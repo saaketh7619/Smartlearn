@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
+import { RoleGuard } from '@/components/shared/RoleGuard';
 
 export default function TeacherLayout({
   children,
@@ -9,11 +10,13 @@ export default function TeacherLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex-1 flex w-full">
-      <Sidebar />
-      <div className="flex-1 overflow-x-hidden p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
-        {children}
+    <RoleGuard requiredRole="TEACHER">
+      <div className="flex-1 flex w-full">
+        <Sidebar />
+        <div className="flex-1 overflow-x-hidden p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+          {children}
+        </div>
       </div>
-    </div>
+    </RoleGuard>
   );
 }

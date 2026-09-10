@@ -14,15 +14,15 @@
     --input: #ffffff;
     --ring: #d82a4e;
 
-    /* WebUni Theme Signature Colors */
-    --webuni-red: #d82a4e;
-    --webuni-red-hover: #c32646;
-    --webuni-red-dark: #a81c39;
-    --webuni-slate: #1a1e24;
-    --webuni-charcoal: #13171b;
-    --webuni-surface: #20252b;
+    /* SmartLearn Signature Colors */
+    --sl-crimson: #d82a4e;
+    --sl-crimson-hover: #c32646;
+    --sl-crimson-dark: #a81c39;
+    --sl-slate: #1a1e24;
+    --sl-charcoal: #13171b;
+    --sl-surface: #20252b;
 
-    /* Role Accents aligned with WebUni */
+    /* Role Accent Colors */
     --student: #2563eb;
     --student-subtle: #eff6ff;
     --teacher: #d82a4e;
@@ -42,12 +42,12 @@
     --input: #20252b;
     --ring: #d82a4e;
 
-    --webuni-red: #e13257;
-    --webuni-red-hover: #d82a4e;
-    --webuni-red-dark: #b81e3e;
-    --webuni-slate: #121519;
-    --webuni-charcoal: #0e1114;
-    --webuni-surface: #1e232a;
+    --sl-crimson: #e13257;
+    --sl-crimson-hover: #d82a4e;
+    --sl-crimson-dark: #b81e3e;
+    --sl-slate: #121519;
+    --sl-charcoal: #0e1114;
+    --sl-surface: #1e232a;
 
     --student: #3b82f6;
     --student-subtle: rgba(59, 130, 246, 0.15);
@@ -82,22 +82,25 @@
   }
 }
 
-/* WebUni Hero & Background Styles */
-.bg-webuni-hero {
+/* SmartLearn Hero & Background Styles */
+.bg-sl-hero {
   background-color: #1a1e24;
-  background-image: linear-gradient(to bottom, rgba(20, 24, 28, 0.75), rgba(15, 18, 22, 0.88)), url('/images/webuni_hero.jpg');
+  background-image: linear-gradient(135deg, rgba(20, 24, 28, 0.92) 0%, rgba(15, 18, 22, 0.97) 100%);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
-.bg-webuni-dark {
+.bg-sl-dark {
   background-color: #1a1e24;
 }
 
-.bg-webuni-surface {
+.bg-sl-surface {
   background-color: #20252b;
 }
+
+/* SmartLearn Surface Styles */
+.bg-sl-banner { background-color: #1a1e24; background-image: linear-gradient(135deg, rgba(20, 24, 28, 0.92) 0%, rgba(15, 18, 22, 0.97) 100%); }
 
 /* Glassmorphism Styles */
 .glass-panel {
@@ -136,7 +139,7 @@
   box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.6);
 }
 
-/* WebUni Crimson Button Styles */
+/* SmartLearn Crimson Button Styles */
 .btn-crimson {
   background-color: #d82a4e;
   color: #ffffff;
@@ -174,10 +177,27 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(10, 77, 56, 0.3);
+  background: rgba(216, 42, 78, 0.25);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(10, 77, 56, 0.6);
+  background: rgba(216, 42, 78, 0.5);
+}
+
+/* Accessibility: visible focus ring for keyboard navigation */
+:focus-visible {
+  outline: 2px solid #d82a4e;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Accessibility: reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

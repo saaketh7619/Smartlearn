@@ -42,7 +42,7 @@ const INSPIRATIONAL_QUOTES = [
   },
   {
     quote: 'Smart learning adapts to every mind, uniting students, teachers, and parents with the shared power of AI.',
-    author: 'WebUni Vision',
+    author: 'SmartLearn Vision',
     role: 'AI Education Ecosystem',
     tag: 'Future of Learning',
   },
@@ -59,6 +59,8 @@ export function WelcomeSplashModal() {
   const welcomeSplashOpen = useStore((state) => state.welcomeSplashOpen);
   const setWelcomeSplashOpen = useStore((state) => state.setWelcomeSplashOpen);
   const triggerConfetti = useStore((state) => state.triggerConfetti);
+
+  const setLoginWelcomeSeen = useStore((state) => state.setLoginWelcomeSeen);
 
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -87,6 +89,10 @@ export function WelcomeSplashModal() {
   };
 
   const handleGoToLogin = (signup = false) => {
+    setLoginWelcomeSeen();
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('sl_login_welcome_shown', 'true');
+    }
     setWelcomeSplashOpen(false);
     triggerConfetti();
     if (signup) {
@@ -97,6 +103,10 @@ export function WelcomeSplashModal() {
   };
 
   const handleDismiss = () => {
+    setLoginWelcomeSeen();
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('sl_login_welcome_shown', 'true');
+    }
     setWelcomeSplashOpen(false);
   };
 
@@ -112,14 +122,14 @@ export function WelcomeSplashModal() {
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-3xl sm:text-4xl tracking-tight text-white">
-                Web<span className="text-white drop-shadow-md">Uni</span>
+                Smart<span className="text-white drop-shadow-md">Learn</span>
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-white/20 text-white backdrop-blur-sm border border-white/30">
                 AI Ecosystem
               </span>
             </div>
             <p className="text-xs sm:text-sm text-white/90 font-medium tracking-wide">
-              Learn From the Best • Smart Education for Students, Teachers &amp; Parents
+              Learn Smarter. Grow Faster. • Smart Education for Students, Teachers &amp; Parents
             </p>
           </div>
 

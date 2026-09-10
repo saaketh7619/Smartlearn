@@ -1,5 +1,148 @@
 export type Role = 'STUDENT' | 'TEACHER' | 'PARENT' | 'ADMIN';
 
+// ============================================================
+// CURRICULUM HIERARCHY TYPES
+// ============================================================
+
+export type ContentStatus = 'draft' | 'published' | 'archived';
+
+export type ResourceType =
+  | 'syllabus'
+  | 'textbook'
+  | 'notes'
+  | 'video'
+  | 'quiz'
+  | 'flashcards'
+  | 'assignment'
+  | 'practice_test'
+  | 'external_link'
+  | 'worksheet';
+
+export interface AuditInfo {
+  uploadedBy: string;
+  uploadedAt: string;
+  editedBy?: string;
+  editedAt?: string;
+}
+
+export interface LearningResource {
+  id: string;
+  parentId: string; // chapterId or conceptId
+  parentType: 'chapter' | 'concept';
+  type: ResourceType;
+  title: string;
+  description?: string;
+  fileUrl?: string;
+  externalUrl?: string;
+  thumbnailUrl?: string;
+  source?: string; // Author / textbook name / publisher
+  tags: string[];
+  language: string;
+  status: ContentStatus;
+  audit: AuditInfo;
+  viewCount: number;
+}
+
+export interface Concept {
+  id: string;
+  chapterId: string;
+  title: string;
+  description?: string;
+  displayOrder: number;
+  resources: LearningResource[];
+}
+
+export interface Chapter {
+  id: string;
+  subjectId: string;
+  title: string;
+  description?: string;
+  displayOrder: number;
+  concepts: Concept[];
+  resources: LearningResource[]; // chapter-level resources (e.g., full chapter notes)
+}
+
+export interface Subject {
+  id: string;
+  classId: string;
+  name: string;
+  board?: string; // CBSE, ICSE, State Board, etc.
+  university?: string;
+  academicYear?: string;
+  language: string;
+  description?: string;
+  coverImageUrl?: string;
+  status: ContentStatus;
+  audit: AuditInfo;
+  chapters: Chapter[];
+}
+
+export interface ClassLevel {
+  id: string;
+  streamId: string;
+  name: string; // 'Class 1', 'Class 10', 'Semester 1', etc.
+  shortName: string; // 'Cls 10', 'Sem 1', etc.
+  displayOrder: number;
+  subjects: Subject[];
+}
+
+export interface Stream {
+  id: string;
+  levelId: string;
+  name: string; // 'Primary', 'Secondary', 'Science', 'Commerce', 'Arts', etc.
+  classes: ClassLevel[];
+}
+
+export interface EducationalLevel {
+  id: string;
+  name: string; // 'School', 'Intermediate', 'College', 'B.Tech', 'M.Tech', 'Other'
+  icon: string; // emoji or icon name
+  description: string;
+  streams: Stream[];
+}
+
+export interface CurriculumStats {
+  totalLevels: number;
+  publishedSubjects: number;
+  draftSubjects: number;
+  archivedSubjects: number;
+  totalChapters: number;
+  totalResources: number;
+  mostViewedResource?: LearningResource;
+}
+
+// ============================================================
+// STUDENT ACADEMIC PROFILE
+// ============================================================
+
+export type LearningGoal =
+  | 'exam_prep'
+  | 'concept_learning'
+  | 'practice'
+  | 'revision'
+  | 'competitive_exams';
+
+export interface StudentAcademicProfile {
+  educationalLevel: string; // e.g. 'School'
+  stream: string; // e.g. 'Secondary'
+  classLevel: string; // e.g. 'Class 10'
+  classId: string; // DB id
+  board: string; // e.g. 'CBSE'
+  subjects: string[]; // subject ids/names enrolled
+  learningGoals: LearningGoal[];
+  onboardingCompleted: boolean;
+}
+
+export interface RecentlyViewedItem {
+  resourceId: string;
+  resourceTitle: string;
+  subjectName: string;
+  chapterTitle: string;
+  viewedAt: string;
+  resourceType: ResourceType;
+}
+
+
 export interface User {
   id: string;
   name: string;
@@ -24,7 +167,13 @@ export interface StudentProfile {
   lastActive: string;
   enrolledCourseIds: string[];
   badges: string[];
+  // Academic profile (set during onboarding)
+  academicProfile?: StudentAcademicProfile;
+  // Learning tracking
+  recentlyViewed?: RecentlyViewedItem[];
+  bookmarkedResourceIds?: string[];
 }
+
 
 export interface TeacherProfile {
   department: string;

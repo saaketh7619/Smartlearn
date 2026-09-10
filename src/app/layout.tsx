@@ -22,6 +22,9 @@ export const viewport: Viewport = {
 };
 
 import { ThemeInitializer } from '@/components/shared/ThemeInitializer';
+import { ToastProvider } from '@/components/shared/ToastContext';
+import { OnboardingTour } from '@/components/shared/OnboardingTour';
+import { WelcomeSplashModal } from '@/components/shared/WelcomeSplashModal';
 
 export default function RootLayout({
   children,
@@ -53,11 +56,15 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 transition-colors duration-200">
-        <ThemeInitializer />
-        <Navbar />
-        <main className="flex-1 flex flex-col">{children}</main>
-        <CommandPalette />
-        <ConfettiEffect />
+        <ToastProvider>
+          <ThemeInitializer />
+          <Navbar />
+          <main className="flex-1 flex flex-col">{children}</main>
+          <CommandPalette />
+          <ConfettiEffect />
+          <OnboardingTour />
+          <WelcomeSplashModal />
+        </ToastProvider>
       </body>
     </html>
   );

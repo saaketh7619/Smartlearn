@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { Role } from '@/types';
+import { getGitHubPagesSpaRedirect } from '@/lib/basePath';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -39,6 +40,14 @@ export default function LandingPage() {
   const switchDemoRole = useStore((state) => state.switchDemoRole);
   const setWelcomeSplashOpen = useStore((state) => state.setWelcomeSplashOpen);
   const triggerConfetti = useStore((state) => state.triggerConfetti);
+
+  // GitHub Pages SPA redirect handler (restores deep link when navigating directly or refreshing)
+  React.useEffect(() => {
+    const spaRedirect = getGitHubPagesSpaRedirect();
+    if (spaRedirect && spaRedirect !== '/' && spaRedirect !== '') {
+      router.replace(spaRedirect);
+    }
+  }, [router]);
 
   const [signupName, setSignupName] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
@@ -57,42 +66,42 @@ export default function LandingPage() {
   const courseCategories = [
     {
       title: 'IT Development',
-      desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      desc: 'Software engineering, algorithms, data structures, and practical coding projects.',
       count: '120 Courses',
       image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=500&h=300&fit=crop&q=80',
       isHighlight: false,
     },
     {
       title: 'Web Design',
-      desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      desc: 'User interface design, modern CSS layouts, accessibility, and visual hierarchies.',
       count: '70 Courses',
       image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500&h=300&fit=crop&q=80',
       isHighlight: true, // Shown highlighted in red in the video
     },
     {
       title: 'Illustration & Drawing',
-      desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      desc: 'Technical drawing, scientific diagrams, and digital illustration foundations.',
       count: '55 Courses',
       image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=500&h=300&fit=crop&q=80',
       isHighlight: false,
     },
     {
       title: 'Social Media',
-      desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      desc: 'Content strategy, digital outreach, and data-driven educational storytelling.',
       count: '40 Courses',
       image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=500&h=300&fit=crop&q=80',
       isHighlight: false,
     },
     {
       title: 'Photoshop',
-      desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      desc: 'Image retouching, composite generation, and professional digital asset creation.',
       count: '220 Courses',
       image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&h=300&fit=crop&q=80',
       isHighlight: true, // Shown highlighted in red in the video
     },
     {
       title: 'Cryptocurrencies',
-      desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      desc: 'Blockchain architecture, decentralized consensus, and cryptographic principles.',
       count: '25 Courses',
       image: 'https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=500&h=300&fit=crop&q=80',
       isHighlight: false,
@@ -109,7 +118,7 @@ export default function LandingPage() {
       instructor: 'William Parker',
       role: 'Developer',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop',
-      desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      desc: 'Explore creative design fundamentals, hands-on spatial reasoning, and visual prototyping.',
       image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=500&h=350&fit=crop&q=80',
     },
     {
@@ -121,7 +130,7 @@ export default function LandingPage() {
       instructor: 'William Parker',
       role: 'Developer',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop',
-      desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      desc: 'Comprehensive introduction to full-stack engineering, algorithms, and system design.',
       image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500&h=350&fit=crop&q=80',
     },
     {
@@ -133,7 +142,7 @@ export default function LandingPage() {
       instructor: 'William Parker',
       role: 'Developer',
       avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop',
-      desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      desc: 'Master typographic hierarchies, color theory, and responsive brand design systems.',
       image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=500&h=350&fit=crop&q=80',
     },
     {
@@ -145,7 +154,7 @@ export default function LandingPage() {
       instructor: 'William Parker',
       role: 'Developer',
       avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop',
-      desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      desc: 'Quantitative modeling, macroeconomic indicators, and portfolio risk management.',
       image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=350&fit=crop&q=80',
     },
   ];
@@ -225,7 +234,7 @@ export default function LandingPage() {
                   </span>
                 </div>
                 <p className="text-xs text-slate-300">
-                  You are authenticated into WebUni SmartLearn. Your personal tools &amp; data are ready.
+                  You are authenticated into SmartLearn. Your personal tools &amp; data are ready.
                 </p>
               </div>
             </div>
@@ -255,27 +264,27 @@ export default function LandingPage() {
       )}
 
       {/* ========================================================================= */}
-      {/* 1. HERO SECTION (WebUni Dark Slate Chalkboard with Pencils & Hand)        */}
+      {/* 1. HERO SECTION (SmartLearn Dark Slate Chalkboard with Pencils & Hand)     */}
       {/* ========================================================================= */}
-      <section className="relative overflow-hidden bg-webuni-hero text-white py-20 sm:py-28 md:py-36 px-4 sm:px-8 border-b border-[#283038]">
+      <section className="relative overflow-hidden bg-sl-hero text-white py-20 sm:py-28 md:py-36 px-4 sm:px-8 border-b border-[#283038]">
         {/* Soft dark vignette overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/75 pointer-events-none" />
 
         <div className="relative max-w-5xl mx-auto text-center space-y-6 z-10">
-          {/* Centered Main Headline matching uploaded video */}
+          {/* Centered Main Headline */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.12]">
-            Get The Best Free Online Courses
+            Learn Smarter. Grow Faster.
           </h1>
 
-          {/* Centered Subtitle matching uploaded video text style */}
-          <p className="text-sm sm:text-base md:text-lg text-slate-200 max-w-2xl mx-auto font-normal leading-relaxed opacity-90 italic">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris scelerisque, at rutrum nulla dictum. Ut ac ligula sapien. Suspendisse cursus faucibus finibus.
+          {/* Centered Subtitle */}
+          <p className="text-base sm:text-lg md:text-xl text-slate-200 max-w-3xl mx-auto font-normal leading-relaxed opacity-95">
+            Personalized courses, AI-powered study support, practice tests, and learning tools built for every student.
           </p>
 
-          {/* Interactive Object Fields & Button Form (Adapts when logged in) */}
-          <div className="pt-4 max-w-3xl mx-auto">
+          {/* Primary Action Button: Prominent Get Started button */}
+          <div className="pt-4 max-w-2xl mx-auto">
             {isLoggedIn && currentUser ? (
-              <div className="bg-black/40 backdrop-blur-md p-6 rounded-sm border border-white/20 shadow-2xl max-w-2xl mx-auto space-y-4 text-center animate-in fade-in">
+              <div className="bg-black/40 backdrop-blur-md p-6 rounded-md border border-white/20 shadow-2xl max-w-2xl mx-auto space-y-4 text-center animate-in fade-in">
                 <div className="space-y-1">
                   <span className="text-xs font-extrabold uppercase tracking-widest text-[#d82a4e]">
                     Authenticated Session: {currentUser.name}
@@ -288,63 +297,39 @@ export default function LandingPage() {
                 <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                   <button
                     onClick={() => handleLaunchDemo(currentUser.role)}
-                    className="btn-crimson px-7 py-3 rounded-sm text-xs sm:text-sm font-bold uppercase tracking-wider shadow-lg flex items-center gap-2 cursor-pointer"
+                    className="btn-crimson px-7 py-3 rounded-md text-xs sm:text-sm font-bold uppercase tracking-wider shadow-lg flex items-center gap-2 cursor-pointer"
                   >
                     <span>Launch {currentUser.role} Dashboard</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
-                  <button
-                    onClick={() => setWelcomeSplashOpen(true)}
-                    className="px-4 py-3 rounded-sm bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/20 flex items-center gap-1.5 cursor-pointer"
+                  <Link
+                    href="/get-started"
+                    className="px-5 py-3 rounded-md bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/20 flex items-center gap-1.5 cursor-pointer transition-colors"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                    <span>View Quotes &amp; Mission</span>
-                  </button>
+                    <span>Switch Portal / Role</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
                 </div>
-              </div>
-            ) : signupSubmitted ? (
-              <div className="bg-emerald-600/90 backdrop-blur-md text-white p-4 rounded-sm shadow-2xl border border-emerald-400 animate-in fade-in">
-                <p className="font-bold text-base">🎉 Welcome to WebUni! Launching student workspace...</p>
               </div>
             ) : (
-              <form
-                onSubmit={handleHeroSignup}
-                className="bg-black/30 backdrop-blur-md p-2.5 sm:p-3 rounded-sm border border-white/20 shadow-2xl grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-2.5 items-center"
-              >
-                {/* Field 1: Name */}
-                <div className="sm:col-span-4">
-                  <input
-                    type="text"
-                    required
-                    value={signupName}
-                    onChange={(e) => setSignupName(e.target.value)}
-                    placeholder="Name"
-                    className="w-full px-4 py-3 rounded-sm text-sm text-slate-900 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#d82a4e] font-medium shadow-inner italic"
-                  />
-                </div>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
+                <Link
+                  href="/get-started"
+                  id="hero-get-started-btn"
+                  className="btn-crimson w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-md text-base sm:text-lg font-extrabold tracking-wide uppercase shadow-2xl hover:scale-105 transition-all cursor-pointer focus:outline-none focus:ring-4 focus:ring-[#d82a4e]/50"
+                >
+                  <span>Get Started</span>
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
 
-                {/* Field 2: E-mail */}
-                <div className="sm:col-span-5">
-                  <input
-                    type="email"
-                    required
-                    value={signupEmail}
-                    onChange={(e) => setSignupEmail(e.target.value)}
-                    placeholder="E-mail"
-                    className="w-full px-4 py-3 rounded-sm text-sm text-slate-900 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#d82a4e] font-medium shadow-inner italic"
-                  />
-                </div>
-
-                {/* Action Button: Sign Up Now in WebUni Crimson */}
-                <div className="sm:col-span-3">
-                  <button
-                    type="submit"
-                    className="btn-crimson w-full py-3 px-4 rounded-sm text-sm font-bold tracking-wide uppercase shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <span>Sign Up Now</span>
-                  </button>
-                </div>
-              </form>
+                <Link
+                  href="/student/courses"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:py-4 rounded-md bg-white/10 hover:bg-white/20 text-white text-sm sm:text-base font-bold border border-white/20 transition-all backdrop-blur-md cursor-pointer"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  <span>Browse 16+ Courses</span>
+                </Link>
+              </div>
             )}
           </div>
 
@@ -354,25 +339,25 @@ export default function LandingPage() {
             <div className="flex flex-wrap items-center justify-center gap-2">
               <button
                 onClick={() => handleLaunchDemo('STUDENT')}
-                className="px-3.5 py-1.5 rounded-sm bg-white/10 hover:bg-[#d82a4e] text-white border border-white/20 transition-all font-semibold flex items-center gap-1.5"
+                className="px-3.5 py-1.5 rounded-sm bg-white/10 hover:bg-[#d82a4e] text-white border border-white/20 transition-all font-semibold flex items-center gap-1.5 cursor-pointer"
               >
                 <span>🎓 Student (Alex)</span>
               </button>
               <button
                 onClick={() => handleLaunchDemo('TEACHER')}
-                className="px-3.5 py-1.5 rounded-sm bg-white/10 hover:bg-[#d82a4e] text-white border border-white/20 transition-all font-semibold flex items-center gap-1.5"
+                className="px-3.5 py-1.5 rounded-sm bg-white/10 hover:bg-[#d82a4e] text-white border border-white/20 transition-all font-semibold flex items-center gap-1.5 cursor-pointer"
               >
                 <span>👩‍🏫 Teacher (Sarah)</span>
               </button>
               <button
                 onClick={() => handleLaunchDemo('PARENT')}
-                className="px-3.5 py-1.5 rounded-sm bg-white/10 hover:bg-[#d82a4e] text-white border border-white/20 transition-all font-semibold flex items-center gap-1.5"
+                className="px-3.5 py-1.5 rounded-sm bg-white/10 hover:bg-[#d82a4e] text-white border border-white/20 transition-all font-semibold flex items-center gap-1.5 cursor-pointer"
               >
                 <span>👨‍👩‍👧 Parent (Priya)</span>
               </button>
               <button
                 onClick={() => handleLaunchDemo('ADMIN')}
-                className="px-3.5 py-1.5 rounded-sm bg-white/10 hover:bg-[#d82a4e] text-white border border-white/20 transition-all font-semibold flex items-center gap-1.5"
+                className="px-3.5 py-1.5 rounded-sm bg-white/10 hover:bg-[#d82a4e] text-white border border-white/20 transition-all font-semibold flex items-center gap-1.5 cursor-pointer"
               >
                 <span>⚡ Admin (Marcus)</span>
               </button>
@@ -389,8 +374,8 @@ export default function LandingPage() {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Our Course Categories
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed italic">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris scelerisque, at rutrum nulla dictum. Ut ac ligula sapien. Suspendisse cursus faucibus finibus.
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
+            Explore structured learning pathways curated by top academic institutions and verified industry experts.
           </p>
         </div>
 
@@ -495,8 +480,8 @@ export default function LandingPage() {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Featured Courses
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed italic">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris scelerisque, at rutrum nulla dictum. Ut ac ligula sapien. Suspendisse cursus faucibus finibus.
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
+            Hand-picked coursework with interactive problem sets, AI-assisted code evaluation, and diagnostic checkpoints.
           </p>
 
           {/* Filter Tabs matching video */}
@@ -585,8 +570,8 @@ export default function LandingPage() {
             <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">
               Sign up to become a teacher
             </h2>
-            <p className="text-xs sm:text-sm text-white/90 leading-relaxed italic">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris scelerisque, at rutrum nulla dictum. Ut ac ligula sapien. Suspendisse cursus faucibus finibus.
+            <p className="text-xs sm:text-sm text-white/90 leading-relaxed">
+              Share your knowledge, automate grading with AI rubrics, and guide motivated learners across the globe.
             </p>
 
             {teacherSubmitted ? (
@@ -798,7 +783,7 @@ export default function LandingPage() {
           <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#d82a4e]/10 text-[#d82a4e] text-xs font-extrabold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Inspiring Minds • The WebUni Philosophy</span>
+              <span>Inspiring Minds • The SmartLearn Philosophy</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Words That Power Every Academic Breakthrough
@@ -844,7 +829,7 @@ export default function LandingPage() {
               </p>
               <div className="pt-3 border-t border-slate-100 dark:border-[#283038] flex items-center justify-between">
                 <div>
-                  <h4 className="font-bold text-xs text-slate-900 dark:text-white">WebUni Vision</h4>
+                  <h4 className="font-bold text-xs text-slate-900 dark:text-white">SmartLearn Vision</h4>
                   <span className="text-[10px] text-slate-400">AI Education Ecosystem</span>
                 </div>
                 <span className="text-[10px] font-bold text-emerald-500 uppercase bg-emerald-500/10 px-2 py-0.5 rounded-sm">Future of EdTech</span>
@@ -859,17 +844,17 @@ export default function LandingPage() {
       {/* ========================================================================= */}
       <section className="py-20 px-4 sm:px-8 text-center max-w-4xl mx-auto w-full space-y-5">
         <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Join Our Community Now!
+          Start Your Learning Journey Today
         </h2>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed italic">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada lorem maximus mauris scelerisque, at rutrum nulla dictum. Ut ac ligula sapien. Suspendisse cursus faucibus finibus.
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
+          Join thousands of students, teachers, and parents already transforming education with SmartLearn&apos;s adaptive AI-powered platform.
         </p>
         <div className="pt-2">
           <Link
             href="/login?mode=signup"
             className="btn-crimson px-9 py-3.5 rounded-sm text-sm font-bold uppercase tracking-wide shadow-lg cursor-pointer inline-flex items-center gap-2"
           >
-            <span>Register Now</span>
+            <span>Get Started Free</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -880,47 +865,46 @@ export default function LandingPage() {
       {/* ========================================================================= */}
       <footer className="mt-auto border-t border-slate-200 dark:border-[#283038] bg-white dark:bg-[#13171b] pt-16 pb-10 px-4 sm:px-8 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 pb-12 border-b border-slate-100 dark:border-[#283038]">
-          {/* Col 1: Contact Info */}
+          {/* Col 1: About SmartLearn */}
           <div className="space-y-3">
-            <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">Contact Info</h4>
-            <p className="leading-relaxed">1481 Creekside Lane<br />Avila Beach, CA 931</p>
-            <p>+53 345 7953 37453</p>
-            <p>yourmail@gmail.com</p>
+            <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">SmartLearn</h4>
+            <p className="leading-relaxed text-slate-500 dark:text-slate-400">
+              AI-powered adaptive education for students, teachers, and parents worldwide.
+            </p>
+            <p className="text-slate-400 dark:text-slate-500">support@smartlearn.edu</p>
           </div>
 
-          {/* Col 2: Engineering */}
+          {/* Col 2: STEM Courses */}
           <div className="space-y-2">
-            <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">Engineering</h4>
+            <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">STEM Courses</h4>
             <ul className="space-y-1.5">
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Applied Studies</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Computer Engineering</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Software Engineering</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Informational Engineering</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">System Engineering</Link></li>
+              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Mathematics</Link></li>
+              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Physics</Link></li>
+              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Chemistry</Link></li>
+              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Computer Science</Link></li>
+              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Biology</Link></li>
             </ul>
           </div>
 
-          {/* Col 3: Graphic Design */}
+          {/* Col 3: Humanities */}
           <div className="space-y-2">
-            <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">Graphic Design</h4>
+            <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">Humanities</h4>
             <ul className="space-y-1.5">
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Applied Studies</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Computer Engineering</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Software Engineering</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Informational Engineering</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">System Engineering</Link></li>
+              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Literature &amp; Rhetoric</Link></li>
+              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">World History</Link></li>
+              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Economics</Link></li>
+              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Social Sciences</Link></li>
             </ul>
           </div>
 
-          {/* Col 4: Development */}
+          {/* Col 4: Platform */}
           <div className="space-y-2">
-            <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">Development</h4>
+            <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">Platform</h4>
             <ul className="space-y-1.5">
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Applied Studies</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Computer Engineering</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Software Engineering</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Informational Engineering</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">System Engineering</Link></li>
+              <li><Link href="/about" className="hover:text-[#d82a4e]">About SmartLearn</Link></li>
+              <li><Link href="/blog" className="hover:text-[#d82a4e]">Blog &amp; Research</Link></li>
+              <li><Link href="/contact" className="hover:text-[#d82a4e]">Contact Support</Link></li>
+              <li><Link href="/login?mode=signup" className="hover:text-[#d82a4e]">Create Account</Link></li>
             </ul>
           </div>
 
@@ -936,7 +920,7 @@ export default function LandingPage() {
                   required
                   value={newsletterEmail}
                   onChange={(e) => setNewsletterEmail(e.target.value)}
-                  placeholder="E-mail"
+                  placeholder="your@email.com"
                   className="w-full px-3.5 py-2 rounded-sm text-xs text-slate-900 bg-slate-100 dark:bg-[#20252b] dark:text-white placeholder-slate-400 focus:outline-none italic border border-slate-200 dark:border-[#283038]"
                 />
                 <button
@@ -945,7 +929,7 @@ export default function LandingPage() {
                 >
                   Subscribe
                 </button>
-                <p className="text-[10px] text-slate-400 italic">*We don't spam</p>
+                <p className="text-[10px] text-slate-400 italic">We never share your email.</p>
               </form>
             )}
           </div>
@@ -953,11 +937,11 @@ export default function LandingPage() {
 
         {/* Bottom copyright bar */}
         <div className="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
-          <p>Copyright ©2026 All rights reserved | This template is made with ❤️ by Colorlib &amp; SmartLearn</p>
+          <p>Copyright &copy;{new Date().getFullYear()} SmartLearn Education Platform. All rights reserved.</p>
           <div className="flex items-center gap-5 font-semibold text-slate-600 dark:text-slate-400">
-            <Link href="/" className="hover:text-[#d82a4e]">Terms &amp; Conditions</Link>
-            <Link href="/" className="hover:text-[#d82a4e]">Register</Link>
-            <Link href="/" className="hover:text-[#d82a4e]">Privacy</Link>
+            <Link href="/terms" className="hover:text-[#d82a4e]">Terms &amp; Conditions</Link>
+            <Link href="/login?mode=signup" className="hover:text-[#d82a4e]">Register</Link>
+            <Link href="/privacy" className="hover:text-[#d82a4e]">Privacy Policy</Link>
           </div>
         </div>
       </footer>

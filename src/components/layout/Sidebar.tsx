@@ -28,6 +28,7 @@ import {
   X,
   Flame,
   LogOut,
+  GraduationCap,
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 
@@ -50,6 +51,7 @@ export function Sidebar() {
 
   const studentNav: NavLinkItem[] = [
     { title: 'Dashboard', href: '/student', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { title: 'My Profile & Class', href: '/student/profile', icon: <GraduationCap className="w-4 h-4 text-emerald-500" /> },
     { title: 'Course Library', href: '/student/courses', icon: <BookOpen className="w-4 h-4" /> },
     { title: 'AI Tutor', href: '/student/tutor', icon: <BrainCircuit className="w-4 h-4 text-blue-500" />, badge: 'AI' },
     { title: 'Tests & Contests', href: '/student/tests', icon: <FileQuestion className="w-4 h-4" />, badge: 'Live' },
@@ -81,6 +83,7 @@ export function Sidebar() {
 
   const adminNav: NavLinkItem[] = [
     { title: 'Command Center', href: '/admin', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { title: 'Curriculum Manager', href: '/admin/curriculum', icon: <Layers className="w-4 h-4 text-indigo-500" />, badge: 'CMS' },
     { title: 'User Management', href: '/admin/users', icon: <Users className="w-4 h-4" /> },
     { title: 'Course Catalog', href: '/admin/courses', icon: <BookOpen className="w-4 h-4" /> },
     { title: 'Moderation Queue', href: '/admin/moderation', icon: <ShieldCheck className="w-4 h-4 text-amber-500" />, badge: '2 Flagged' },
@@ -208,14 +211,72 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile Menu Toggle Button */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed bottom-5 right-5 z-40 p-3.5 rounded-full bg-[#d82a4e] text-white shadow-xl hover:bg-[#c32646] transition-all flex items-center justify-center focus:outline-none"
-        aria-label="Open Navigation"
+      {/* Mobile Bottom Navigation Bar */}
+      <nav
+        aria-label="Mobile Navigation"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#1a1e24]/95 backdrop-blur-md border-t border-slate-200 dark:border-[#283038] px-2 py-1.5 flex items-center justify-around shadow-lg"
       >
-        <Menu className="w-5 h-5" />
-      </button>
+        <Link
+          href={role === 'STUDENT' ? '/student' : role === 'TEACHER' ? '/teacher' : role === 'PARENT' ? '/parent' : '/admin'}
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
+            pathname === '/student' || pathname === '/teacher' || pathname === '/parent' || pathname === '/admin'
+              ? 'text-[#d82a4e] font-bold'
+              : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <LayoutDashboard className="w-4 h-4" />
+          <span>Home</span>
+        </Link>
+
+        {role === 'STUDENT' && (
+          <>
+            <Link
+              href="/student/courses"
+              className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
+                pathname.startsWith('/student/courses')
+                  ? 'text-[#d82a4e] font-bold'
+                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>Courses</span>
+            </Link>
+
+            <Link
+              href="/student/tutor"
+              className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
+                pathname.startsWith('/student/tutor')
+                  ? 'text-blue-500 font-bold'
+                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <BrainCircuit className="w-4 h-4" />
+              <span>AI Tutor</span>
+            </Link>
+
+            <Link
+              href="/student/tests"
+              className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
+                pathname.startsWith('/student/tests')
+                  ? 'text-[#d82a4e] font-bold'
+                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <FileQuestion className="w-4 h-4" />
+              <span>Tests</span>
+            </Link>
+          </>
+        )}
+
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+          aria-label="Open Full Menu"
+        >
+          <Menu className="w-4 h-4" />
+          <span>More</span>
+        </button>
+      </nav>
 
       {/* Desktop Persistent Sidebar */}
       <aside className="hidden lg:flex w-64 flex-col border-r border-slate-200 dark:border-[#283038] bg-white dark:bg-[#1a1e24] sticky top-16 sm:top-20 h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)] overflow-y-auto">
@@ -234,12 +295,12 @@ export function Sidebar() {
               <span className="font-bold text-slate-800 dark:text-slate-100 text-sm">Navigation</span>
               <button
                 onClick={() => setMobileOpen(false)}
-                className="p-1.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+                className="p-1.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto pb-16">
               <NavContent />
             </div>
           </div>

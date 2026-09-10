@@ -327,6 +327,126 @@ export const INITIAL_COURSES: Course[] = [
     enrollmentCount: 460,
     durationHours: 16,
     modules: []
+  },
+  {
+    id: 'course-stats-1',
+    title: 'Applied Statistics, Probability & Bayes Theorem',
+    description: 'Master discrete and continuous probability distributions, hypothesis testing, p-values, and Bayesian inference for STEM.',
+    subject: 'Mathematics',
+    grade: 'Grade 11-12',
+    difficulty: 'Advanced',
+    thumbnail: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop&q=80',
+    instructorName: 'Dr. Sarah Jenkins',
+    instructorRole: 'Head of Mathematics',
+    rating: 4.93,
+    enrollmentCount: 395,
+    durationHours: 20,
+    modules: []
+  },
+  {
+    id: 'course-chem-thermo',
+    title: 'Chemical Thermodynamics & Dynamic Equilibrium',
+    description: 'Enthalpy, entropy, Gibbs free energy, Le Chatelier’s principle, and electrochemical potential calculations.',
+    subject: 'Chemistry',
+    grade: 'Grade 11-12',
+    difficulty: 'Advanced',
+    thumbnail: 'https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6?w=600&auto=format&fit=crop&q=80',
+    instructorName: 'Dr. Anita Desai',
+    instructorRole: 'Head of Chemistry',
+    rating: 4.88,
+    enrollmentCount: 310,
+    durationHours: 18,
+    modules: []
+  },
+  {
+    id: 'course-phys-em',
+    title: 'Electromagnetism, Electric Circuits & Maxwell Laws',
+    description: 'Coulomb law, Gauss law, magnetic flux, electromagnetic induction, AC circuits, and wave propagation.',
+    subject: 'Physics',
+    grade: 'Grade 11-12',
+    difficulty: 'Advanced',
+    thumbnail: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80',
+    instructorName: 'Prof. David Vance',
+    instructorRole: 'Senior Physics Fellow',
+    rating: 4.91,
+    enrollmentCount: 430,
+    durationHours: 22,
+    modules: []
+  },
+  {
+    id: 'course-cs-dsa',
+    title: 'Data Structures & Algorithm Design in Java',
+    description: 'From linked lists, binary search trees, and heaps to Dijkstra shortest path and dynamic programming patterns.',
+    subject: 'Computer Science',
+    grade: 'Grade 10-12',
+    difficulty: 'Intermediate',
+    thumbnail: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80',
+    instructorName: 'Elena Rostova',
+    instructorRole: 'AI Research Director',
+    rating: 4.95,
+    enrollmentCount: 580,
+    durationHours: 28,
+    modules: []
+  },
+  {
+    id: 'course-bio-eco',
+    title: 'Ecology, Conservation Biology & Systems Ecology',
+    description: 'Ecosystem energy flows, population dynamics, biodiversity hotspots, and climate feedback modeling.',
+    subject: 'Biology',
+    grade: 'Grade 9-11',
+    difficulty: 'Beginner',
+    thumbnail: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&auto=format&fit=crop&q=80',
+    instructorName: 'Dr. Anita Desai',
+    instructorRole: 'Head of Chemistry & Life Sciences',
+    rating: 4.84,
+    enrollmentCount: 260,
+    durationHours: 12,
+    modules: []
+  },
+  {
+    id: 'course-world-hist',
+    title: 'World History & Civilizational Turning Points',
+    description: 'Comparative analysis of the Agricultural Revolution, Silk Road commerce, the Enlightenment, and the Industrial Age.',
+    subject: 'Literature & Humanities',
+    grade: 'Grade 9-12',
+    difficulty: 'Beginner',
+    thumbnail: 'https://images.unsplash.com/photo-1461360370896-922624d12aa1?w=600&auto=format&fit=crop&q=80',
+    instructorName: 'Arthur Pendelton',
+    instructorRole: 'Humanities Lead',
+    rating: 4.81,
+    enrollmentCount: 220,
+    durationHours: 14,
+    modules: []
+  },
+  {
+    id: 'course-linear-alg',
+    title: 'Linear Algebra, Eigenvalues & Geometric Transforms',
+    description: 'Vector spaces, matrix determinants, linear transformations, dot and cross products, eigenvalues, and SVD.',
+    subject: 'Mathematics',
+    grade: 'Grade 11-12',
+    difficulty: 'Advanced',
+    thumbnail: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=600&auto=format&fit=crop&q=80',
+    instructorName: 'Dr. Sarah Jenkins',
+    instructorRole: 'Head of Mathematics',
+    rating: 4.94,
+    enrollmentCount: 375,
+    durationHours: 18,
+    modules: []
+  },
+  {
+    id: 'course-astrophys',
+    title: 'Foundations of Astrophysics & Observational Cosmology',
+    description: 'Stellar evolution, Hertzsprung-Russell diagrams, gravitational lensing, black holes, and the cosmic microwave background.',
+    subject: 'Physics',
+    grade: 'Grade 10-12',
+    difficulty: 'Intermediate',
+    thumbnail: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=600&auto=format&fit=crop&q=80',
+    instructorName: 'Prof. David Vance',
+    instructorRole: 'Senior Physics Fellow',
+    rating: 4.97,
+    enrollmentCount: 490,
+    durationHours: 16,
+    modules: []
   }
 ];
 
@@ -425,6 +545,132 @@ export const INITIAL_TESTS: Test[] = [
         topic: 'Newtonian Laws',
         subject: 'Physics',
         difficulty: 'Easy'
+      },
+      {
+        id: 'qp-3',
+        text: 'What is the escape velocity from Earth’s surface? (Radius R ≈ 6371 km, g ≈ 9.8 m/s²)',
+        options: ['7.9 km/s', '11.2 km/s', '16.7 km/s', '24.5 km/s'],
+        correctAnswerIndex: 1,
+        explanation: 'Escape velocity is given by v_e = √(2gR) = √(2 * 9.8 * 6.371 * 10^6) ≈ 11,180 m/s ≈ 11.2 km/s.',
+        topic: 'Gravitation & Orbits',
+        subject: 'Physics',
+        difficulty: 'Medium'
+      },
+      {
+        id: 'qp-4',
+        text: 'In an elastic collision between two identical masses where one is initially at rest, what happens to the velocity of the moving mass after collision?',
+        options: ['It doubles', 'It reverses', 'It comes to rest (velocity = 0)', 'It continues at half speed'],
+        correctAnswerIndex: 2,
+        explanation: 'For head-on elastic collision of equal masses m1 = m2, the velocities swap. The first mass stops completely and the target moves off with the original velocity.',
+        topic: 'Elastic Collisions',
+        subject: 'Physics',
+        difficulty: 'Hard'
+      }
+    ]
+  },
+  {
+    id: 'test-cs-algorithms',
+    title: 'Computer Science Diagnostic: Algorithms & Big-O Complexity',
+    subject: 'Computer Science',
+    grade: 'Grade 10-12',
+    durationMinutes: 15,
+    totalMarks: 40,
+    isAdaptive: true,
+    antiCheatEnabled: true,
+    createdAt: '2026-03-06T11:00:00.000Z',
+    questions: [
+      {
+        id: 'qcs-1',
+        text: 'What is the average time complexity of searching an element in a balanced Binary Search Tree (BST)?',
+        options: ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)'],
+        correctAnswerIndex: 1,
+        explanation: 'At each node in a balanced BST, half of the search space is eliminated, yielding logarithmic time O(log n).',
+        topic: 'Binary Search Trees',
+        subject: 'Computer Science',
+        difficulty: 'Easy'
+      },
+      {
+        id: 'qcs-2',
+        text: 'Which data structure operates on a Last-In, First-Out (LIFO) principle and is used for call stack management?',
+        options: ['Queue', 'Stack', 'Linked List', 'Max Heap'],
+        correctAnswerIndex: 1,
+        explanation: 'A Stack strictly adheres to LIFO semantics, used for function call stacks and undo mechanisms.',
+        topic: 'Stacks & Queues',
+        subject: 'Computer Science',
+        difficulty: 'Easy'
+      },
+      {
+        id: 'qcs-3',
+        text: 'What is the worst-case time complexity of QuickSort when using naive pivot selection on an already sorted array?',
+        options: ['O(n log n)', 'O(n)', 'O(n²)', 'O(2^n)'],
+        correctAnswerIndex: 2,
+        explanation: 'Naive pivot selection produces unbalanced partitions of size 1 and n-1, leading to quadratic recurrence T(n) = T(n-1) + O(n) = O(n²).',
+        topic: 'Sorting Algorithms',
+        subject: 'Computer Science',
+        difficulty: 'Medium'
+      },
+      {
+        id: 'qcs-4',
+        text: 'In Dynamic Programming, which condition indicates that a problem can be broken into overlapping subproblems with optimal substructure?',
+        options: ['Greedy Choice Property', 'Bellman Equation Principle of Optimality', 'P versus NP Equivalence', 'Amortized Cost Invariance'],
+        correctAnswerIndex: 1,
+        explanation: 'Richard Bellman’s Principle of Optimality requires that optimal solutions to a problem contain optimal solutions to its subproblems.',
+        topic: 'Dynamic Programming',
+        subject: 'Computer Science',
+        difficulty: 'Hard'
+      }
+    ]
+  },
+  {
+    id: 'test-chem-olympiad',
+    title: 'National Chemistry Diagnostic: Kinetics & Bonding',
+    subject: 'Chemistry',
+    grade: 'Grade 11-12',
+    durationMinutes: 15,
+    totalMarks: 40,
+    isAdaptive: true,
+    antiCheatEnabled: true,
+    createdAt: '2026-03-07T14:00:00.000Z',
+    questions: [
+      {
+        id: 'qch-1',
+        text: 'What is the hybridization of carbon atoms in benzene (C6H6)?',
+        options: ['sp', 'sp2', 'sp3', 'dsp2'],
+        correctAnswerIndex: 1,
+        explanation: 'Each carbon in benzene forms three sigma bonds (planar trigonal geometry) and participates in a delocalized pi ring, which corresponds to sp2 hybridization.',
+        topic: 'Chemical Bonding',
+        subject: 'Chemistry',
+        difficulty: 'Easy'
+      },
+      {
+        id: 'qch-2',
+        text: 'According to Le Chatelier’s principle, what happens to the exothermic Haber process (N2 + 3H2 ⇌ 2NH3, ΔH < 0) when temperature is increased?',
+        options: ['Equilibrium shifts right (more NH3)', 'Equilibrium shifts left (less NH3)', 'No change in equilibrium', 'Reaction stops completely'],
+        correctAnswerIndex: 1,
+        explanation: 'For an exothermic reaction, heat is a product. Increasing temperature shifts equilibrium toward reactants (left) to absorb the added heat.',
+        topic: 'Dynamic Equilibrium',
+        subject: 'Chemistry',
+        difficulty: 'Medium'
+      },
+      {
+        id: 'qch-3',
+        text: 'What is the pH of a 0.001 M HCl solution at 25°C assuming complete dissociation?',
+        options: ['1', '2', '3', '11'],
+        correctAnswerIndex: 2,
+        explanation: 'HCl is a strong monoprotic acid, so [H+] = 10^-3 M. pH = -log10(10^-3) = 3.',
+        topic: 'Acids & Bases',
+        subject: 'Chemistry',
+        difficulty: 'Easy'
+      },
+      {
+        id: 'qch-4',
+        text: 'In a first-order chemical reaction, how does the half-life t_1/2 depend on the initial reactant concentration [A]0?',
+        options: ['Directly proportional to [A]0', 'Inversely proportional to [A]0', 'Independent of [A]0', 'Proportional to [A]0²'],
+        correctAnswerIndex: 2,
+        explanation: 'For first-order reactions, t_1/2 = ln(2)/k = 0.693/k, which has no concentration term and is strictly independent of initial concentration.',
+        topic: 'Chemical Kinetics',
+        subject: 'Chemistry',
+        difficulty: 'Medium'
       }
     ]
   }
@@ -656,6 +902,19 @@ class SmartLearnDatabase {
   public moderation: ModerationItem[] = [...INITIAL_MODERATION];
   public leaderboard: LeaderboardEntry[] = [...INITIAL_LEADERBOARD];
 
+  // Curriculum catalogue — deep-cloned from seed, editable by Admin
+  // We use the EDUCATIONAL_LEVELS from curriculumData and keep a mutable copy
+  private _curriculum: import('@/types').EducationalLevel[] = [];
+
+  get curriculum(): import('@/types').EducationalLevel[] {
+    if (this._curriculum.length === 0) {
+      // Lazy-load from curriculumData (avoids circular import at module init)
+      const { EDUCATIONAL_LEVELS } = require('@/lib/curriculumData');
+      this._curriculum = JSON.parse(JSON.stringify(EDUCATIONAL_LEVELS));
+    }
+    return this._curriculum;
+  }
+
   // User methods
   getUserById(id: string): User | undefined {
     return this.users.find(u => u.id === id);
@@ -735,6 +994,287 @@ class SmartLearnDatabase {
     this.messages.push(msg);
     return msg;
   }
+
+  // ============================================================
+  // CURRICULUM CATALOGUE METHODS
+  // ============================================================
+
+  /** Get subjects for a specific classId across the full curriculum */
+  getSubjectsByClassId(classId: string): import('@/types').Subject[] {
+    for (const level of this.curriculum) {
+      for (const stream of level.streams) {
+        const cls = stream.classes.find(c => c.id === classId);
+        if (cls) return cls.subjects;
+      }
+    }
+    return [];
+  }
+
+  /** Get published subjects only, for students */
+  getPublishedSubjectsByClassId(classId: string): import('@/types').Subject[] {
+    return this.getSubjectsByClassId(classId).filter(s => s.status === 'published');
+  }
+
+  /** Find class object by id */
+  getClassById(classId: string): import('@/types').ClassLevel | undefined {
+    for (const level of this.curriculum) {
+      for (const stream of level.streams) {
+        const cls = stream.classes.find(c => c.id === classId);
+        if (cls) return cls;
+      }
+    }
+    return undefined;
+  }
+
+  /** Find subject by id across all classes */
+  getSubjectById(subjectId: string): import('@/types').Subject | undefined {
+    for (const level of this.curriculum) {
+      for (const stream of level.streams) {
+        for (const cls of stream.classes) {
+          const sub = cls.subjects.find(s => s.id === subjectId);
+          if (sub) return sub;
+        }
+      }
+    }
+    return undefined;
+  }
+
+  /** Add a new subject to a class */
+  addSubject(classId: string, subject: import('@/types').Subject): boolean {
+    for (const level of this.curriculum) {
+      for (const stream of level.streams) {
+        const cls = stream.classes.find(c => c.id === classId);
+        if (cls) {
+          cls.subjects.push(subject);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /** Update a subject's status (draft → published → archived) */
+  updateSubjectStatus(subjectId: string, status: import('@/types').ContentStatus, editorName: string): boolean {
+    const sub = this.getSubjectById(subjectId);
+    if (!sub) return false;
+    sub.status = status;
+    sub.audit.editedBy = editorName;
+    sub.audit.editedAt = new Date().toISOString();
+    return true;
+  }
+
+  /** Add a chapter to a subject */
+  addChapter(subjectId: string, chapter: import('@/types').Chapter): boolean {
+    const sub = this.getSubjectById(subjectId);
+    if (!sub) return false;
+    sub.chapters.push(chapter);
+    return true;
+  }
+
+  /** Find a chapter by id across all subjects */
+  getChapterById(chapterId: string): import('@/types').Chapter | undefined {
+    for (const level of this.curriculum) {
+      for (const stream of level.streams) {
+        for (const cls of stream.classes) {
+          for (const sub of cls.subjects) {
+            const ch = sub.chapters.find(c => c.id === chapterId);
+            if (ch) return ch;
+          }
+        }
+      }
+    }
+    return undefined;
+  }
+
+  /** Add a concept to a chapter */
+  addConcept(chapterId: string, concept: import('@/types').Concept): boolean {
+    const ch = this.getChapterById(chapterId);
+    if (!ch) return false;
+    ch.concepts.push(concept);
+    return true;
+  }
+
+  /** Add a resource to a chapter or concept */
+  addResource(parentId: string, parentType: 'chapter' | 'concept', resource: import('@/types').LearningResource): boolean {
+    if (parentType === 'chapter') {
+      const ch = this.getChapterById(parentId);
+      if (!ch) return false;
+      ch.resources.push(resource);
+      return true;
+    } else {
+      // Find concept
+      for (const level of this.curriculum) {
+        for (const stream of level.streams) {
+          for (const cls of stream.classes) {
+            for (const sub of cls.subjects) {
+              for (const ch of sub.chapters) {
+                const con = ch.concepts.find(c => c.id === parentId);
+                if (con) {
+                  con.resources.push(resource);
+                  return true;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /** Update resource status */
+  updateResourceStatus(resourceId: string, status: import('@/types').ContentStatus, editorName: string): boolean {
+    const resource = this.findResourceById(resourceId);
+    if (!resource) return false;
+    resource.status = status;
+    resource.audit.editedBy = editorName;
+    resource.audit.editedAt = new Date().toISOString();
+    return true;
+  }
+
+  /** Delete resource by id */
+  deleteResource(resourceId: string): boolean {
+    for (const level of this.curriculum) {
+      for (const stream of level.streams) {
+        for (const cls of stream.classes) {
+          for (const sub of cls.subjects) {
+            for (const ch of sub.chapters) {
+              const chIdx = ch.resources.findIndex(r => r.id === resourceId);
+              if (chIdx !== -1) { ch.resources.splice(chIdx, 1); return true; }
+              for (const con of ch.concepts) {
+                const conIdx = con.resources.findIndex(r => r.id === resourceId);
+                if (conIdx !== -1) { con.resources.splice(conIdx, 1); return true; }
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /** Increment view count for a resource */
+  incrementResourceView(resourceId: string) {
+    const r = this.findResourceById(resourceId);
+    if (r) r.viewCount++;
+  }
+
+  /** Find a resource by id anywhere in the curriculum */
+  findResourceById(resourceId: string): import('@/types').LearningResource | undefined {
+    for (const level of this.curriculum) {
+      for (const stream of level.streams) {
+        for (const cls of stream.classes) {
+          for (const sub of cls.subjects) {
+            for (const ch of sub.chapters) {
+              const r = ch.resources.find(res => res.id === resourceId);
+              if (r) return r;
+              for (const con of ch.concepts) {
+                const cr = con.resources.find(res => res.id === resourceId);
+                if (cr) return cr;
+              }
+            }
+          }
+        }
+      }
+    }
+    return undefined;
+  }
+
+  /** Get aggregate curriculum statistics for Admin dashboard */
+  getCurriculumStats(): import('@/types').CurriculumStats {
+    let publishedSubjects = 0;
+    let draftSubjects = 0;
+    let archivedSubjects = 0;
+    let totalChapters = 0;
+    let totalResources = 0;
+    let mostViewed: import('@/types').LearningResource | undefined;
+
+    for (const level of this.curriculum) {
+      for (const stream of level.streams) {
+        for (const cls of stream.classes) {
+          for (const sub of cls.subjects) {
+            if (sub.status === 'published') publishedSubjects++;
+            else if (sub.status === 'draft') draftSubjects++;
+            else archivedSubjects++;
+
+            totalChapters += sub.chapters.length;
+            for (const ch of sub.chapters) {
+              totalResources += ch.resources.length;
+              for (const r of ch.resources) {
+                if (!mostViewed || r.viewCount > mostViewed.viewCount) mostViewed = r;
+              }
+              for (const con of ch.concepts) {
+                totalResources += con.resources.length;
+                for (const r of con.resources) {
+                  if (!mostViewed || r.viewCount > mostViewed.viewCount) mostViewed = r;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return {
+      totalLevels: this.curriculum.length,
+      publishedSubjects,
+      draftSubjects,
+      archivedSubjects,
+      totalChapters,
+      totalResources,
+      mostViewedResource: mostViewed,
+    };
+  }
+
+  /** Search across published curriculum (for student search) */
+  searchCurriculum(query: string, classId?: string): Array<{
+    type: 'subject' | 'chapter' | 'concept' | 'resource';
+    id: string;
+    title: string;
+    subjectName: string;
+    chapterTitle?: string;
+    classId: string;
+  }> {
+    const results: Array<{
+      type: 'subject' | 'chapter' | 'concept' | 'resource';
+      id: string;
+      title: string;
+      subjectName: string;
+      chapterTitle?: string;
+      classId: string;
+    }> = [];
+    const q = query.toLowerCase();
+
+    for (const level of this.curriculum) {
+      for (const stream of level.streams) {
+        for (const cls of stream.classes) {
+          if (classId && cls.id !== classId) continue;
+          for (const sub of cls.subjects) {
+            if (sub.status !== 'published') continue;
+            if (sub.name.toLowerCase().includes(q)) {
+              results.push({ type: 'subject', id: sub.id, title: sub.name, subjectName: sub.name, classId: cls.id });
+            }
+            for (const ch of sub.chapters) {
+              if (ch.title.toLowerCase().includes(q)) {
+                results.push({ type: 'chapter', id: ch.id, title: ch.title, subjectName: sub.name, chapterTitle: ch.title, classId: cls.id });
+              }
+              for (const con of ch.concepts) {
+                if (con.title.toLowerCase().includes(q)) {
+                  results.push({ type: 'concept', id: con.id, title: con.title, subjectName: sub.name, chapterTitle: ch.title, classId: cls.id });
+                }
+              }
+              for (const r of ch.resources) {
+                if (r.status === 'published' && r.title.toLowerCase().includes(q)) {
+                  results.push({ type: 'resource', id: r.id, title: r.title, subjectName: sub.name, chapterTitle: ch.title, classId: cls.id });
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return results.slice(0, 50);
+  }
 }
 
 // Global Singleton for in-memory persistence
@@ -746,3 +1286,4 @@ export const db = global.__smartLearnDb || new SmartLearnDatabase();
 if (process.env.NODE_ENV !== 'production') {
   global.__smartLearnDb = db;
 }
+

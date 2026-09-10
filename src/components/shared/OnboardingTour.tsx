@@ -9,10 +9,18 @@ export function OnboardingTour() {
   const onboardingSeen = useStore((state) => state.onboardingSeen);
   const setOnboardingSeen = useStore((state) => state.setOnboardingSeen);
 
-  const role = currentUser?.role || 'STUDENT';
-  const hasSeen = onboardingSeen[role];
-
+  const [mounted, setMounted] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const role = currentUser?.role || 'STUDENT';
+  const hasSeen =
+    !mounted ||
+    onboardingSeen[role] ||
+    (typeof window !== 'undefined' && !!sessionStorage.getItem(`sl_onboarding_seen_${role}`));
 
   if (hasSeen) return null;
 

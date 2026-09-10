@@ -59,6 +59,32 @@ function LoginPageContent() {
     return () => clearTimeout(timer);
   }, [otpStep, resendSeconds]);
 
+  useEffect(() => {
+    const roleParam = searchParams?.get('role')?.toUpperCase();
+    if (roleParam && ['STUDENT', 'TEACHER', 'PARENT', 'ADMIN'].includes(roleParam)) {
+      setSelectedRole(roleParam as Role);
+      if (roleParam === 'STUDENT') {
+        setIdentifier('student@smartlearn.edu');
+        setFullName('Alex Rivera');
+        setGradeOrDept('Grade 10-A');
+      } else if (roleParam === 'TEACHER') {
+        setIdentifier('sarah@smartlearn.edu');
+        setFullName('Dr. Sarah Jenkins');
+        setGradeOrDept('Advanced Mathematics');
+      } else if (roleParam === 'PARENT') {
+        setIdentifier('priya@smartlearn.edu');
+        setFullName('Priya Sharma');
+      } else if (roleParam === 'ADMIN') {
+        setIdentifier('admin@smartlearn.edu');
+        setFullName('Marcus Vance');
+      }
+    }
+    const modeParam = searchParams?.get('mode');
+    if (modeParam === 'signup' || modeParam === 'signin') {
+      setMode(modeParam);
+    }
+  }, [searchParams]);
+
   // Handle direct 1-click Quick Launch into any portal
   const handleQuickPortalLaunch = (role: Role) => {
     switchDemoRole(role);
@@ -183,22 +209,22 @@ function LoginPageContent() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#121519] text-slate-900 dark:text-slate-100 py-12 px-4 sm:px-8 flex flex-col justify-center">
       <div className="max-w-4xl mx-auto w-full space-y-8">
-        {/* Top Header with WebUni Branding */}
+        {/* Top Header with SmartLearn Branding */}
         <div className="text-center space-y-2">
           <Link href="/" className="inline-flex items-center gap-2 group mb-2">
             <span className="font-extrabold text-3xl sm:text-4xl tracking-tight text-slate-900 dark:text-white">
-              Web<span className="text-[#d82a4e]">Uni</span>
+              Smart<span className="text-[#d82a4e]">Learn</span>
             </span>
             <span className="text-xs px-2.5 py-0.5 rounded-sm bg-[#d82a4e]/15 text-[#d82a4e] font-extrabold uppercase tracking-wider">
-              SmartLearn
+              Education
             </span>
           </Link>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             {otpStep
-              ? 'Verify Demo OTP Code'
+              ? 'Verify OTP Code'
               : mode === 'signin'
               ? 'Sign in to Your Educational Portal'
-              : 'Create Your WebUni Account'}
+              : 'Create Your SmartLearn Account'}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
             Choose your portal role below, or verify with our demo SMS/Email OTP system to unlock personalized learning.
@@ -339,6 +365,49 @@ function LoginPageContent() {
 
           {!otpStep ? (
             <>
+              {/* Preselected Role Confirmation Banner */}
+              <div className="mb-6 p-4 rounded-sm border bg-slate-50 dark:bg-[#121519] border-slate-200 dark:border-[#283038] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`p-2.5 rounded-sm ${
+                      selectedRole === 'STUDENT'
+                        ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400'
+                        : selectedRole === 'TEACHER'
+                        ? 'bg-[#d82a4e]/10 text-[#d82a4e]'
+                        : selectedRole === 'PARENT'
+                        ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                        : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                    }`}
+                  >
+                    {selectedRole === 'STUDENT' && <GraduationCap className="w-5 h-5" />}
+                    {selectedRole === 'TEACHER' && <Users className="w-5 h-5" />}
+                    {selectedRole === 'PARENT' && <HeartHandshake className="w-5 h-5" />}
+                    {selectedRole === 'ADMIN' && <Shield className="w-5 h-5" />}
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1.5 uppercase tracking-wider">
+                      <span>Target Role:</span>
+                      <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="font-extrabold text-slate-700 dark:text-slate-300">
+                        {selectedRole === 'ADMIN'
+                          ? 'Administrator'
+                          : selectedRole.charAt(0) + selectedRole.slice(1).toLowerCase()}
+                      </span>
+                    </div>
+                    <div className="text-sm font-extrabold text-slate-900 dark:text-white">
+                      {mode === 'signup' ? 'New Account Registration' : 'Secure Portal Sign In'}
+                    </div>
+                  </div>
+                </div>
+                <Link
+                  href="/get-started"
+                  className="text-xs font-bold text-[#d82a4e] hover:underline inline-flex items-center gap-1 self-start sm:self-center"
+                >
+                  <span>Change Role</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+
               {/* Sign In vs Sign Up Tabs */}
               <div className="flex border-b border-slate-200 dark:border-[#283038] mb-6">
                 <button
@@ -632,7 +701,7 @@ export default function LoginPage() {
         <div className="min-h-screen bg-[#1a1e24] flex items-center justify-center text-white">
           <div className="flex flex-col items-center gap-3">
             <Loader2 className="w-8 h-8 text-[#d82a4e] animate-spin" />
-            <p className="text-sm text-gray-400 font-medium">Loading SmartLearn Authentication...</p>
+            <p className="text-sm text-gray-400 font-medium">Preparing sign-in...</p>
           </div>
         </div>
       }

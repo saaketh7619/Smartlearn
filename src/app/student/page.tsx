@@ -19,6 +19,7 @@ import {
   Zap,
   TrendingUp,
   Clock,
+  GraduationCap,
 } from 'lucide-react';
 import {
   LineChart,
@@ -39,6 +40,8 @@ import { db } from '@/lib/db';
 export default function StudentDashboard() {
   const router = useRouter();
   const currentUser = useStore((state) => state.currentUser);
+  const academicProfile = useStore((state) => state.academicProfile);
+  const recentlyViewed = useStore((state) => state.recentlyViewed);
   const addXP = useStore((state) => state.addXP);
   const triggerConfetti = useStore((state) => state.triggerConfetti);
 
@@ -46,6 +49,8 @@ export default function StudentDashboard() {
 
   const student = currentUser?.studentProfile;
   const courses = db.courses;
+
+  const lastViewed = recentlyViewed.length > 0 ? recentlyViewed[0] : null;
 
   // Chart 1: Mastery Over Time
   const masteryData = [
@@ -81,21 +86,28 @@ export default function StudentDashboard() {
 
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-bold uppercase tracking-wider text-white">
-                Grade 10 · St. Jude International
+                {academicProfile ? `${academicProfile.classLevel} · ${academicProfile.board}` : 'Grade 10 · CBSE'}
               </span>
-              <span className="text-xs text-blue-100 flex items-center gap-1 font-semibold">
-                <Clock className="w-3.5 h-3.5" />
-                Goal: Math Olympiad Prep
-              </span>
+              {academicProfile?.learningGoals && academicProfile.learningGoals.length > 0 ? (
+                <span className="text-xs text-blue-100 flex items-center gap-1 font-semibold">
+                  <Clock className="w-3.5 h-3.5" />
+                  Goal: {academicProfile.learningGoals[0]}
+                </span>
+              ) : (
+                <span className="text-xs text-blue-100 flex items-center gap-1 font-semibold">
+                  <Clock className="w-3.5 h-3.5" />
+                  Goal: Board Exam Excellence
+                </span>
+              )}
             </div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
               Good morning, {currentUser?.name || 'Alex'}! ☀️
             </h1>
             <p className="text-blue-100 text-xs sm:text-sm max-w-xl leading-relaxed">
               You are on a <strong className="text-amber-300 font-bold">7-Day Study Streak</strong>! Keep the momentum
-              going. Complete 1 adaptive test today to unlock the <em>Calculus Master</em> badge.
+              going. Explore your curriculum materials or complete an adaptive test today.
             </p>
           </div>
 
@@ -115,6 +127,31 @@ export default function StudentDashboard() {
         </div>
       </div>
 
+      {/* Onboarding invite if profile incomplete */}
+      {!academicProfile?.onboardingCompleted && (
+        <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 border border-blue-200 dark:border-blue-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-xs">
+              <GraduationCap className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                Personalise your Academic Curriculum
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Choose your Educational Level, Class, Board, and Subjects for syllabus-aligned materials.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/student/onboarding"
+            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-xs flex-shrink-0"
+          >
+            Complete Profile &rarr;
+          </Link>
+        </div>
+      )}
+
       {/* 2. CONTINUE LEARNING & AI COMPANION PROMPT */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Continue Learning Card */}
@@ -125,19 +162,39 @@ export default function StudentDashboard() {
                 <BookOpen className="w-4 h-4" />
                 Continue Learning
               </span>
-              <span className="text-xs text-slate-400 font-medium">Last active 12m ago</span>
+              <span className="text-xs text-slate-400 font-medium">
+                {lastViewed ? 'Recently Studied' : 'Last active 12m ago'}
+              </span>
             </div>
 
-            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-              Mastering Differential Calculus: Lesson 2.2 — The Chain Rule
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-              Learn how to differentiate composite functions f(g(x)) and apply it to real-world rate of change problems.
-            </p>
+            {lastViewed ? (
+              <>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase">
+                    {lastViewed.subjectName} · {lastViewed.resourceType}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                  {lastViewed.resourceTitle}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                  Continue studying your curriculum material. Revisit concepts or solve practice questions to solidify your understanding.
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                  Mastering Differential Calculus: Lesson 2.2 — The Chain Rule
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                  Learn how to differentiate composite functions f(g(x)) and apply it to real-world rate of change problems.
+                </p>
+              </>
+            )}
 
             <div className="mt-5 space-y-2">
               <div className="flex items-center justify-between text-xs font-semibold">
-                <span className="text-slate-600 dark:text-slate-300">Course Progress</span>
+                <span className="text-slate-600 dark:text-slate-300">Curriculum Progress</span>
                 <span className="text-blue-600 dark:text-blue-400">65% Completed</span>
               </div>
               <div className="w-full h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
@@ -147,13 +204,15 @@ export default function StudentDashboard() {
           </div>
 
           <div className="pt-6 mt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-            <span className="text-xs text-slate-500">Module 2 of 4 · 2 lessons remaining</span>
+            <span className="text-xs text-slate-500">
+              {academicProfile ? `${academicProfile.classLevel} Syllabus` : 'Module 2 of 4 · 2 lessons remaining'}
+            </span>
             <Link
-              href="/student/courses/course-calc-1"
+              href={lastViewed ? '/student/courses' : '/student/courses/course-calc-1'}
               className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2"
             >
               <Play className="w-3.5 h-3.5 fill-white" />
-              Resume Lesson
+              Resume Study
             </Link>
           </div>
         </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   BookOpen,
   Search,
@@ -9,6 +10,8 @@ import {
   Clock,
   Sparkles,
   Award,
+  Layers,
+  ArrowRight,
 } from 'lucide-react';
 import { db } from '@/lib/db';
 
@@ -32,9 +35,19 @@ export default function AdminCoursesPage() {
             Supervise published curriculum modules, syllabus alignments, and assessment question banks.
           </p>
         </div>
-        <span className="px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800 text-xs font-bold">
-          {courses.length} Approved Courses
-        </span>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/admin/curriculum"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold transition-all shadow-sm"
+          >
+            <Layers className="w-4 h-4" />
+            <span>Open Curriculum CMS</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+          <span className="px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800 text-xs font-bold">
+            {courses.length} Approved Courses
+          </span>
+        </div>
       </div>
 
       {/* Grid */}

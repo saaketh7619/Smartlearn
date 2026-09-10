@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>SmartLearn — Redirecting...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      background: #121519;
+      color: #fff;
+      font-family: system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .loader {
+      text-align: center;
+      space-y: 8px;
+    }
+    p { color: #94a3b8; font-size: 14px; margin-top: 12px; }
+  </style>
+  <script>
+    // GitHub Pages SPA Redirect Technique
+    // Encodes the current path so the root index.html can restore client-side routing.
+    // The basePath "/Smartlearn" is stripped before storing the redirect path,
+    // so Next.js router receives a path relative to the app root.
+    (function() {
+      var basePath = '/Smartlearn';
+      var location = window.location;
+      var pathname = location.pathname;
+
+      // Strip basePath prefix so Next.js sees the clean app path
+      if (pathname.indexOf(basePath) === 0) {
+        pathname = pathname.slice(basePath.length) || '/';
+      }
+
+      var redirectPath = pathname + location.search + location.hash;
+      var redirectUrl = location.protocol + '//' + location.host + basePath +
+        '/?p=' + encodeURIComponent(redirectPath);
+
+      window.location.replace(redirectUrl);
+    })();
+  </script>
+</head>
+<body>
+  <div class="loader">
+    <div>🚀</div>
+    <p>Loading SmartLearn...</p>
+  </div>
+</body>
+</html>
