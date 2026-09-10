@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -21,13 +21,14 @@ import {
   UserCheck,
   Lock,
   ArrowLeft,
+  Loader2,
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { generateOTP, verifyOTP, DEMO_ACCOUNTS } from '@/lib/auth';
 import { INITIAL_USERS } from '@/lib/db';
 import { Role, User } from '@/types';
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const switchDemoRole = useStore((state) => state.switchDemoRole);
@@ -621,5 +622,22 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#1a1e24] flex items-center justify-center text-white">
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="w-8 h-8 text-[#d82a4e] animate-spin" />
+            <p className="text-sm text-gray-400 font-medium">Loading SmartLearn Authentication...</p>
+          </div>
+        </div>
+      }
+    >
+      <LoginPageContent />
+    </Suspense>
   );
 }
