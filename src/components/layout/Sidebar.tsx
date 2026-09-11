@@ -50,45 +50,45 @@ export function Sidebar() {
   const role = currentUser?.role || 'STUDENT';
 
   const studentNav: NavLinkItem[] = [
-    { title: 'Dashboard', href: '/student', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { title: 'My Profile & Class', href: '/student/profile', icon: <GraduationCap className="w-4 h-4 text-emerald-500" /> },
-    { title: 'Course Library', href: '/student/courses', icon: <BookOpen className="w-4 h-4" /> },
-    { title: 'AI Tutor', href: '/student/tutor', icon: <BrainCircuit className="w-4 h-4 text-blue-500" />, badge: 'AI' },
-    { title: 'Tests & Contests', href: '/student/tests', icon: <FileQuestion className="w-4 h-4" />, badge: 'Live' },
-    { title: 'AI Study Planner', href: '/student/planner', icon: <Calendar className="w-4 h-4 text-indigo-500" /> },
-    { title: 'AI Revision', href: '/student/revision', icon: <Layers className="w-4 h-4 text-purple-500" /> },
-    { title: 'Notebook', href: '/student/notebook', icon: <FileText className="w-4 h-4" /> },
-    { title: 'Focus Mode', href: '/student/focus', icon: <Clock className="w-4 h-4 text-emerald-500" /> },
-    { title: 'Analytics', href: '/student/analytics', icon: <BarChart3 className="w-4 h-4" /> },
-    { title: 'Career & Wellness', href: '/student/career-wellness', icon: <Compass className="w-4 h-4 text-amber-500" /> },
+    { title: 'Dashboard', href: '/student/', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { title: 'My Profile & Class', href: '/student/profile/', icon: <GraduationCap className="w-4 h-4 text-emerald-500" /> },
+    { title: 'Course Library', href: '/student/courses/', icon: <BookOpen className="w-4 h-4" /> },
+    { title: 'AI Tutor', href: '/student/tutor/', icon: <BrainCircuit className="w-4 h-4 text-blue-500" />, badge: 'AI' },
+    { title: 'Tests & Contests', href: '/student/tests/', icon: <FileQuestion className="w-4 h-4" />, badge: 'Live' },
+    { title: 'AI Study Planner', href: '/student/planner/', icon: <Calendar className="w-4 h-4 text-indigo-500" /> },
+    { title: 'AI Revision', href: '/student/revision/', icon: <Layers className="w-4 h-4 text-purple-500" /> },
+    { title: 'Notebook', href: '/student/notebook/', icon: <FileText className="w-4 h-4" /> },
+    { title: 'Focus Mode', href: '/student/focus/', icon: <Clock className="w-4 h-4 text-emerald-500" /> },
+    { title: 'Analytics', href: '/student/analytics/', icon: <BarChart3 className="w-4 h-4" /> },
+    { title: 'Career & Wellness', href: '/student/career-wellness/', icon: <Compass className="w-4 h-4 text-amber-500" /> },
   ];
 
   const teacherNav: NavLinkItem[] = [
-    { title: 'Class Dashboard', href: '/teacher', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { title: 'Student Roster', href: '/teacher/roster', icon: <Users className="w-4 h-4" /> },
-    { title: 'AI Paper & Plan Gen', href: '/teacher/generator', icon: <Wand2 className="w-4 h-4 text-purple-500" />, badge: 'AI' },
-    { title: 'Create Test', href: '/teacher/tests/create', icon: <PlusCircle className="w-4 h-4" /> },
-    { title: 'Weakness Analytics', href: '/teacher/analytics', icon: <BarChart3 className="w-4 h-4" /> },
-    { title: 'Messages', href: '/teacher/messages', icon: <MessageSquare className="w-4 h-4" /> },
-    { title: 'Report Cards', href: '/teacher/reports', icon: <Printer className="w-4 h-4" /> },
+    { title: 'Class Dashboard', href: '/teacher/', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { title: 'Student Roster', href: '/teacher/roster/', icon: <Users className="w-4 h-4" /> },
+    { title: 'AI Paper & Plan Gen', href: '/teacher/generator/', icon: <Wand2 className="w-4 h-4 text-purple-500" />, badge: 'AI' },
+    { title: 'Create Test', href: '/teacher/tests/create/', icon: <PlusCircle className="w-4 h-4" /> },
+    { title: 'Weakness Analytics', href: '/teacher/analytics/', icon: <BarChart3 className="w-4 h-4" /> },
+    { title: 'Messages', href: '/teacher/messages/', icon: <MessageSquare className="w-4 h-4" /> },
+    { title: 'Report Cards', href: '/teacher/reports/', icon: <Printer className="w-4 h-4" /> },
   ];
 
   const parentNav: NavLinkItem[] = [
-    { title: 'Child Overview', href: '/parent', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { title: 'Progress Trends', href: '/parent/progress', icon: <BarChart3 className="w-4 h-4" /> },
-    { title: 'Smart Alerts', href: '/parent/alerts', icon: <BellRing className="w-4 h-4 text-rose-500" />, badge: '1 Action' },
-    { title: 'Achievements', href: '/parent/achievements', icon: <Award className="w-4 h-4 text-amber-500" /> },
-    { title: 'Teacher Messages', href: '/parent/messages', icon: <MessageSquare className="w-4 h-4" /> },
+    { title: 'Child Overview', href: '/parent/', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { title: 'Progress Trends', href: '/parent/progress/', icon: <BarChart3 className="w-4 h-4" /> },
+    { title: 'Smart Alerts', href: '/parent/alerts/', icon: <BellRing className="w-4 h-4 text-rose-500" />, badge: '1 Action' },
+    { title: 'Achievements', href: '/parent/achievements/', icon: <Award className="w-4 h-4 text-amber-500" /> },
+    { title: 'Teacher Messages', href: '/parent/messages/', icon: <MessageSquare className="w-4 h-4" /> },
   ];
 
   const adminNav: NavLinkItem[] = [
-    { title: 'Command Center', href: '/admin', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { title: 'Curriculum Manager', href: '/admin/curriculum', icon: <Layers className="w-4 h-4 text-indigo-500" />, badge: 'CMS' },
-    { title: 'User Management', href: '/admin/users', icon: <Users className="w-4 h-4" /> },
-    { title: 'Course Catalog', href: '/admin/courses', icon: <BookOpen className="w-4 h-4" /> },
-    { title: 'Moderation Queue', href: '/admin/moderation', icon: <ShieldCheck className="w-4 h-4 text-amber-500" />, badge: '2 Flagged' },
-    { title: 'Support Tickets', href: '/admin/tickets', icon: <HelpCircle className="w-4 h-4" /> },
-    { title: 'Settings & Security', href: '/admin/settings', icon: <Settings className="w-4 h-4" /> },
+    { title: 'Command Center', href: '/admin/', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { title: 'Curriculum Manager', href: '/admin/curriculum/', icon: <Layers className="w-4 h-4 text-indigo-500" />, badge: 'CMS' },
+    { title: 'User Management', href: '/admin/users/', icon: <Users className="w-4 h-4" /> },
+    { title: 'Course Catalog', href: '/admin/courses/', icon: <BookOpen className="w-4 h-4" /> },
+    { title: 'Moderation Queue', href: '/admin/moderation/', icon: <ShieldCheck className="w-4 h-4 text-amber-500" />, badge: '2 Flagged' },
+    { title: 'Support Tickets', href: '/admin/tickets/', icon: <HelpCircle className="w-4 h-4" /> },
+    { title: 'Settings & Security', href: '/admin/settings/', icon: <Settings className="w-4 h-4" /> },
   ];
 
   let currentNav = studentNav;
@@ -113,11 +113,14 @@ export function Sidebar() {
         {/* Links */}
         <div className="space-y-0.5">
           {currentNav.map((item) => {
-            const isActive = pathname === item.href || (item.href !== `/${role.toLowerCase()}` && pathname.startsWith(item.href));
+            const cleanHref = item.href.replace(/\/$/, '');
+            const isRootRole = item.href === '/student/' || item.href === '/teacher/' || item.href === '/parent/' || item.href === '/admin/';
+            const isActive = pathname === item.href || pathname === cleanHref || (!isRootRole && pathname.startsWith(cleanHref));
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={true}
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center justify-between px-3.5 py-2.5 rounded-md text-xs font-semibold transition-all ${
                   isActive

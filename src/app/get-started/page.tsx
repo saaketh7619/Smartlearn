@@ -188,25 +188,34 @@ export default function GetStartedPage() {
                 </div>
               </div>
 
-              {/* Action Buttons (Explicit Selection: Create Account & Log In) */}
-              <div className="pt-6 mt-6 border-t border-slate-100 dark:border-[#283038] space-y-2.5">
-                {/* Primary Button: Create Account */}
+              {/* Action Buttons: Direct Portal Launch & Sign In/Sign Up */}
+              <div className="pt-6 mt-6 border-t border-slate-100 dark:border-[#283038] space-y-2">
+                {/* Primary Action: Direct Portal Launch */}
                 <Link
-                  href={`/login?role=${role.id}&mode=signup`}
+                  href={`/${role.id}`}
                   className={`w-full py-2.5 px-4 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm ${role.buttonColor}`}
                 >
-                  <UserPlus className="w-3.5 h-3.5" />
-                  <span>Create {role.id === 'admin' ? 'Admin' : role.id.charAt(0).toUpperCase() + role.id.slice(1)} Account</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>Enter {role.title}</span>
                 </Link>
 
-                {/* Secondary Button: Log In */}
-                <Link
-                  href={`/login?role=${role.id}&mode=signin`}
-                  className="w-full py-2 px-4 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 bg-slate-100 dark:bg-[#20252b] hover:bg-slate-200 dark:hover:bg-[#283038] text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-[#283038] transition-all"
-                >
-                  <LogIn className="w-3.5 h-3.5" />
-                  <span>Log In to {role.id === 'admin' ? 'Admin' : role.id.charAt(0).toUpperCase() + role.id.slice(1)}</span>
-                </Link>
+                {/* Secondary Actions */}
+                <div className="flex gap-2">
+                  <Link
+                    href={`/login?role=${role.id}&mode=signin`}
+                    className="flex-1 py-1.5 px-2 rounded-sm text-[11px] font-bold flex items-center justify-center gap-1 bg-slate-100 dark:bg-[#20252b] hover:bg-slate-200 dark:hover:bg-[#283038] text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-[#283038] transition-all"
+                  >
+                    <LogIn className="w-3 h-3" />
+                    <span>Sign In</span>
+                  </Link>
+                  <Link
+                    href={`/login?role=${role.id}&mode=signup`}
+                    className="flex-1 py-1.5 px-2 rounded-sm text-[11px] font-bold flex items-center justify-center gap-1 bg-slate-100 dark:bg-[#20252b] hover:bg-slate-200 dark:hover:bg-[#283038] text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-[#283038] transition-all"
+                  >
+                    <UserPlus className="w-3 h-3" />
+                    <span>Register</span>
+                  </Link>
+                </div>
               </div>
             </div>
           ))}

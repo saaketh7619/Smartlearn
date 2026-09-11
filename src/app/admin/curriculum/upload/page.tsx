@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   ChevronRight, ChevronLeft, Check, Upload, Link as LinkIcon,
@@ -49,7 +49,7 @@ interface NewChapter {
   resources: { id: string; type: ResourceType; title: string; description: string; externalUrl: string; tags: string }[];
 }
 
-export default function AdminCurriculumUploadPage() {
+function AdminCurriculumUploadContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const toast = useToast();
@@ -698,5 +698,22 @@ export default function AdminCurriculumUploadPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AdminCurriculumUploadPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-8 h-8 border-4 border-[#d82a4e] border-t-transparent rounded-full animate-spin" />
+            <p className="text-xs text-slate-500 font-medium">Loading curriculum uploader...</p>
+          </div>
+        </div>
+      }
+    >
+      <AdminCurriculumUploadContent />
+    </Suspense>
   );
 }

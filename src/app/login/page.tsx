@@ -22,11 +22,14 @@ import {
   Lock,
   ArrowLeft,
   Loader2,
+  Settings,
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { generateOTP, verifyOTP, DEMO_ACCOUNTS } from '@/lib/auth';
 import { INITIAL_USERS } from '@/lib/db';
 import { Role, User } from '@/types';
+import { sendOtpEmail, getEmailJsConfig } from '@/lib/emailjs';
+import EmailJsConfigModal from '@/components/EmailJsConfigModal';
 
 function LoginPageContent() {
   const router = useRouter();
@@ -50,6 +53,18 @@ function LoginPageContent() {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [resendSeconds, setResendSeconds] = useState(60);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
+  const [isEmailJsConfigured, setIsEmailJsConfigured] = useState(false);
+  const [emailDelivery, setEmailDelivery] = useState<{
+    status: 'idle' | 'sent' | 'unconfigured' | 'error';
+    message?: string;
+  }>({ status: 'idle' });
+
+  useEffect(() => {
+    const config = getEmailJsConfig();
+    setIsEmailJsConfigured(Boolean(config.serviceId && config.templateId && config.publicKey));
+  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -90,15 +105,15 @@ function LoginPageContent() {
     switchDemoRole(role);
     triggerConfetti();
     const portalPaths: Record<Role, string> = {
-      STUDENT: '/student',
-      TEACHER: '/teacher',
-      PARENT: '/parent',
-      ADMIN: '/admin',
+      STUDENT: '/student/',
+      TEACHER: '/teacher/',
+      PARENT: '/parent/',
+      ADMIN: '/admin/',
     };
     router.push(portalPaths[role]);
   };
 
-  const handleRequestOTP = (e: React.FormEvent) => {
+  const handleRequestOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
     if (!identifier.trim()) {
@@ -108,9 +123,68 @@ function LoginPageContent() {
 
     const code = generateOTP(identifier);
     setGeneratedOtp(code);
-    setOtpStep(true);
-    setResendSeconds(60);
     setOtpDigits(['', '', '', '', '', '']);
+    setResendSeconds(60);
+
+    if (authMethod === 'email' && identifier.includes('@')) {
+      setIsSendingEmail(true);
+      const res = await sendOtpEmail(identifier.trim(), code, mode === 'signup' ? fullName : undefined);
+      setIsSendingEmail(false);
+
+      if (res.success) {
+        setEmailDelivery({
+          status: 'sent',
+          message: `Verification code dispatched to ${identifier} via EmailJS.`,
+        });
+      } else if (res.unconfigured) {
+        setEmailDelivery({
+          status: 'unconfigured',
+          message: 'EmailJS is not configured yet. Using simulated demo OTP mode.',
+        });
+      } else {
+        setEmailDelivery({
+          status: 'error',
+          message: res.error || 'EmailJS delivery failed.',
+        });
+      }
+    } else {
+      setEmailDelivery({
+        status: 'unconfigured',
+        message: 'Simulated SMS OTP mode triggered.',
+      });
+    }
+
+    setOtpStep(true);
+  };
+
+  const handleResendOtp = async () => {
+    const newCode = generateOTP(identifier);
+    setGeneratedOtp(newCode);
+    setResendSeconds(60);
+    setErrorMsg('');
+
+    if (authMethod === 'email' && identifier.includes('@')) {
+      setIsSendingEmail(true);
+      const res = await sendOtpEmail(identifier.trim(), newCode, mode === 'signup' ? fullName : undefined);
+      setIsSendingEmail(false);
+
+      if (res.success) {
+        setEmailDelivery({
+          status: 'sent',
+          message: `A new OTP has been delivered to ${identifier} via EmailJS.`,
+        });
+      } else if (res.unconfigured) {
+        setEmailDelivery({
+          status: 'unconfigured',
+          message: 'EmailJS is not configured yet. Using simulated demo OTP mode.',
+        });
+      } else {
+        setEmailDelivery({
+          status: 'error',
+          message: res.error || 'EmailJS delivery failed.',
+        });
+      }
+    }
   };
 
   const handleAutoFillOtp = () => {
@@ -550,11 +624,21 @@ function LoginPageContent() {
 
                 <button
                   type="submit"
-                  className="w-full mt-3 py-3 px-6 rounded-sm btn-crimson text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
+                  disabled={isSendingEmail}
+                  className="w-full mt-3 py-3 px-6 rounded-sm btn-crimson text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60"
                 >
-                  <KeyRound className="w-4 h-4" />
-                  <span>Send Demo Verification OTP</span>
-                  <ArrowRight className="w-4 h-4" />
+                  {isSendingEmail ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Sending OTP via EmailJS...</span>
+                    </>
+                  ) : (
+                    <>
+                      <KeyRound className="w-4 h-4" />
+                      <span>Send Verification OTP</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
               </form>
             </>
@@ -577,29 +661,101 @@ function LoginPageContent() {
                 </span>
               </div>
 
-              {/* Simulated Gateway Banner matching user request */}
-              <div className="p-4 rounded-sm bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-bold">
-                  <Zap className="w-4 h-4 text-amber-500" />
-                  <span>Simulated SMS &amp; Email Gateway Triggered:</span>
+              {/* Delivery Feedback Banner */}
+              {emailDelivery.status === 'sent' ? (
+                <div className="p-4 rounded-sm bg-emerald-500/10 border border-emerald-500/30 text-emerald-900 dark:text-emerald-200 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                      <Check className="w-4 h-4" />
+                      <span>OTP Sent to Inbox via EmailJS!</span>
+                    </div>
+                    <span className="text-[10px] bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-bold px-2 py-0.5 rounded-full">
+                      Real Email Delivery
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-300">
+                    A verification code has been dispatched to <strong>{identifier}</strong>. Please check your inbox and spam folder.
+                  </p>
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-emerald-500/20">
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                      Fallback Demo Code: <strong className="font-mono text-slate-800 dark:text-slate-200">{generatedOtp || '123456'}</strong>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleAutoFillOtp}
+                      className="px-2.5 py-1 rounded-sm bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all cursor-pointer flex items-center gap-1"
+                    >
+                      <Check className="w-3 h-3" />
+                      <span>Auto-Fill Code</span>
+                    </button>
+                  </div>
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-300">
-                  Verification code sent to <strong>{identifier}</strong>:
-                </p>
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-                  <span className="font-mono text-base font-extrabold tracking-wider bg-white dark:bg-[#13171b] px-3 py-1 rounded-sm border border-amber-500/40 text-[#d82a4e]">
-                    {generatedOtp || '123456'}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleAutoFillOtp}
-                    className="px-3 py-1 rounded-sm bg-[#d82a4e] hover:bg-[#c32646] text-white text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-1"
-                  >
-                    <Check className="w-3 h-3" />
-                    <span>Click to Auto-Fill OTP</span>
-                  </button>
+              ) : emailDelivery.status === 'error' ? (
+                <div className="p-4 rounded-sm bg-rose-500/10 border border-rose-500/30 text-rose-900 dark:text-rose-200 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-xs font-bold text-rose-600 dark:text-rose-400">
+                      <AlertCircle className="w-4 h-4" />
+                      <span>EmailJS Delivery Alert</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsConfigModalOpen(true)}
+                      className="text-[11px] font-bold text-[#d82a4e] hover:underline cursor-pointer"
+                    >
+                      Check Credentials
+                    </button>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-300">
+                    {emailDelivery.message}
+                  </p>
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-rose-500/20">
+                    <span className="font-mono text-base font-extrabold tracking-wider bg-white dark:bg-[#13171b] px-3 py-1 rounded-sm border border-rose-500/40 text-[#d82a4e]">
+                      {generatedOtp || '123456'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleAutoFillOtp}
+                      className="px-3 py-1 rounded-sm bg-[#d82a4e] hover:bg-[#c32646] text-white text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-1"
+                    >
+                      <Check className="w-3 h-3" />
+                      <span>Use Backup OTP ({generatedOtp || '123456'})</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="p-4 rounded-sm bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400">
+                      <Zap className="w-4 h-4" />
+                      <span>Simulated Gateway Triggered:</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsConfigModalOpen(true)}
+                      className="text-[11px] font-bold text-[#d82a4e] hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      <Settings className="w-3 h-3" />
+                      <span>Connect EmailJS</span>
+                    </button>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-300">
+                    Verification code generated for <strong>{identifier}</strong>:
+                  </p>
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+                    <span className="font-mono text-base font-extrabold tracking-wider bg-white dark:bg-[#13171b] px-3 py-1 rounded-sm border border-amber-500/40 text-[#d82a4e]">
+                      {generatedOtp || '123456'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleAutoFillOtp}
+                      className="px-3 py-1 rounded-sm bg-[#d82a4e] hover:bg-[#c32646] text-white text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-1"
+                    >
+                      <Check className="w-3 h-3" />
+                      <span>Click to Auto-Fill OTP</span>
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* 6-Digit Individual PIN Boxes */}
               <div className="space-y-2">
@@ -641,14 +797,11 @@ function LoginPageContent() {
                     ) : (
                       <button
                         type="button"
-                        onClick={() => {
-                          const newCode = generateOTP(identifier);
-                          setGeneratedOtp(newCode);
-                          setResendSeconds(60);
-                        }}
-                        className="text-[#d82a4e] hover:underline font-semibold cursor-pointer"
+                        onClick={handleResendOtp}
+                        disabled={isSendingEmail}
+                        className="text-[#d82a4e] hover:underline font-semibold cursor-pointer disabled:opacity-50"
                       >
-                        Resend Demo OTP
+                        {isSendingEmail ? 'Sending...' : 'Resend OTP'}
                       </button>
                     )}
                   </span>
@@ -690,6 +843,15 @@ function LoginPageContent() {
           )}
         </div>
       </div>
+
+      <EmailJsConfigModal
+        isOpen={isConfigModalOpen}
+        onClose={() => setIsConfigModalOpen(false)}
+        onSaved={() => {
+          const config = getEmailJsConfig();
+          setIsEmailJsConfigured(Boolean(config.serviceId && config.templateId && config.publicKey));
+        }}
+      />
     </div>
   );
 }

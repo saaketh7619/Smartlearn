@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import {
@@ -34,64 +34,88 @@ export function Navbar() {
   const theme = useStore((state) => state.theme);
   const toggleTheme = useStore((state) => state.toggleTheme);
   const setCommandPaletteOpen = useStore((state) => state.setCommandPaletteOpen);
-  const triggerConfetti = useStore((state) => state.triggerConfetti);
 
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const currentRole = currentUser?.role || 'STUDENT';
-  const isLandingPage = pathname === '/';
+  const isLandingPage = pathname === '/' || pathname === '';
 
   const roleStyles = {
     STUDENT: {
       name: 'Student Portal',
       badgeClass: 'bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30',
       icon: <GraduationCap className="w-3.5 h-3.5 mr-1 text-blue-500" />,
-      dashboard: '/student',
+      dashboard: '/student/',
     },
     TEACHER: {
       name: 'Teacher Portal',
       badgeClass: 'bg-purple-500/15 text-purple-600 dark:text-purple-400 border-purple-500/30',
       icon: <Users className="w-3.5 h-3.5 mr-1 text-purple-500" />,
-      dashboard: '/teacher',
+      dashboard: '/teacher/',
     },
     PARENT: {
       name: 'Parent Portal',
       badgeClass: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
       icon: <HeartHandshake className="w-3.5 h-3.5 mr-1 text-emerald-500" />,
-      dashboard: '/parent',
+      dashboard: '/parent/',
     },
     ADMIN: {
       name: 'Admin Console',
       badgeClass: 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30',
       icon: <Shield className="w-3.5 h-3.5 mr-1 text-amber-500" />,
-      dashboard: '/admin',
+      dashboard: '/admin/',
     },
   };
+
+  // Proactively prefetch all navbar and portal routes on mount for instantaneous (0ms) clicks
+  useEffect(() => {
+    const routesToPreload = [
+      '/',
+      '/about/',
+      '/student/courses/',
+      '/blog/',
+      '/contact/',
+      '/get-started/',
+      '/login/',
+      '/student/',
+      '/teacher/',
+      '/parent/',
+      '/admin/',
+    ];
+    routesToPreload.forEach((r) => {
+      try {
+        router.prefetch(r);
+      } catch {
+        // ignore
+      }
+    });
+  }, [router]);
 
   const handleSwitchRole = (role: Role) => {
     switchDemoRole(role);
     setRoleDropdownOpen(false);
     setMobileMenuOpen(false);
-    triggerConfetti();
     router.push(roleStyles[role].dashboard);
   };
 
   const handleLogout = () => {
     logoutUser();
-    triggerConfetti();
     setMobileMenuOpen(false);
     router.push('/');
   };
 
+  const isNavActive = (path: string) => {
+    if (path === '/') return pathname === '/' || pathname === '';
+    return pathname === path || pathname === `${path}/` || pathname.startsWith(`${path}/`);
+  };
+
   return (
-    <header
-      className="sticky top-0 z-40 w-full transition-colors duration-200 border-b bg-white/95 dark:bg-[#1a1e24]/95 text-slate-900 dark:text-white border-slate-200 dark:border-[#283038] backdrop-blur-md shadow-xs"
-    >
+    <header className="sticky top-0 z-40 w-full transition-colors duration-200 border-b bg-white/95 dark:bg-[#1a1e24]/95 text-slate-900 dark:text-white border-slate-200 dark:border-[#283038] backdrop-blur-md shadow-xs">
       <div className="flex h-16 sm:h-20 items-center justify-between px-4 sm:px-8 max-w-7xl mx-auto">
         {/* Left: SmartLearn Brand Logo */}
         <div className="flex items-center gap-3">
-          <Link href="/" className="flex flex-col group">
+          <Link href="/" prefetch={true} className="flex flex-col group">
             <div className="flex items-center gap-1">
               <span className="font-extrabold text-2xl sm:text-3xl tracking-tight text-slate-900 dark:text-white">
                 Smart<span className="text-[#d82a4e]">Learn</span>
@@ -104,7 +128,9 @@ export function Navbar() {
 
           {/* Active Portal Badge (Only shown when authenticated) */}
           {isLoggedIn && currentUser && !isLandingPage && (
-            <div className={`hidden md:flex items-center px-2.5 py-1 text-xs font-bold rounded-md border ${roleStyles[currentRole].badgeClass}`}>
+            <div
+              className={`hidden md:flex items-center px-2.5 py-1 text-xs font-bold rounded-md border ${roleStyles[currentRole].badgeClass}`}
+            >
               {roleStyles[currentRole].icon}
               {roleStyles[currentRole].name}
             </div>
@@ -115,24 +141,27 @@ export function Navbar() {
         <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-semibold text-slate-700 dark:text-slate-200">
           <Link
             href="/"
+            prefetch={true}
             className={`transition-colors hover:text-[#d82a4e] dark:hover:text-[#d82a4e] ${
-              pathname === '/' ? 'text-[#d82a4e] font-bold' : ''
+              isNavActive('/') ? 'text-[#d82a4e] font-bold' : ''
             }`}
           >
             Home
           </Link>
           <Link
-            href="/about"
+            href="/about/"
+            prefetch={true}
             className={`transition-colors hover:text-[#d82a4e] dark:hover:text-[#d82a4e] ${
-              pathname === '/about' ? 'text-[#d82a4e] font-bold' : ''
+              isNavActive('/about') ? 'text-[#d82a4e] font-bold' : ''
             }`}
           >
             About
           </Link>
           <Link
-            href="/student/courses"
+            href="/student/courses/"
+            prefetch={true}
             className={`transition-colors hover:text-[#d82a4e] dark:hover:text-[#d82a4e] ${
-              pathname.startsWith('/student/courses') ? 'text-[#d82a4e] font-bold' : ''
+              isNavActive('/student/courses') ? 'text-[#d82a4e] font-bold' : ''
             }`}
           >
             Courses
@@ -144,55 +173,66 @@ export function Navbar() {
             <ChevronDown className="w-3.5 h-3.5 opacity-70" />
             <div className="absolute top-full left-0 mt-1 w-56 py-2 bg-white dark:bg-[#1a1e24] rounded-xl shadow-2xl border border-slate-200 dark:border-[#283038] text-slate-800 dark:text-slate-100 hidden group-hover:block transition-all z-50">
               <Link
-                href="/get-started"
+                href="/get-started/"
+                prefetch={true}
                 className="w-full text-left px-4 py-2 text-xs font-bold text-[#d82a4e] hover:bg-slate-50 dark:hover:bg-[#20252b] flex items-center justify-between border-b border-slate-100 dark:border-[#283038]"
               >
                 <span>🚀 Choose Portal / Onboarding</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
-              <button
-                onClick={() => handleSwitchRole('STUDENT')}
+              <Link
+                href="/student/"
+                prefetch={true}
+                onClick={() => switchDemoRole('STUDENT')}
                 className="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-[#20252b] flex items-center justify-between cursor-pointer"
               >
                 <span>🎓 Student Workspace</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-blue-500" />
-              </button>
-              <button
-                onClick={() => handleSwitchRole('TEACHER')}
+              </Link>
+              <Link
+                href="/teacher/"
+                prefetch={true}
+                onClick={() => switchDemoRole('TEACHER')}
                 className="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-[#20252b] flex items-center justify-between cursor-pointer"
               >
                 <span>👩‍🏫 Teacher Hub</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-purple-500" />
-              </button>
-              <button
-                onClick={() => handleSwitchRole('PARENT')}
+              </Link>
+              <Link
+                href="/parent/"
+                prefetch={true}
+                onClick={() => switchDemoRole('PARENT')}
                 className="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-[#20252b] flex items-center justify-between cursor-pointer"
               >
                 <span>👨‍👩‍👧 Parent Portal</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-emerald-500" />
-              </button>
-              <button
-                onClick={() => handleSwitchRole('ADMIN')}
+              </Link>
+              <Link
+                href="/admin/"
+                prefetch={true}
+                onClick={() => switchDemoRole('ADMIN')}
                 className="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-[#20252b] flex items-center justify-between cursor-pointer"
               >
                 <span>⚡ Admin Console</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-amber-500" />
-              </button>
+              </Link>
             </div>
           </div>
 
           <Link
-            href="/blog"
+            href="/blog/"
+            prefetch={true}
             className={`transition-colors hover:text-[#d82a4e] dark:hover:text-[#d82a4e] ${
-              pathname === '/blog' ? 'text-[#d82a4e] font-bold' : ''
+              isNavActive('/blog') ? 'text-[#d82a4e] font-bold' : ''
             }`}
           >
             Blog
           </Link>
           <Link
-            href="/contact"
+            href="/contact/"
+            prefetch={true}
             className={`transition-colors hover:text-[#d82a4e] dark:hover:text-[#d82a4e] ${
-              pathname === '/contact' ? 'text-[#d82a4e] font-bold' : ''
+              isNavActive('/contact') ? 'text-[#d82a4e] font-bold' : ''
             }`}
           >
             Contact
@@ -244,34 +284,42 @@ export function Navbar() {
                       <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                         Switch Active Portal
                       </div>
-                      <button
+                      <Link
+                        href="/student/"
+                        prefetch={true}
                         onClick={() => handleSwitchRole('STUDENT')}
                         className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-left hover:bg-slate-100 dark:hover:bg-[#20252b]"
                       >
                         <span>🎓 Student (Alex)</span>
                         {currentRole === 'STUDENT' && <span className="text-[#d82a4e] text-[10px] font-bold">Active</span>}
-                      </button>
-                      <button
+                      </Link>
+                      <Link
+                        href="/teacher/"
+                        prefetch={true}
                         onClick={() => handleSwitchRole('TEACHER')}
                         className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-left hover:bg-slate-100 dark:hover:bg-[#20252b]"
                       >
                         <span>👩‍🏫 Teacher (Sarah)</span>
                         {currentRole === 'TEACHER' && <span className="text-[#d82a4e] text-[10px] font-bold">Active</span>}
-                      </button>
-                      <button
+                      </Link>
+                      <Link
+                        href="/parent/"
+                        prefetch={true}
                         onClick={() => handleSwitchRole('PARENT')}
                         className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-left hover:bg-slate-100 dark:hover:bg-[#20252b]"
                       >
                         <span>👨‍👩‍👧 Parent (Priya)</span>
                         {currentRole === 'PARENT' && <span className="text-emerald-500 text-[10px] font-bold">Active</span>}
-                      </button>
-                      <button
+                      </Link>
+                      <Link
+                        href="/admin/"
+                        prefetch={true}
                         onClick={() => handleSwitchRole('ADMIN')}
                         className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-left hover:bg-slate-100 dark:hover:bg-[#20252b]"
                       >
                         <span>⚡ Admin (Marcus)</span>
                         {currentRole === 'ADMIN' && <span className="text-amber-500 text-[10px] font-bold">Active</span>}
-                      </button>
+                      </Link>
                     </div>
                   </>
                 )}
@@ -283,6 +331,7 @@ export function Navbar() {
               {/* Direct Dashboard Shortcut */}
               <Link
                 href={roleStyles[currentRole].dashboard}
+                prefetch={true}
                 className="btn-crimson inline-flex items-center justify-center px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-bold shadow-sm gap-1"
               >
                 <span>Dashboard</span>
@@ -304,13 +353,15 @@ export function Navbar() {
             /* Unauthenticated state: Clean Login & Get Started buttons */
             <div className="flex items-center gap-2">
               <Link
-                href="/login"
+                href="/login/"
+                prefetch={true}
                 className="px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-[#d82a4e] dark:hover:text-[#d82a4e] transition-colors"
               >
                 Log In
               </Link>
               <Link
-                href="/get-started"
+                href="/get-started/"
+                prefetch={true}
                 className="btn-crimson inline-flex items-center justify-center px-4 sm:px-5 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-bold shadow-md hover:scale-[1.02] transition-transform"
               >
                 <span>Get Started</span>
@@ -335,27 +386,31 @@ export function Navbar() {
           <nav className="flex flex-col space-y-3 text-sm font-bold text-slate-800 dark:text-slate-100">
             <Link
               href="/"
+              prefetch={true}
               onClick={() => setMobileMenuOpen(false)}
               className="py-1.5 hover:text-[#d82a4e] transition-colors flex items-center justify-between"
             >
               <span>Home</span>
             </Link>
             <Link
-              href="/about"
+              href="/about/"
+              prefetch={true}
               onClick={() => setMobileMenuOpen(false)}
               className="py-1.5 hover:text-[#d82a4e] transition-colors flex items-center justify-between"
             >
               <span>About Us</span>
             </Link>
             <Link
-              href="/student/courses"
+              href="/student/courses/"
+              prefetch={true}
               onClick={() => setMobileMenuOpen(false)}
               className="py-1.5 hover:text-[#d82a4e] transition-colors flex items-center justify-between"
             >
               <span>Course Library</span>
             </Link>
             <Link
-              href="/get-started"
+              href="/get-started/"
+              prefetch={true}
               onClick={() => setMobileMenuOpen(false)}
               className="py-1.5 text-[#d82a4e] hover:underline flex items-center justify-between font-extrabold"
             >
@@ -363,14 +418,16 @@ export function Navbar() {
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              href="/blog"
+              href="/blog/"
+              prefetch={true}
               onClick={() => setMobileMenuOpen(false)}
               className="py-1.5 hover:text-[#d82a4e] transition-colors flex items-center justify-between"
             >
               <span>Academic Blog</span>
             </Link>
             <Link
-              href="/contact"
+              href="/contact/"
+              prefetch={true}
               onClick={() => setMobileMenuOpen(false)}
               className="py-1.5 hover:text-[#d82a4e] transition-colors flex items-center justify-between"
             >
@@ -382,14 +439,16 @@ export function Navbar() {
             {!isLoggedIn ? (
               <>
                 <Link
-                  href="/get-started"
+                  href="/get-started/"
+                  prefetch={true}
                   onClick={() => setMobileMenuOpen(false)}
                   className="btn-crimson w-full py-2.5 rounded-md text-center text-xs font-bold uppercase tracking-wider"
                 >
                   Get Started
                 </Link>
                 <Link
-                  href="/login"
+                  href="/login/"
+                  prefetch={true}
                   onClick={() => setMobileMenuOpen(false)}
                   className="w-full py-2.5 rounded-md border border-slate-200 dark:border-[#283038] text-center text-xs font-bold text-slate-700 dark:text-slate-200"
                 >
@@ -400,6 +459,7 @@ export function Navbar() {
               <div className="space-y-2">
                 <Link
                   href={roleStyles[currentRole].dashboard}
+                  prefetch={true}
                   onClick={() => setMobileMenuOpen(false)}
                   className="btn-crimson w-full py-2.5 rounded-md text-center text-xs font-bold uppercase tracking-wider block"
                 >

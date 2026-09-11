@@ -169,14 +169,14 @@ export default function LandingPage() {
     setSignupSubmitted(true);
     setTimeout(() => {
       switchDemoRole('STUDENT');
-      router.push('/student');
+      router.push('/student/');
     }, 1200);
   };
 
   const handleSearchCourseSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     switchDemoRole('STUDENT');
-    router.push(`/student/courses?q=${encodeURIComponent(courseSearchTerm)}`);
+    router.push(`/student/courses/?q=${encodeURIComponent(courseSearchTerm)}`);
   };
 
   const handleTeacherSubmit = (e: React.FormEvent) => {
@@ -185,7 +185,7 @@ export default function LandingPage() {
     setTeacherSubmitted(true);
     setTimeout(() => {
       switchDemoRole('TEACHER');
-      router.push('/teacher');
+      router.push('/teacher/');
     }, 1500);
   };
 
@@ -197,12 +197,11 @@ export default function LandingPage() {
 
   const handleLaunchDemo = (role: Role) => {
     switchDemoRole(role);
-    triggerConfetti();
     const roleRoutes: Record<Role, string> = {
-      STUDENT: '/student',
-      TEACHER: '/teacher',
-      PARENT: '/parent',
-      ADMIN: '/admin',
+      STUDENT: '/student/',
+      TEACHER: '/teacher/',
+      PARENT: '/parent/',
+      ADMIN: '/admin/',
     };
     router.push(roleRoutes[role]);
   };

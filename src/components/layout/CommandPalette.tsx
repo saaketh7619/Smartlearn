@@ -64,7 +64,7 @@ export function CommandPalette() {
         icon: <BookOpen className="w-4 h-4 text-blue-500" />,
         perform: () => {
           switchDemoRole('STUDENT');
-          router.push('/student');
+          router.push('/student/');
         },
       },
       {
@@ -75,7 +75,7 @@ export function CommandPalette() {
         icon: <Users className="w-4 h-4 text-purple-500" />,
         perform: () => {
           switchDemoRole('TEACHER');
-          router.push('/teacher');
+          router.push('/teacher/');
         },
       },
       {
@@ -86,7 +86,7 @@ export function CommandPalette() {
         icon: <ShieldCheck className="w-4 h-4 text-emerald-500" />,
         perform: () => {
           switchDemoRole('PARENT');
-          router.push('/parent');
+          router.push('/parent/');
         },
       },
       {
@@ -97,7 +97,7 @@ export function CommandPalette() {
         icon: <Sparkles className="w-4 h-4 text-amber-500" />,
         perform: () => {
           switchDemoRole('ADMIN');
-          router.push('/admin');
+          router.push('/admin/');
         },
       },
       // AI Tools
@@ -109,7 +109,7 @@ export function CommandPalette() {
         icon: <BrainCircuit className="w-4 h-4 text-blue-500" />,
         perform: () => {
           switchDemoRole('STUDENT');
-          router.push('/student/tutor');
+          router.push('/student/tutor/');
         },
       },
       {
@@ -120,7 +120,7 @@ export function CommandPalette() {
         icon: <FileQuestion className="w-4 h-4 text-blue-500" />,
         perform: () => {
           switchDemoRole('STUDENT');
-          router.push('/student/tests/test-adaptive-math-1/take');
+          router.push('/student/tests/test-adaptive-math-1/take/');
         },
       },
       {
@@ -131,7 +131,7 @@ export function CommandPalette() {
         icon: <Calendar className="w-4 h-4 text-indigo-500" />,
         perform: () => {
           switchDemoRole('STUDENT');
-          router.push('/student/planner');
+          router.push('/student/planner/');
         },
       },
       {
@@ -142,7 +142,7 @@ export function CommandPalette() {
         icon: <Layers className="w-4 h-4 text-violet-500" />,
         perform: () => {
           switchDemoRole('STUDENT');
-          router.push('/student/revision');
+          router.push('/student/revision/');
         },
       },
       {
@@ -153,7 +153,7 @@ export function CommandPalette() {
         icon: <FileQuestion className="w-4 h-4 text-purple-500" />,
         perform: () => {
           switchDemoRole('TEACHER');
-          router.push('/teacher/generator');
+          router.push('/teacher/generator/');
         },
       },
       // Role Switch
@@ -165,7 +165,7 @@ export function CommandPalette() {
         icon: <span className="text-base">🎓</span>,
         perform: () => {
           switchDemoRole('STUDENT');
-          router.push('/student');
+          router.push('/student/');
         },
       },
       {
@@ -176,7 +176,7 @@ export function CommandPalette() {
         icon: <span className="text-base">👩‍🏫</span>,
         perform: () => {
           switchDemoRole('TEACHER');
-          router.push('/teacher');
+          router.push('/teacher/');
         },
       },
       {
@@ -187,7 +187,7 @@ export function CommandPalette() {
         icon: <span className="text-base">👨‍👩‍👧</span>,
         perform: () => {
           switchDemoRole('PARENT');
-          router.push('/parent');
+          router.push('/parent/');
         },
       },
       {
@@ -198,7 +198,7 @@ export function CommandPalette() {
         icon: <span className="text-base">⚡</span>,
         perform: () => {
           switchDemoRole('ADMIN');
-          router.push('/admin');
+          router.push('/admin/');
         },
       },
       // Preferences

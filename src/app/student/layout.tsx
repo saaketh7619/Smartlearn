@@ -7,21 +7,6 @@ import { RoleGuard } from '@/components/shared/RoleGuard';
 import { useStore } from '@/store/useStore';
 
 function StudentOnboardingCheck({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const currentUser = useStore((state) => state.currentUser);
-  const academicProfile = useStore((state) => state.academicProfile);
-
-  useEffect(() => {
-    if (currentUser?.role === 'STUDENT' && pathname !== '/student/onboarding') {
-      const skipped =
-        typeof window !== 'undefined' && sessionStorage.getItem('sl_skip_onboarding') === 'true';
-      if (!academicProfile?.onboardingCompleted && !skipped) {
-        router.push('/student/onboarding');
-      }
-    }
-  }, [currentUser, academicProfile, pathname, router]);
-
   return <>{children}</>;
 }
 

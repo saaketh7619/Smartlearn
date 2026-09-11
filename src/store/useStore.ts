@@ -3,11 +3,24 @@ import { User, Role, NotificationItem, StudentAcademicProfile, RecentlyViewedIte
 import { db, INITIAL_USERS } from '@/lib/db';
 import { DEMO_ACCOUNTS } from '@/lib/auth';
 
+const LS_CURRENT_USER = 'sl_current_user';
+const LS_IS_LOGGED_IN = 'sl_is_logged_in';
 const LS_ACADEMIC_PROFILE = 'sl_academic_profile';
 const LS_RECENTLY_VIEWED = 'sl_recently_viewed';
 const LS_BOOKMARKS = 'sl_bookmarked_resources';
 const SS_ONBOARDING_PREFIX = 'sl_onboarding_seen_';
 const SS_LOGIN_WELCOME = 'sl_login_welcome_shown';
+
+const DEFAULT_STUDENT_PROFILE: StudentAcademicProfile = {
+  educationalLevel: 'School',
+  stream: 'Secondary',
+  classLevel: 'Class 10',
+  classId: 'class-10',
+  board: 'CBSE',
+  subjects: ['Mathematics', 'Science', 'English', 'Social Science'],
+  learningGoals: ['exam_prep', 'concept_learning', 'practice'],
+  onboardingCompleted: true,
+};
 
 function loadFromStorage<T>(key: string, fallback: T, storage: 'local' | 'session' = 'local'): T {
   if (typeof window === 'undefined') return fallback;
@@ -81,8 +94,8 @@ interface SmartLearnState {
 }
 
 export const useStore = create<SmartLearnState>((set, get) => ({
-  currentUser: INITIAL_USERS[0],
-  isLoggedIn: false,
+  currentUser: loadFromStorage<User | null>(LS_CURRENT_USER, INITIAL_USERS[0]),
+  isLoggedIn: loadFromStorage<boolean>(LS_IS_LOGGED_IN, true),
   welcomeSplashOpen: false,
   theme: 'dark',
   language: 'en',
@@ -92,20 +105,26 @@ export const useStore = create<SmartLearnState>((set, get) => ({
   confettiTrigger: 0,
   onboardingSeen: {},
 
-  // Load persisted academic profile
-  academicProfile: loadFromStorage<StudentAcademicProfile | null>(LS_ACADEMIC_PROFILE, null),
+  // Load persisted academic profile (fallback to preconfigured profile)
+  academicProfile: loadFromStorage<StudentAcademicProfile | null>(LS_ACADEMIC_PROFILE, DEFAULT_STUDENT_PROFILE),
   recentlyViewed: loadFromStorage<RecentlyViewedItem[]>(LS_RECENTLY_VIEWED, []),
   bookmarkedResourceIds: loadFromStorage<string[]>(LS_BOOKMARKS, []),
 
   // Check sessionStorage for login welcome (once per session)
   loginWelcomeSeen: loadFromStorage<boolean>(SS_LOGIN_WELCOME, false, 'session'),
 
-  setCurrentUser: (user) => set({ currentUser: user, isLoggedIn: !!user }),
+  setCurrentUser: (user) => {
+    saveToStorage(LS_CURRENT_USER, user);
+    saveToStorage(LS_IS_LOGGED_IN, !!user);
+    set({ currentUser: user, isLoggedIn: !!user });
+  },
 
   setWelcomeSplashOpen: (open) => set({ welcomeSplashOpen: open }),
 
   loginUser: (user) => {
     const alreadySeen = loadFromStorage<boolean>(SS_LOGIN_WELCOME, false, 'session');
+    saveToStorage(LS_CURRENT_USER, user);
+    saveToStorage(LS_IS_LOGGED_IN, true);
     set({
       currentUser: user,
       isLoggedIn: true,
@@ -117,12 +136,14 @@ export const useStore = create<SmartLearnState>((set, get) => ({
     }
     // Load academic profile for students
     if (user.role === 'STUDENT') {
-      const profile = loadFromStorage<StudentAcademicProfile | null>(`${LS_ACADEMIC_PROFILE}_${user.id}`, null);
+      const profile = loadFromStorage<StudentAcademicProfile | null>(`${LS_ACADEMIC_PROFILE}_${user.id}`, DEFAULT_STUDENT_PROFILE);
       set({ academicProfile: profile });
     }
   },
 
   logoutUser: () => {
+    saveToStorage(LS_CURRENT_USER, null);
+    saveToStorage(LS_IS_LOGGED_IN, false);
     set({ currentUser: null, isLoggedIn: false, academicProfile: null });
   },
 
@@ -132,9 +153,11 @@ export const useStore = create<SmartLearnState>((set, get) => ({
     if (role === 'TEACHER') targetUser = INITIAL_USERS[1];
     if (role === 'PARENT') targetUser = INITIAL_USERS[2];
     if (role === 'ADMIN') targetUser = INITIAL_USERS[3];
+    saveToStorage(LS_CURRENT_USER, targetUser);
+    saveToStorage(LS_IS_LOGGED_IN, true);
     set({ currentUser: targetUser, isLoggedIn: true, welcomeSplashOpen: false });
     if (role === 'STUDENT') {
-      const profile = loadFromStorage<StudentAcademicProfile | null>(`${LS_ACADEMIC_PROFILE}_${targetUser.id}`, null);
+      const profile = loadFromStorage<StudentAcademicProfile | null>(`${LS_ACADEMIC_PROFILE}_${targetUser.id}`, DEFAULT_STUDENT_PROFILE);
       set({ academicProfile: profile });
     }
   },
