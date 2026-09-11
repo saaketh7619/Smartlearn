@@ -209,8 +209,25 @@ function DoubtTutorContent() {
 
   const [messages, setMessages] = useState<TutorMessage[]>([]);
 
-  // Load configured API key
+  // Load configured API key (from localStorage or URL parameter)
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const urlKey = params.get('gemini_key') || params.get('key');
+        if (urlKey && urlKey.trim()) {
+          const clean = urlKey.trim();
+          saveGeminiApiKey(clean);
+          setGeminiKey(clean);
+          // Clean query string from browser address bar smoothly without reloading
+          const cleanUrl = window.location.pathname;
+          window.history.replaceState({}, '', cleanUrl);
+          return;
+        }
+      } catch {
+        // ignore
+      }
+    }
     const key = getGeminiApiKey();
     setGeminiKey(key || '');
   }, []);
