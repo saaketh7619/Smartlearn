@@ -6,8 +6,9 @@ import Link from 'next/link';
 import {
   Sparkles,
   Mail,
-  Phone,
   ArrowRight,
+  Eye,
+  EyeOff,
   ShieldCheck,
   Check,
   AlertCircle,
@@ -42,8 +43,11 @@ function LoginPageContent() {
   const initialRole = (searchParams?.get('role')?.toUpperCase() as Role) || 'STUDENT';
 
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
-  const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('email');
+  const [authMethod, setAuthMethod] = useState<'password' | 'otp'>('password');
   const [identifier, setIdentifier] = useState('student@smartlearn.edu');
+  const [password, setPassword] = useState('smartlearn123');
+  const [confirmPassword, setConfirmPassword] = useState('smartlearn123');
+  const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState('Alex Rivera');
   const [selectedRole, setSelectedRole] = useState<Role>(initialRole);
   const [gradeOrDept, setGradeOrDept] = useState('Grade 10-A');
@@ -116,45 +120,109 @@ function LoginPageContent() {
   const handleRequestOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
-    if (!identifier.trim()) {
-      setErrorMsg('Please enter your email address or phone number.');
+    if (!identifier.trim() || !identifier.includes('@')) {
+      setErrorMsg('Please enter a valid email address.');
       return;
     }
 
-    const code = generateOTP(identifier);
+    const code = generateOTP(identifier.trim());
     setGeneratedOtp(code);
     setOtpDigits(['', '', '', '', '', '']);
     setResendSeconds(60);
 
-    if (authMethod === 'email' && identifier.includes('@')) {
-      setIsSendingEmail(true);
-      const res = await sendOtpEmail(identifier.trim(), code, mode === 'signup' ? fullName : undefined);
-      setIsSendingEmail(false);
+    setIsSendingEmail(true);
+    const res = await sendOtpEmail(identifier.trim(), code, mode === 'signup' ? fullName : undefined);
+    setIsSendingEmail(false);
 
-      if (res.success) {
-        setEmailDelivery({
-          status: 'sent',
-          message: `Verification code dispatched to ${identifier} via EmailJS.`,
-        });
-      } else if (res.unconfigured) {
-        setEmailDelivery({
-          status: 'unconfigured',
-          message: 'Instant OTP verification active.',
-        });
-      } else {
-        setEmailDelivery({
-          status: 'error',
-          message: res.error || 'EmailJS delivery failed.',
-        });
-      }
-    } else {
+    if (res.success) {
+      setEmailDelivery({
+        status: 'sent',
+        message: `Verification code dispatched to ${identifier} via EmailJS.`,
+      });
+    } else if (res.unconfigured) {
       setEmailDelivery({
         status: 'unconfigured',
-        message: 'Simulated SMS OTP mode triggered.',
+        message: 'Instant OTP verification active.',
+      });
+    } else {
+      setEmailDelivery({
+        status: 'error',
+        message: res.error || 'EmailJS delivery failed.',
       });
     }
 
     setOtpStep(true);
+  };
+
+  const handlePasswordAuth = (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg('');
+
+    if (!identifier.trim() || !identifier.includes('@')) {
+      setErrorMsg('Please enter a valid email address.');
+      return;
+    }
+
+    if (!password) {
+      setErrorMsg('Please enter your account password.');
+      return;
+    }
+
+    if (password.length < 6) {
+      setErrorMsg('Password must be at least 6 characters.');
+      return;
+    }
+
+    if (mode === 'signup' && confirmPassword && password !== confirmPassword) {
+      setErrorMsg('Passwords do not match. Please verify your password.');
+      return;
+    }
+
+    triggerConfetti();
+    setSuccessMsg(mode === 'signup' ? 'Account created successfully! Initializing portal...' : 'Sign in successful! Initializing portal...');
+
+    const baseUser =
+      selectedRole === 'STUDENT'
+        ? INITIAL_USERS[0]
+        : selectedRole === 'TEACHER'
+        ? INITIAL_USERS[1]
+        : selectedRole === 'PARENT'
+        ? INITIAL_USERS[2]
+        : INITIAL_USERS[3];
+
+    const verifiedUser: User = {
+      ...baseUser,
+      id: `user-${selectedRole.toLowerCase()}-${Date.now()}`,
+      name: mode === 'signup' && fullName ? fullName : baseUser.name,
+      email: identifier.trim(),
+      role: selectedRole,
+      studentProfile:
+        selectedRole === 'STUDENT' && baseUser.studentProfile
+          ? {
+              ...baseUser.studentProfile,
+              grade: gradeOrDept || baseUser.studentProfile.grade,
+            }
+          : baseUser.studentProfile,
+      teacherProfile:
+        selectedRole === 'TEACHER' && baseUser.teacherProfile
+          ? {
+              ...baseUser.teacherProfile,
+              department: gradeOrDept || baseUser.teacherProfile.department,
+            }
+          : baseUser.teacherProfile,
+    };
+
+    loginUser(verifiedUser);
+
+    const roleDashboards: Record<Role, string> = {
+      STUDENT: '/student/',
+      TEACHER: '/teacher/',
+      PARENT: '/parent/',
+      ADMIN: '/admin/',
+    };
+    setTimeout(() => {
+      router.push(roleDashboards[selectedRole]);
+    }, 600);
   };
 
   const handleResendOtp = async () => {
@@ -163,7 +231,7 @@ function LoginPageContent() {
     setResendSeconds(60);
     setErrorMsg('');
 
-    if (authMethod === 'email' && identifier.includes('@')) {
+    if (identifier.includes('@')) {
       setIsSendingEmail(true);
       const res = await sendOtpEmail(identifier.trim(), newCode, mode === 'signup' ? fullName : undefined);
       setIsSendingEmail(false);
@@ -245,7 +313,7 @@ function LoginPageContent() {
         id: `user-${selectedRole.toLowerCase()}-${Date.now()}`,
         name: mode === 'signup' && fullName ? fullName : baseUser.name,
         email: identifier.includes('@') ? identifier : baseUser.email,
-        phone: !identifier.includes('@') ? identifier : baseUser.phone,
+        phone: baseUser.phone,
         role: selectedRole,
         studentProfile:
           selectedRole === 'STUDENT' && baseUser.studentProfile
@@ -276,7 +344,7 @@ function LoginPageContent() {
         router.push(roleDashboards[selectedRole]);
       }, 800);
     } else {
-      setErrorMsg(`Invalid verification code. Please check your SMS code or click Auto-fill (${generatedOtp || '123456'}).`);
+      setErrorMsg(`Invalid verification code. Please check your email inbox or click Auto-fill (${generatedOtp || '123456'}).`);
     }
   };
 
@@ -301,7 +369,7 @@ function LoginPageContent() {
               : 'Create Your SmartLearn Account'}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
-            Choose your portal role below, or verify with our SMS/Email OTP verification system to unlock personalized learning.
+            Choose your portal role below, or sign in using your email &amp; password or secure OTP verification.
           </p>
         </div>
 
@@ -508,38 +576,42 @@ function LoginPageContent() {
                 </button>
               </div>
 
-              {/* Email vs Phone Toggle */}
-              <div className="flex items-center justify-center gap-6 mb-6 text-xs font-semibold">
+              {/* Auth Method Selector: Email & Password vs Email OTP */}
+              <div className="flex items-center justify-center gap-3 sm:gap-4 mb-6 text-xs font-bold border-b border-slate-200 dark:border-[#283038] pb-3">
                 <button
                   type="button"
                   onClick={() => {
-                    setAuthMethod('email');
-                    setIdentifier(selectedRole === 'STUDENT' ? 'student@smartlearn.edu' : 'sarah@smartlearn.edu');
+                    setAuthMethod('password');
+                    setErrorMsg('');
                   }}
-                  className={`flex items-center gap-1.5 pb-1 border-b-2 transition-all cursor-pointer ${
-                    authMethod === 'email' ? 'border-[#d82a4e] text-[#d82a4e] font-bold' : 'border-transparent text-slate-400'
+                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-sm transition-all cursor-pointer ${
+                    authMethod === 'password'
+                      ? 'bg-[#d82a4e] text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-[#20252b] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
-                  <Mail className="w-3.5 h-3.5" />
-                  <span>Email Verification</span>
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Email &amp; Password</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => {
-                    setAuthMethod('phone');
-                    setIdentifier('+1 (555) 345-7890');
+                    setAuthMethod('otp');
+                    setErrorMsg('');
                   }}
-                  className={`flex items-center gap-1.5 pb-1 border-b-2 transition-all cursor-pointer ${
-                    authMethod === 'phone' ? 'border-[#d82a4e] text-[#d82a4e] font-bold' : 'border-transparent text-slate-400'
+                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-sm transition-all cursor-pointer ${
+                    authMethod === 'otp'
+                      ? 'bg-[#d82a4e] text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-[#20252b] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
-                  <Phone className="w-3.5 h-3.5" />
-                  <span>Mobile Phone (SMS OTP)</span>
+                  <Mail className="w-3.5 h-3.5" />
+                  <span>Email OTP Verification</span>
                 </button>
               </div>
 
               {/* Form Input Fields */}
-              <form onSubmit={handleRequestOTP} className="space-y-4">
+              <form onSubmit={authMethod === 'password' ? handlePasswordAuth : handleRequestOTP} className="space-y-4">
                 {mode === 'signup' && (
                   <div>
                     <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
@@ -558,17 +630,82 @@ function LoginPageContent() {
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                    {authMethod === 'email' ? 'Email Address' : 'Mobile Phone Number'}
+                    Email Address
                   </label>
-                  <input
-                    type={authMethod === 'email' ? 'email' : 'tel'}
-                    required
-                    value={identifier}
-                    onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder={authMethod === 'email' ? 'yourname@institution.edu' : '+1 (555) 000-0000'}
-                    className="w-full px-4 py-2.5 rounded-sm text-xs bg-slate-50 dark:bg-[#20252b] border border-slate-200 dark:border-[#283038] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#d82a4e]"
-                  />
+                  <div className="relative">
+                    <input
+                      type="email"
+                      required
+                      value={identifier}
+                      onChange={(e) => setIdentifier(e.target.value)}
+                      placeholder="yourname@institution.edu"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-sm text-xs bg-slate-50 dark:bg-[#20252b] border border-slate-200 dark:border-[#283038] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#d82a4e]"
+                    />
+                    <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                  </div>
                 </div>
+
+                {authMethod === 'password' && (
+                  <>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                          Password
+                        </label>
+                        {mode === 'signin' && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAuthMethod('otp');
+                              setErrorMsg('');
+                            }}
+                            className="text-[11px] font-bold text-[#d82a4e] hover:underline cursor-pointer"
+                          >
+                            Sign in with OTP instead
+                          </button>
+                        )}
+                      </div>
+                      <div className="relative">
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          required
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="Enter account password (min. 6 characters)"
+                          className="w-full pl-10 pr-10 py-2.5 rounded-sm text-xs bg-slate-50 dark:bg-[#20252b] border border-slate-200 dark:border-[#283038] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#d82a4e]"
+                        />
+                        <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                          title={showPassword ? 'Hide password' : 'Show password'}
+                        >
+                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {mode === 'signup' && (
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                          Confirm Password
+                        </label>
+                        <div className="relative">
+                          <input
+                            type={showPassword ? 'text' : 'password'}
+                            required
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="Re-enter your password"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-sm text-xs bg-slate-50 dark:bg-[#20252b] border border-slate-200 dark:border-[#283038] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#d82a4e]"
+                          />
+                          <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
 
                 {/* Role Picker for Targeted Dashboard Access */}
                 <div>
@@ -622,24 +759,35 @@ function LoginPageContent() {
                   </div>
                 )}
 
-                <button
-                  type="submit"
-                  disabled={isSendingEmail}
-                  className="w-full mt-3 py-3 px-6 rounded-sm btn-crimson text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60"
-                >
-                  {isSendingEmail ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Sending OTP via EmailJS...</span>
-                    </>
-                  ) : (
-                    <>
-                      <KeyRound className="w-4 h-4" />
-                      <span>Send OTP Verification</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
+                {authMethod === 'password' ? (
+                  <button
+                    type="submit"
+                    className="w-full mt-3 py-3 px-6 rounded-sm btn-crimson text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <Lock className="w-4 h-4" />
+                    <span>{mode === 'signup' ? 'Create Account & Sign In' : 'Sign In with Password'}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={isSendingEmail}
+                    className="w-full mt-3 py-3 px-6 rounded-sm btn-crimson text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60"
+                  >
+                    {isSendingEmail ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Sending OTP via EmailJS...</span>
+                      </>
+                    ) : (
+                      <>
+                        <KeyRound className="w-4 h-4" />
+                        <span>Send OTP Verification</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                )}
               </form>
             </>
           ) : (
@@ -654,7 +802,7 @@ function LoginPageContent() {
                   className="text-xs text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 cursor-pointer font-semibold"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Change Email/Phone</span>
+                  <span>Change Email</span>
                 </button>
                 <span className="text-xs font-bold text-[#d82a4e]">
                   Role: {selectedRole}
