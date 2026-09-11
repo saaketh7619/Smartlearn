@@ -146,7 +146,14 @@ export async function callGeminiTutorLive(
     parts,
   });
 
-  const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+  const modelsToTry = [
+    'gemini-3.6-flash',
+    'gemini-3.7-flash',
+    'gemini-3.8-flash',
+    'gemini-flash-latest',
+    'gemini-3.5-flash',
+    'gemini-2.5-flash',
+  ];
   let lastError = '';
 
   for (const model of modelsToTry) {

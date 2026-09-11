@@ -90,8 +90,15 @@ export async function POST(req: Request) {
       }
     }
 
-    // Call Gemini API with model fallback: gemini-2.5-flash -> gemini-2.0-flash -> gemini-1.5-flash
-    const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+    // Call Gemini API with model fallback: gemini-3.6-flash -> gemini-3.7-flash -> gemini-flash-latest
+    const modelsToTry = [
+      'gemini-3.6-flash',
+      'gemini-3.7-flash',
+      'gemini-3.8-flash',
+      'gemini-flash-latest',
+      'gemini-3.5-flash',
+      'gemini-2.5-flash',
+    ];
     let lastError: any = null;
 
     for (const model of modelsToTry) {

@@ -37,6 +37,7 @@ jobs:
           NEXT_PUBLIC_EMAILJS_SERVICE_ID: 'service_nk1ngue'
           NEXT_PUBLIC_EMAILJS_TEMPLATE_ID: 'template_sptzhpb'
           NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: 'GoD5merb9lhnJGaD5'
+          NEXT_PUBLIC_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: npm run build
 
       - name: Deploy to gh-pages branch
