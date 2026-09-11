@@ -126,6 +126,27 @@ function extractGeminiTutorPayload(candidateText: string, model: string): TutorR
     }
   }
 
+  if (Array.isArray(parsed) && parsed.length > 0) {
+    const steps = parsed.map((s: any) =>
+      typeof s === 'string'
+        ? s
+        : `${s.step ? `Step ${s.step}: ` : ''}${s.title || ''}${s.equation ? ` (${s.equation})` : ''}${s.explanation ? ` — ${s.explanation}` : ''}`.trim()
+    );
+    return {
+      success: true,
+      isLiveGemini: true,
+      modelUsed: model,
+      text: steps[0] || 'Here is the step-by-step breakdown:',
+      equation: parsed.find((s: any) => s.equation)?.equation || '',
+      steps,
+      keyTakeaway: 'Mastering each step systematically builds complete confidence in exams.',
+      followUps: [
+        'Can you break down the most difficult step in this solution?',
+        'Can you give another variation of this problem?',
+      ],
+    };
+  }
+
   if (parsed && typeof parsed === 'object') {
     // 1. Resolve main text
     let mainText =
@@ -227,7 +248,7 @@ function extractGeminiTutorPayload(candidateText: string, model: string): TutorR
 
 /**
  * Call Google Gemini API directly (client-side or server-side compatible)
- * with multi-model fallback: gemini-3.6-flash -> gemini-3.7-flash -> gemini-flash-latest
+ * Prioritizing sub-second latency models: gemini-3.5-flash-lite -> gemini-flash-lite-latest -> gemini-3.6-flash
  */
 export async function callGeminiTutorLive(
   query: string,
@@ -279,11 +300,12 @@ export async function callGeminiTutorLive(
   });
 
   const modelsToTry = [
+    'gemini-3.5-flash-lite',
+    'gemini-flash-lite-latest',
+    'gemini-3.1-flash-lite',
     'gemini-3.6-flash',
     'gemini-3.7-flash',
-    'gemini-3.8-flash',
     'gemini-flash-latest',
-    'gemini-3.5-flash',
     'gemini-2.5-flash',
   ];
   let lastError = '';
@@ -292,15 +314,15 @@ export async function callGeminiTutorLive(
     try {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${effectiveApiKey}`;
       
-      // Request with JSON preference first
+      // Request with JSON preference and fast, concise token limit
       let res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents,
           generationConfig: {
-            temperature: 0.3,
-            maxOutputTokens: 2500,
+            temperature: 0.1,
+            maxOutputTokens: 1200,
             responseMimeType: 'application/json',
           },
         }),
@@ -314,8 +336,8 @@ export async function callGeminiTutorLive(
           body: JSON.stringify({
             contents,
             generationConfig: {
-              temperature: 0.3,
-              maxOutputTokens: 2500,
+              temperature: 0.1,
+              maxOutputTokens: 1200,
             },
           }),
         });

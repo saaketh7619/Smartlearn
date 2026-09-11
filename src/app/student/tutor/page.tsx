@@ -135,7 +135,7 @@ function EmptyState({
       ) : (
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          Google Gemini 3.6 Flash Connected &amp; Ready
+          Google Gemini Turbo Active &amp; Ready
         </div>
       )}
 
@@ -516,7 +516,7 @@ function DoubtTutorContent() {
                 {geminiKey ? (
                   <>
                     <Sparkles className="w-3 h-3 text-emerald-500" />
-                    Gemini 3.6 Live
+                    Gemini Turbo
                   </>
                 ) : (
                   <>

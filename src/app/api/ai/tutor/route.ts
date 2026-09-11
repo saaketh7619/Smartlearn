@@ -90,13 +90,14 @@ export async function POST(req: Request) {
       }
     }
 
-    // Call Gemini API with model fallback: gemini-3.6-flash -> gemini-3.7-flash -> gemini-flash-latest
+    // Call Gemini API prioritizing ultra-fast models: gemini-3.5-flash-lite -> gemini-flash-lite-latest -> gemini-3.6-flash
     const modelsToTry = [
+      'gemini-3.5-flash-lite',
+      'gemini-flash-lite-latest',
+      'gemini-3.1-flash-lite',
       'gemini-3.6-flash',
       'gemini-3.7-flash',
-      'gemini-3.8-flash',
       'gemini-flash-latest',
-      'gemini-3.5-flash',
       'gemini-2.5-flash',
     ];
     let lastError: any = null;
@@ -110,8 +111,8 @@ export async function POST(req: Request) {
           body: JSON.stringify({
             contents,
             generationConfig: {
-              temperature: 0.2,
-              maxOutputTokens: 2048,
+              temperature: 0.1,
+              maxOutputTokens: 1200,
               responseMimeType: 'application/json',
             },
           }),
