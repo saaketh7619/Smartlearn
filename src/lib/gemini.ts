@@ -62,28 +62,28 @@ export function saveGeminiApiKey(key: string): void {
   }
 }
 
-export const GEMINI_SYSTEM_INSTRUCTION = `You are SmartLearn Master STEM AI Tutor — an elite, inspiring, and pedagogically brilliant private tutor for students preparing for high school, AP courses, SAT, and competitive entrance exams (JEE, NEET).
+export const GEMINI_SYSTEM_INSTRUCTION = `You are SmartLearn AI Master Tutor — an elite, inspiring, and pedagogically brilliant personal tutor for students across all academic subjects (Mathematics, Physics, Chemistry, Biology, Computer Science, Coding, History, Social Sciences, Economics, and Literature).
 
-Your mission is to make every math, physics, chemistry, biology, and computer science concept crystal clear, intuitive, and unforgettable through Socratic guidance and first-principles thinking.
+Your mission is to make every concept crystal clear, intuitive, and unforgettable through first-principles explanations and helpful examples.
 
-When answering a question or analyzing an attached handwritten diagram:
-1. Explain the fundamental intuition and use a vivid real-world analogy.
-2. Present the governing equation or formula in clean mathematical notation.
-3. Provide a clear, numbered step-by-step derivation or solution.
-4. Give a memorable "Key Takeaway" or exam mnemonic.
-5. Provide 3 thoughtful follow-up questions to test deep understanding.
+Guidelines:
+1. Provide a comprehensive, clear, and encouraging explanation (markdown supported).
+2. If mathematical or scientific: include the governing equation or formula.
+3. If coding: provide clean, well-commented code snippets with time/space complexity.
+4. If multi-step problem or historical sequence: provide clear numbered steps or points.
+5. Provide a memorable "Key Takeaway", summary rule, or exam tip.
+6. Provide 2-3 engaging follow-up questions to test deep understanding.
 
-Format your response STRICTLY as a valid JSON object matching this structure:
+Format your response as a valid JSON object matching this structure:
 {
-  "text": "Clear, encouraging explanation with real-world analogy and intuition",
-  "equation": "Governing mathematical equation or formula (LaTeX or clean notation, or empty if none)",
+  "text": "Main comprehensive explanation, intuition, or narrative (markdown supported)",
+  "equation": "Governing mathematical equation, code snippet, or formula (or empty string if none)",
   "steps": [
-    "Step 1: Initial setup and identifying givens",
-    "Step 2: Core theorem or transformation applied",
-    "Step 3: Algebraic or physical simplification",
-    "Step 4: Final solution and verification"
+    "Step 1 or key concept point",
+    "Step 2 or key concept point",
+    "Step 3 or key concept point"
   ],
-  "keyTakeaway": "1-sentence golden rule or mnemonic for exams",
+  "keyTakeaway": "1-sentence golden rule, exam mnemonic, or key insight",
   "followUps": [
     "Follow-up question 1 to test understanding",
     "Deeper exploration question 2",
@@ -91,11 +91,143 @@ Format your response STRICTLY as a valid JSON object matching this structure:
   ]
 }
 
-Return ONLY the raw JSON object, without extra conversational text before or after.`;
+Return valid JSON. If answering casual questions, greetings, or short advice, fill "text" warmly and leave other fields empty.`;
+
+/**
+ * Robust extractor for Gemini model output handling various JSON schemas and plain markdown
+ */
+function extractGeminiTutorPayload(candidateText: string, model: string): TutorResponse {
+  if (!candidateText || !candidateText.trim()) {
+    return {
+      success: true,
+      isLiveGemini: true,
+      modelUsed: model,
+      text: 'I could not generate a response for that. Please try asking again or rephrasing your question.',
+      steps: [],
+      followUps: [],
+    };
+  }
+
+  let parsed: any = null;
+  try {
+    const cleanJson = candidateText
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/\s*```$/i, '')
+      .trim();
+    parsed = JSON.parse(cleanJson);
+  } catch {
+    // If not pure JSON, attempt to locate a JSON block inside the text
+    const jsonMatch = candidateText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      try {
+        parsed = JSON.parse(jsonMatch[0]);
+      } catch {}
+    }
+  }
+
+  if (parsed && typeof parsed === 'object') {
+    // 1. Resolve main text
+    let mainText =
+      parsed.text ||
+      parsed.explanation ||
+      parsed.description ||
+      parsed.summary ||
+      parsed.definition ||
+      parsed.message ||
+      parsed.content ||
+      parsed.answer ||
+      parsed.response ||
+      parsed.solution ||
+      '';
+
+    if (parsed.title && !mainText.includes(parsed.title)) {
+      mainText = `**${parsed.title}**\n\n${mainText}`.trim();
+    }
+
+    if (parsed.code && !mainText.includes(parsed.code)) {
+      mainText = `${mainText}\n\n\`\`\`\n${parsed.code}\n\`\`\``.trim();
+    }
+
+    if (!mainText) {
+      // Gather string values if none of standard fields were named directly
+      mainText = Object.entries(parsed)
+        .filter(([k, v]) => typeof v === 'string' && !['equation', 'keyTakeaway', 'key_takeaway'].includes(k))
+        .map(([_, v]) => v)
+        .join('\n\n');
+    }
+
+    // 2. Resolve equation / formula / code
+    const equation = parsed.equation || parsed.formula || parsed.starting_equation || '';
+
+    // 3. Resolve steps / process
+    let steps: string[] = [];
+    if (Array.isArray(parsed.steps)) {
+      steps = parsed.steps.map((s: any) =>
+        typeof s === 'string' ? s : s.text || s.description || s.step || JSON.stringify(s)
+      );
+    } else if (Array.isArray(parsed.solutions)) {
+      steps = parsed.solutions.map((s: any) => String(s));
+    } else if (Array.isArray(parsed.phases)) {
+      steps = parsed.phases.map((s: any) =>
+        typeof s === 'string' ? s : s.title || s.name || JSON.stringify(s)
+      );
+    }
+
+    // 4. Resolve key takeaway / summary
+    const keyTakeaway =
+      parsed.keyTakeaway ||
+      parsed.key_takeaway ||
+      parsed.takeaway ||
+      parsed.mnemonic ||
+      parsed.conclusion ||
+      parsed.examTip ||
+      '';
+
+    // 5. Resolve follow-up questions
+    let followUps: string[] = [];
+    if (Array.isArray(parsed.followUps)) {
+      followUps = parsed.followUps.map((f: any) => String(f));
+    } else if (Array.isArray(parsed.follow_ups)) {
+      followUps = parsed.follow_ups.map((f: any) => String(f));
+    } else if (Array.isArray(parsed.questions)) {
+      followUps = parsed.questions.map((f: any) => String(f));
+    }
+
+    return {
+      success: true,
+      isLiveGemini: true,
+      modelUsed: model,
+      text: mainText || candidateText,
+      equation,
+      steps,
+      keyTakeaway,
+      followUps: followUps.length > 0 ? followUps : [
+        'Can you break this down further?',
+        'Can you give another practical example?',
+        'How does this apply to exams?',
+      ],
+    };
+  }
+
+  // Pure Markdown / Natural Language Response
+  return {
+    success: true,
+    isLiveGemini: true,
+    modelUsed: model,
+    text: candidateText,
+    equation: '',
+    steps: [],
+    followUps: [
+      'Can you break this down further?',
+      'Can you give another practical example?',
+    ],
+  };
+}
 
 /**
  * Call Google Gemini API directly (client-side or server-side compatible)
- * with multi-model fallback: gemini-2.5-flash -> gemini-2.0-flash -> gemini-1.5-flash
+ * with multi-model fallback: gemini-3.6-flash -> gemini-3.7-flash -> gemini-flash-latest
  */
 export async function callGeminiTutorLive(
   query: string,
@@ -159,18 +291,35 @@ export async function callGeminiTutorLive(
   for (const model of modelsToTry) {
     try {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${effectiveApiKey}`;
-      const res = await fetch(url, {
+      
+      // Request with JSON preference first
+      let res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents,
           generationConfig: {
-            temperature: 0.2,
-            maxOutputTokens: 2048,
+            temperature: 0.3,
+            maxOutputTokens: 2500,
             responseMimeType: 'application/json',
           },
         }),
       });
+
+      // If JSON mode returned 400 Bad Request, retry with standard text mode
+      if (!res.ok && res.status === 400) {
+        res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents,
+            generationConfig: {
+              temperature: 0.3,
+              maxOutputTokens: 2500,
+            },
+          }),
+        });
+      }
 
       if (res.ok) {
         const data = await res.json();
@@ -178,38 +327,7 @@ export async function callGeminiTutorLive(
           data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
         if (candidateText) {
-          try {
-            const cleanJson = candidateText
-              .replace(/^```json\s*/i, '')
-              .replace(/^```\s*/i, '')
-              .replace(/\s*```$/i, '')
-              .trim();
-
-            const parsed = JSON.parse(cleanJson);
-            return {
-              success: true,
-              isLiveGemini: true,
-              modelUsed: model,
-              text: parsed.text || candidateText,
-              equation: parsed.equation || '',
-              steps: Array.isArray(parsed.steps) ? parsed.steps : [],
-              keyTakeaway: parsed.keyTakeaway || '',
-              followUps: Array.isArray(parsed.followUps) ? parsed.followUps : [],
-            };
-          } catch {
-            return {
-              success: true,
-              isLiveGemini: true,
-              modelUsed: model,
-              text: candidateText,
-              equation: '',
-              steps: [],
-              followUps: [
-                'Can you break this down further?',
-                'Can you give another example?',
-              ],
-            };
-          }
+          return extractGeminiTutorPayload(candidateText, model);
         }
       } else {
         const errData = await res.json().catch(() => ({}));
@@ -220,7 +338,7 @@ export async function callGeminiTutorLive(
     }
   }
 
-  // Gracefully fallback to offline STEM engine if API calls fail
+  // Gracefully fallback to offline STEM engine if all API calls fail
   const offline = getOfflineStemResponse(query || 'Help with STEM doubt');
   return {
     ...offline,

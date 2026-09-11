@@ -317,11 +317,11 @@ function DoubtTutorContent() {
     setImagePreview(null);
     setIsTyping(true);
 
-    // 12-second timeout guard
+    // 60-second timeout guard to ensure complex derivations and long explanations complete
     const tid = setTimeout(() => {
       setIsTyping(false);
       setTimedOut(true);
-    }, 12000);
+    }, 60000);
     setTimeoutId(tid);
 
     try {
@@ -516,7 +516,7 @@ function DoubtTutorContent() {
                 {geminiKey ? (
                   <>
                     <Sparkles className="w-3 h-3 text-emerald-500" />
-                    Gemini 2.5 Live
+                    Gemini 3.6 Live
                   </>
                 ) : (
                   <>
