@@ -78,7 +78,7 @@ export async function sendOtpEmail(
 
   // Comprehensive template parameters matching any EmailJS template configuration
   const templateParams = {
-    // Recipient address variations
+    // Recipient address variations (covering any variable defined in EmailJS template)
     email: cleanEmail,
     to_email: cleanEmail,
     user_email: cleanEmail,
@@ -86,6 +86,10 @@ export async function sendOtpEmail(
     recipient: cleanEmail,
     recipient_email: cleanEmail,
     reply_to: cleanEmail,
+    send_to: cleanEmail,
+    target_email: cleanEmail,
+    student_email: cleanEmail,
+    user: cleanEmail,
     // Recipient name variations
     to_name: cleanName,
     name: cleanName,
@@ -101,6 +105,9 @@ export async function sendOtpEmail(
     verification_code: otpCode,
     user_otp: otpCode,
     OTP: otpCode,
+    CODE: otpCode,
+    pin: otpCode,
+    PIN: otpCode,
     time_limit: '10 minutes',
     // Formatted message
     message: `Your SmartLearn verification code is ${otpCode}. It is valid for 10 minutes. Please enter this code to verify your account.`,
@@ -138,10 +145,36 @@ export async function sendOtpEmail(
         : err instanceof Error
         ? err.message
         : 'Browser client EmailJS dispatch failed';
-    console.warn('Browser EmailJS dispatch encountered an issue, trying server proxy:', clientError);
+    console.warn('Browser EmailJS SDK dispatch encountered an issue, trying direct REST API:', clientError);
   }
 
-  // 2. Automatic Server Fallback (bypasses adblockers and CORS restrictions)
+  // 1.5 Direct REST API Dispatch to EmailJS (bypasses SDK quirks on mobile browsers and works with standard fetch)
+  try {
+    const directRes = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_id: config.serviceId,
+        template_id: config.templateId,
+        user_id: config.publicKey,
+        template_params: templateParams,
+      }),
+    });
+
+    if (directRes.ok) {
+      return {
+        success: true,
+        message: `OTP email successfully dispatched to ${cleanEmail} via EmailJS.`,
+      };
+    } else {
+      const directErrText = await directRes.text();
+      console.warn('Direct EmailJS REST returned non-200:', directRes.status, directErrText);
+    }
+  } catch (directErr) {
+    console.warn('Direct EmailJS REST fetch failed:', directErr);
+  }
+
+  // 2. Automatic Server Fallback (bypasses adblockers and CORS restrictions when running with Node server)
   try {
     const serverRes = await fetch('/api/auth/otp/', {
       method: 'POST',

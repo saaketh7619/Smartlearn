@@ -821,9 +821,12 @@ function LoginPageContent() {
                       Real Email Delivery
                     </span>
                   </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-300">
-                    A verification code has been dispatched to <strong>{identifier}</strong>. Please check your inbox and spam folder.
-                  </p>
+                  <div className="text-xs text-slate-600 dark:text-slate-300 space-y-1.5">
+                    <p>A verification code has been dispatched to <strong>{identifier}</strong>.</p>
+                    <p className="text-[11px] text-amber-700 dark:text-amber-300 font-semibold bg-amber-500/10 p-2 rounded-sm border border-amber-500/20">
+                      📬 <strong>Important:</strong> Please check your <strong>Spam / Junk</strong> folder or <strong>Promotions</strong> tab. You can also click <strong>Auto-Fill Code</strong> below to log in instantly.
+                    </p>
+                  </div>
                   <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-emerald-500/20">
                     <span className="text-[11px] text-slate-500 dark:text-slate-400">
                       Instant Access Code: <strong className="font-mono text-slate-800 dark:text-slate-200">{generatedOtp || '123456'}</strong>
