@@ -30,7 +30,7 @@ import {
 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import Link from 'next/link';
-import { getGeminiApiKey, saveGeminiApiKey, getOfflineStemResponse, TutorMessage } from '@/lib/gemini';
+import { getGeminiApiKey, saveGeminiApiKey, getOfflineStemResponse, callGeminiTutorLive, TutorMessage, TutorResponse } from '@/lib/gemini';
 import GeminiKeyModal from '@/components/GeminiKeyModal';
 
 // ─── Typing Indicator ───────────────────────────────────────────────────────
@@ -308,57 +308,61 @@ function DoubtTutorContent() {
     setTimeoutId(tid);
 
     try {
-      // Call unified backend Gemini API route
       const currentApiKey = geminiKey || getGeminiApiKey();
-      const res = await fetch('/api/ai/tutor/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      let data: TutorResponse | null = null;
+
+      // When an API key is available or on static export (GitHub Pages), call Gemini directly client-side
+      if (currentApiKey) {
+        data = await callGeminiTutorLive(
           query,
-          imageBase64: attachedImage,
-          apiKey: currentApiKey,
-          history: messages.slice(-4).map((m) => ({
-            sender: m.sender,
-            text: m.text,
-          })),
-        }),
-      });
+          currentApiKey,
+          messages.slice(-4).map((m) => ({ sender: m.sender, text: m.text })),
+          attachedImage || undefined
+        );
+      } else {
+        // Try local server API if running Next.js dev server
+        try {
+          const res = await fetch('/api/ai/tutor/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              query,
+              imageBase64: attachedImage,
+              history: messages.slice(-4).map((m) => ({
+                sender: m.sender,
+                text: m.text,
+              })),
+            }),
+          });
+          if (res.ok) {
+            data = await res.json();
+          }
+        } catch {
+          // Fallback to offline STEM engine
+        }
+      }
 
       clearTimeout(tid);
       setTimedOut(false);
 
-      if (res.ok) {
-        const data = await res.json();
-        const aiMsg: TutorMessage = {
-          id: `ai-${Date.now()}`,
-          sender: 'ai',
-          text: data.text || 'Explanation derived successfully.',
-          equation: data.equation,
-          steps: data.steps,
-          keyTakeaway: data.keyTakeaway,
-          followUps: data.followUps,
-          isLiveGemini: data.isLiveGemini,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        };
-
-        setMessages((prev) => [...prev, aiMsg]);
-        addXP(25, 'Learned with AI Tutor');
-      } else {
-        // Fallback to local offline STEM engine
-        const fallback = getOfflineStemResponse(query);
-        const aiMsg: TutorMessage = {
-          id: `ai-${Date.now()}`,
-          sender: 'ai',
-          text: fallback.text,
-          equation: fallback.equation,
-          steps: fallback.steps,
-          keyTakeaway: fallback.keyTakeaway,
-          followUps: fallback.followUps,
-          isLiveGemini: false,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        };
-        setMessages((prev) => [...prev, aiMsg]);
+      if (!data) {
+        data = getOfflineStemResponse(query);
       }
+
+      const aiMsg: TutorMessage = {
+        id: `ai-${Date.now()}`,
+        sender: 'ai',
+        text: data.text || 'Explanation derived successfully.',
+        equation: data.equation,
+        steps: data.steps,
+        keyTakeaway: data.keyTakeaway,
+        followUps: data.followUps,
+        isLiveGemini: data.isLiveGemini,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+
+      setMessages((prev) => [...prev, aiMsg]);
+      addXP(25, 'Learned with AI Tutor');
     } catch (err) {
       clearTimeout(tid);
       setTimedOut(false);

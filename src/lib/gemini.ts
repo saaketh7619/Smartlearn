@@ -62,6 +62,166 @@ export function saveGeminiApiKey(key: string): void {
   }
 }
 
+export const GEMINI_SYSTEM_INSTRUCTION = `You are SmartLearn Master STEM AI Tutor — an elite, inspiring, and pedagogically brilliant private tutor for students preparing for high school, AP courses, SAT, and competitive entrance exams (JEE, NEET).
+
+Your mission is to make every math, physics, chemistry, biology, and computer science concept crystal clear, intuitive, and unforgettable through Socratic guidance and first-principles thinking.
+
+When answering a question or analyzing an attached handwritten diagram:
+1. Explain the fundamental intuition and use a vivid real-world analogy.
+2. Present the governing equation or formula in clean mathematical notation.
+3. Provide a clear, numbered step-by-step derivation or solution.
+4. Give a memorable "Key Takeaway" or exam mnemonic.
+5. Provide 3 thoughtful follow-up questions to test deep understanding.
+
+Format your response STRICTLY as a valid JSON object matching this structure:
+{
+  "text": "Clear, encouraging explanation with real-world analogy and intuition",
+  "equation": "Governing mathematical equation or formula (LaTeX or clean notation, or empty if none)",
+  "steps": [
+    "Step 1: Initial setup and identifying givens",
+    "Step 2: Core theorem or transformation applied",
+    "Step 3: Algebraic or physical simplification",
+    "Step 4: Final solution and verification"
+  ],
+  "keyTakeaway": "1-sentence golden rule or mnemonic for exams",
+  "followUps": [
+    "Follow-up question 1 to test understanding",
+    "Deeper exploration question 2",
+    "Common exam trap or edge case question 3"
+  ]
+}
+
+Return ONLY the raw JSON object, without extra conversational text before or after.`;
+
+/**
+ * Call Google Gemini API directly (client-side or server-side compatible)
+ * with multi-model fallback: gemini-2.5-flash -> gemini-2.0-flash -> gemini-1.5-flash
+ */
+export async function callGeminiTutorLive(
+  query: string,
+  apiKey?: string,
+  history?: Array<{ sender: 'user' | 'ai'; text: string }>,
+  imageBase64?: string
+): Promise<TutorResponse> {
+  const effectiveApiKey =
+    (apiKey && apiKey.trim()) ||
+    getGeminiApiKey() ||
+    process.env.NEXT_PUBLIC_GEMINI_API_KEY ||
+    '';
+
+  if (!effectiveApiKey) {
+    const offline = getOfflineStemResponse(query || 'Help with attached diagram');
+    return {
+      ...offline,
+      isLiveGemini: false,
+      error: 'No Gemini API key configured.',
+    };
+  }
+
+  const contents: any[] = [];
+  const parts: any[] = [{ text: `${GEMINI_SYSTEM_INSTRUCTION}\n\nStudent's question: "${query}"` }];
+
+  if (imageBase64) {
+    const match = imageBase64.match(/^data:(image\/[a-zA-Z0-9+.-]+);base64,(.+)$/);
+    if (match) {
+      parts.push({
+        inlineData: {
+          mimeType: match[1],
+          data: match[2],
+        },
+      });
+    }
+  }
+
+  // Include recent conversation context if available
+  if (history && history.length > 0) {
+    const historyContext = history
+      .map((h) => `${h.sender === 'user' ? 'Student' : 'Tutor'}: ${h.text}`)
+      .join('\n');
+    parts[0].text = `${GEMINI_SYSTEM_INSTRUCTION}\n\nConversation Context:\n${historyContext}\n\nStudent's question: "${query}"`;
+  }
+
+  contents.push({
+    role: 'user',
+    parts,
+  });
+
+  const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+  let lastError = '';
+
+  for (const model of modelsToTry) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${effectiveApiKey}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents,
+          generationConfig: {
+            temperature: 0.2,
+            maxOutputTokens: 2048,
+            responseMimeType: 'application/json',
+          },
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const candidateText =
+          data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+        if (candidateText) {
+          try {
+            const cleanJson = candidateText
+              .replace(/^```json\s*/i, '')
+              .replace(/^```\s*/i, '')
+              .replace(/\s*```$/i, '')
+              .trim();
+
+            const parsed = JSON.parse(cleanJson);
+            return {
+              success: true,
+              isLiveGemini: true,
+              modelUsed: model,
+              text: parsed.text || candidateText,
+              equation: parsed.equation || '',
+              steps: Array.isArray(parsed.steps) ? parsed.steps : [],
+              keyTakeaway: parsed.keyTakeaway || '',
+              followUps: Array.isArray(parsed.followUps) ? parsed.followUps : [],
+            };
+          } catch {
+            return {
+              success: true,
+              isLiveGemini: true,
+              modelUsed: model,
+              text: candidateText,
+              equation: '',
+              steps: [],
+              followUps: [
+                'Can you break this down further?',
+                'Can you give another example?',
+              ],
+            };
+          }
+        }
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        lastError = errData?.error?.message || `Gemini API HTTP ${res.status}`;
+      }
+    } catch (err: any) {
+      lastError = err.message || 'Network error connecting to Gemini API';
+    }
+  }
+
+  // Gracefully fallback to offline STEM engine if API calls fail
+  const offline = getOfflineStemResponse(query || 'Help with STEM doubt');
+  return {
+    ...offline,
+    isLiveGemini: false,
+    error: `Gemini API: ${lastError}. Serving from SmartLearn STEM Knowledge Base.`,
+  };
+}
+
 /**
  * Comprehensive STEM Offline Knowledge Base for instant, high-quality responses
  * when offline or when no Gemini API key is configured.

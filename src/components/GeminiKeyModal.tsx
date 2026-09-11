@@ -12,7 +12,7 @@ import {
   ShieldCheck,
   Zap,
 } from 'lucide-react';
-import { getGeminiApiKey, saveGeminiApiKey } from '@/lib/gemini';
+import { getGeminiApiKey, saveGeminiApiKey, callGeminiTutorLive } from '@/lib/gemini';
 
 interface GeminiKeyModalProps {
   isOpen: boolean;
@@ -32,7 +32,7 @@ export default function GeminiKeyModal({
   useEffect(() => {
     if (isOpen) {
       const existing = getGeminiApiKey();
-      setApiKey(existing || '');
+      setApiKey(existing);
       setTestingStatus('idle');
       setStatusMessage('');
     }
@@ -40,8 +40,8 @@ export default function GeminiKeyModal({
 
   if (!isOpen) return null;
 
-  const handleSave = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
     const cleanKey = apiKey.trim();
     saveGeminiApiKey(cleanKey);
     setStatusMessage(cleanKey ? 'Gemini API Key saved successfully!' : 'API Key cleared.');
@@ -64,16 +64,9 @@ export default function GeminiKeyModal({
     setStatusMessage('Testing connection with Google Gemini 2.5 Flash...');
 
     try {
-      const res = await fetch('/api/ai/tutor/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: 'Explain why 1+1=2 simply in 1 sentence',
-          apiKey: keyToTest,
-        }),
-      });
+      // Direct call to Gemini Live API
+      const data = await callGeminiTutorLive('Explain why 1+1=2 simply in 1 sentence', keyToTest);
 
-      const data = await res.json();
       if (data.success && data.isLiveGemini) {
         setTestingStatus('success');
         setStatusMessage(`Connected! Gemini responded successfully via ${data.modelUsed || 'Gemini Flash'}.`);
@@ -88,7 +81,7 @@ export default function GeminiKeyModal({
       }
     } catch (err: any) {
       setTestingStatus('error');
-      setStatusMessage(`Network error: ${err.message || 'Failed to reach tutor API'}`);
+      setStatusMessage(`Network error: ${err.message || 'Failed to reach Gemini API'}`);
     }
   };
 
