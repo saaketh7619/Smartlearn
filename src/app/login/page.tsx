@@ -635,7 +635,7 @@ function LoginPageContent() {
                   ) : (
                     <>
                       <KeyRound className="w-4 h-4" />
-                      <span>Send Verification OTP</span>
+                      <span>Send OTP Verification</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -678,7 +678,7 @@ function LoginPageContent() {
                   </p>
                   <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-emerald-500/20">
                     <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Fallback Demo Code: <strong className="font-mono text-slate-800 dark:text-slate-200">{generatedOtp || '123456'}</strong>
+                      Instant Access Code: <strong className="font-mono text-slate-800 dark:text-slate-200">{generatedOtp || '123456'}</strong>
                     </span>
                     <button
                       type="button"
@@ -824,7 +824,7 @@ function LoginPageContent() {
                     onClick={() => { setMode('signup'); setErrorMsg(''); }}
                     className="text-[#d82a4e] font-bold hover:underline cursor-pointer"
                   >
-                    Create Account with Demo OTP
+                    Create Account with OTP Verification
                   </button>
                 </p>
               ) : (
