@@ -209,59 +209,6 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-[#ffffff] dark:bg-[#121519] text-slate-900 dark:text-slate-100">
 
-      {/* 0.1 AUTHENTICATED ACTIVE SESSION BANNER (Changes dynamically after login) */}
-      {isLoggedIn && currentUser && (
-        <div className="bg-[#1a1e24] text-white border-b border-[#283038] py-3.5 px-4 sm:px-8 shadow-sm">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <img
-                src={currentUser.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&q=80'}
-                alt={currentUser.name}
-                className="w-10 h-10 rounded-full border-2 border-[#d82a4e] object-cover shadow-xs"
-              />
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-extrabold text-sm sm:text-base text-white">
-                    Welcome back, {currentUser.name}!
-                  </span>
-                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-sm bg-[#d82a4e] text-white uppercase tracking-wider">
-                    {currentUser.role} Portal Active
-                  </span>
-                  <span className="text-[11px] text-emerald-400 font-semibold flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    Demo OTP Verified
-                  </span>
-                </div>
-                <p className="text-xs text-slate-300">
-                  You are authenticated into SmartLearn. Your personal tools &amp; data are ready.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5">
-              <button
-                onClick={() => handleLaunchDemo(currentUser.role)}
-                className="btn-crimson px-5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider shadow-md flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>Go to My {currentUser.role} Dashboard</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-              <button
-                onClick={() => {
-                  logoutUser();
-                  triggerConfetti();
-                }}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-sm bg-white/10 hover:bg-[#d82a4e]/20 text-white text-xs font-semibold border border-white/20 transition-all cursor-pointer"
-                title="Logout and reset session"
-              >
-                <LogOut className="w-3.5 h-3.5 text-[#d82a4e]" />
-                <span>Log Out</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* ========================================================================= */}
       {/* 1. HERO SECTION (SmartLearn Dark Slate Chalkboard with Pencils & Hand)     */}
       {/* ========================================================================= */}
@@ -281,86 +228,15 @@ export default function LandingPage() {
           </p>
 
           {/* Primary Action Button: Prominent Get Started button */}
-          <div className="pt-4 max-w-2xl mx-auto">
-            {isLoggedIn && currentUser ? (
-              <div className="bg-black/40 backdrop-blur-md p-6 rounded-md border border-white/20 shadow-2xl max-w-2xl mx-auto space-y-4 text-center animate-in fade-in">
-                <div className="space-y-1">
-                  <span className="text-xs font-extrabold uppercase tracking-widest text-[#d82a4e]">
-                    Authenticated Session: {currentUser.name}
-                  </span>
-                  <h3 className="text-lg sm:text-xl font-extrabold text-white">
-                    Continue to your {currentUser.role.toLowerCase()} workspace
-                  </h3>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-                  <button
-                    onClick={() => handleLaunchDemo(currentUser.role)}
-                    className="btn-crimson px-7 py-3 rounded-md text-xs sm:text-sm font-bold uppercase tracking-wider shadow-lg flex items-center gap-2 cursor-pointer"
-                  >
-                    <span>Launch {currentUser.role} Dashboard</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                  <Link
-                    href="/get-started"
-                    className="px-5 py-3 rounded-md bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/20 flex items-center gap-1.5 cursor-pointer transition-colors"
-                  >
-                    <span>Switch Portal / Role</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
-                <Link
-                  href="/get-started"
-                  id="hero-get-started-btn"
-                  className="btn-crimson w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-md text-base sm:text-lg font-extrabold tracking-wide uppercase shadow-2xl hover:scale-105 transition-all cursor-pointer focus:outline-none focus:ring-4 focus:ring-[#d82a4e]/50"
-                >
-                  <span>Get Started</span>
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-
-                <Link
-                  href="/student/courses"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:py-4 rounded-md bg-white/10 hover:bg-white/20 text-white text-sm sm:text-base font-bold border border-white/20 transition-all backdrop-blur-md cursor-pointer"
-                >
-                  <BookOpen className="w-4 h-4" />
-                  <span>Browse 16+ Courses</span>
-                </Link>
-              </div>
-            )}
-          </div>
-
-          {/* Quick Demo Persona Chips */}
-          <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-2.5 text-xs">
-            <span className="text-slate-300 font-medium">Or explore demo portals directly:</span>
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              <button
-                onClick={() => handleLaunchDemo('STUDENT')}
-                className="px-3.5 py-1.5 rounded-sm bg-white/10 hover:bg-[#d82a4e] text-white border border-white/20 transition-all font-semibold flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>🎓 Student (Alex)</span>
-              </button>
-              <button
-                onClick={() => handleLaunchDemo('TEACHER')}
-                className="px-3.5 py-1.5 rounded-sm bg-white/10 hover:bg-[#d82a4e] text-white border border-white/20 transition-all font-semibold flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>👩‍🏫 Teacher (Sarah)</span>
-              </button>
-              <button
-                onClick={() => handleLaunchDemo('PARENT')}
-                className="px-3.5 py-1.5 rounded-sm bg-white/10 hover:bg-[#d82a4e] text-white border border-white/20 transition-all font-semibold flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>👨‍👩‍👧 Parent (Priya)</span>
-              </button>
-              <button
-                onClick={() => handleLaunchDemo('ADMIN')}
-                className="px-3.5 py-1.5 rounded-sm bg-white/10 hover:bg-[#d82a4e] text-white border border-white/20 transition-all font-semibold flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>⚡ Admin (Marcus)</span>
-              </button>
-            </div>
+          <div className="pt-6 max-w-2xl mx-auto flex items-center justify-center">
+            <Link
+              href="/get-started"
+              id="hero-get-started-btn"
+              className="btn-crimson inline-flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-md text-base sm:text-lg font-extrabold tracking-wide uppercase shadow-2xl hover:scale-105 transition-all cursor-pointer focus:outline-none focus:ring-4 focus:ring-[#d82a4e]/50"
+            >
+              <span>Get Started</span>
+              <ArrowRight className="w-5 h-5" />
+            </Link>
           </div>
         </div>
       </section>

@@ -31,6 +31,13 @@ import { INITIAL_USERS } from '@/lib/db';
 import { Role, User } from '@/types';
 import { sendOtpEmail, getEmailJsConfig } from '@/lib/emailjs';
 import EmailJsConfigModal from '@/components/EmailJsConfigModal';
+import {
+  signUpWithEmail,
+  signInWithPassword,
+  sendSupabaseOtp,
+  verifySupabaseOtp,
+  supabase,
+} from '@/lib/supabase';
 
 function LoginPageContent() {
   const router = useRouter();
@@ -58,6 +65,7 @@ function LoginPageContent() {
   const [successMsg, setSuccessMsg] = useState('');
   const [resendSeconds, setResendSeconds] = useState(60);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [isEmailJsConfigured, setIsEmailJsConfigured] = useState(false);
   const [emailDelivery, setEmailDelivery] = useState<{
@@ -131,13 +139,22 @@ function LoginPageContent() {
     setResendSeconds(60);
 
     setIsSendingEmail(true);
+
+    // 1. Dispatch OTP via Supabase Auth
+    const sbOtpRes = await sendSupabaseOtp(identifier.trim(), {
+      fullName: mode === 'signup' ? fullName : undefined,
+      role: selectedRole,
+      gradeOrDept: gradeOrDept.trim() || undefined,
+    });
+
+    // 2. Dispatch OTP via EmailJS
     const res = await sendOtpEmail(identifier.trim(), code, mode === 'signup' ? fullName : undefined);
     setIsSendingEmail(false);
 
-    if (res.success) {
+    if (sbOtpRes.success || res.success) {
       setEmailDelivery({
         status: 'sent',
-        message: `Verification code dispatched to ${identifier} via EmailJS.`,
+        message: `Verification code dispatched to ${identifier} via Supabase Auth & EmailJS.`,
       });
     } else if (res.unconfigured) {
       setEmailDelivery({
@@ -147,72 +164,46 @@ function LoginPageContent() {
     } else {
       setEmailDelivery({
         status: 'error',
-        message: res.error || 'EmailJS delivery failed.',
+        message: res.error || sbOtpRes.error || 'Email delivery failed.',
       });
     }
 
     setOtpStep(true);
   };
 
-  const handlePasswordAuth = (e: React.FormEvent) => {
+  const handlePasswordAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
-    if (!identifier.trim() || !identifier.includes('@')) {
-      setErrorMsg('Please enter a valid email address.');
+    const cleanEmail = identifier.trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!cleanEmail) {
+      setErrorMsg('Wrong email. Please enter your account email address.');
+      return;
+    }
+
+    if (!emailRegex.test(cleanEmail)) {
+      setErrorMsg('Wrong email format. Please enter an appropriate email address (e.g. name@domain.com).');
       return;
     }
 
     if (!password) {
-      setErrorMsg('Please enter your account password.');
+      setErrorMsg('Wrong password. Please enter your account password.');
       return;
     }
 
     if (password.length < 6) {
-      setErrorMsg('Password must be at least 6 characters.');
+      setErrorMsg('Wrong password length. Password must be at least 6 characters long.');
       return;
     }
 
     if (mode === 'signup' && confirmPassword && password !== confirmPassword) {
-      setErrorMsg('Passwords do not match. Please verify your password.');
+      setErrorMsg('Passwords do not match. Please verify your confirm password.');
       return;
     }
 
-    triggerConfetti();
-    setSuccessMsg(mode === 'signup' ? 'Account created successfully! Initializing portal...' : 'Sign in successful! Initializing portal...');
-
-    const baseUser =
-      selectedRole === 'STUDENT'
-        ? INITIAL_USERS[0]
-        : selectedRole === 'TEACHER'
-        ? INITIAL_USERS[1]
-        : selectedRole === 'PARENT'
-        ? INITIAL_USERS[2]
-        : INITIAL_USERS[3];
-
-    const verifiedUser: User = {
-      ...baseUser,
-      id: `user-${selectedRole.toLowerCase()}-${Date.now()}`,
-      name: mode === 'signup' && fullName ? fullName : baseUser.name,
-      email: identifier.trim(),
-      role: selectedRole,
-      studentProfile:
-        selectedRole === 'STUDENT' && baseUser.studentProfile
-          ? {
-              ...baseUser.studentProfile,
-              grade: gradeOrDept || baseUser.studentProfile.grade,
-            }
-          : baseUser.studentProfile,
-      teacherProfile:
-        selectedRole === 'TEACHER' && baseUser.teacherProfile
-          ? {
-              ...baseUser.teacherProfile,
-              department: gradeOrDept || baseUser.teacherProfile.department,
-            }
-          : baseUser.teacherProfile,
-    };
-
-    loginUser(verifiedUser);
+    setIsSubmitting(true);
 
     const roleDashboards: Record<Role, string> = {
       STUDENT: '/student/',
@@ -220,9 +211,61 @@ function LoginPageContent() {
       PARENT: '/parent/',
       ADMIN: '/admin/',
     };
-    setTimeout(() => {
-      router.push(roleDashboards[selectedRole]);
-    }, 600);
+
+    if (mode === 'signup') {
+      const res = await signUpWithEmail(cleanEmail, password, {
+        fullName: fullName.trim() || 'SmartLearn User',
+        role: selectedRole,
+        gradeOrDept: gradeOrDept.trim() || undefined,
+      });
+
+      if (!res.success) {
+        setIsSubmitting(false);
+        setErrorMsg(res.error || 'Registration failed with Supabase Auth.');
+        return;
+      }
+
+      triggerConfetti();
+      setSuccessMsg('Account registered with Supabase! Initializing portal workspace...');
+      if (res.user) {
+        loginUser(res.user);
+      }
+      setTimeout(() => {
+        router.push(roleDashboards[selectedRole]);
+      }, 700);
+    } else {
+      // mode === 'signin'
+      const res = await signInWithPassword(cleanEmail, password, selectedRole);
+
+      if (res.success && res.user) {
+        triggerConfetti();
+        setSuccessMsg('Supabase authentication confirmed! Initializing portal workspace...');
+        loginUser(res.user);
+        setTimeout(() => {
+          router.push(roleDashboards[selectedRole]);
+        }, 700);
+        return;
+      }
+
+      // Sign-in failed: Differentiate between "Wrong password" and "Wrong email"
+      setIsSubmitting(false);
+
+      try {
+        const { data: existingProfile } = await supabase
+          .from('profiles')
+          .select('id, email')
+          .eq('email', cleanEmail)
+          .maybeSingle();
+
+        if (existingProfile) {
+          setErrorMsg('Wrong password. The password you entered is incorrect for this account. Please verify your password and try again.');
+        } else {
+          setErrorMsg('Wrong email. No registered account found with this email address. Please check your spelling or click "Create Account" above.');
+        }
+      } catch {
+        setErrorMsg('Wrong password or unregistered email. Please check your credentials and try again.');
+      }
+    }
   };
 
   const handleResendOtp = async () => {
@@ -233,13 +276,18 @@ function LoginPageContent() {
 
     if (identifier.includes('@')) {
       setIsSendingEmail(true);
+      await sendSupabaseOtp(identifier.trim(), {
+        fullName: mode === 'signup' ? fullName : undefined,
+        role: selectedRole,
+        gradeOrDept: gradeOrDept.trim() || undefined,
+      });
       const res = await sendOtpEmail(identifier.trim(), newCode, mode === 'signup' ? fullName : undefined);
       setIsSendingEmail(false);
 
       if (res.success) {
         setEmailDelivery({
           status: 'sent',
-          message: `A new OTP has been delivered to ${identifier} via EmailJS.`,
+          message: `A new OTP has been delivered to ${identifier} via Supabase & EmailJS.`,
         });
       } else if (res.unconfigured) {
         setEmailDelivery({
@@ -282,7 +330,7 @@ function LoginPageContent() {
     }
   };
 
-  const handleVerifyOTP = (e: React.FormEvent) => {
+  const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
     const fullOtp = otpDigits.join('');
@@ -292,6 +340,28 @@ function LoginPageContent() {
       return;
     }
 
+    setIsSubmitting(true);
+
+    const roleDashboards: Record<Role, string> = {
+      STUDENT: '/student/',
+      TEACHER: '/teacher/',
+      PARENT: '/parent/',
+      ADMIN: '/admin/',
+    };
+
+    // 1. Attempt verification with Supabase Auth
+    const sbRes = await verifySupabaseOtp(identifier.trim(), fullOtp, selectedRole);
+    if (sbRes.success && sbRes.user) {
+      triggerConfetti();
+      setSuccessMsg('Supabase OTP verified successfully! Initializing portal workspace...');
+      loginUser(sbRes.user);
+      setTimeout(() => {
+        router.push(roleDashboards[selectedRole]);
+      }, 700);
+      return;
+    }
+
+    // 2. Fallback to EmailJS / local OTP verification
     const isValid = verifyOTP(identifier, fullOtp);
 
     if (isValid) {
@@ -334,16 +404,11 @@ function LoginPageContent() {
       loginUser(verifiedUser);
 
       // Directly open the respected dashboard page
-      const roleDashboards: Record<Role, string> = {
-        STUDENT: '/student',
-        TEACHER: '/teacher',
-        PARENT: '/parent',
-        ADMIN: '/admin',
-      };
       setTimeout(() => {
         router.push(roleDashboards[selectedRole]);
-      }, 800);
+      }, 700);
     } else {
+      setIsSubmitting(false);
       setErrorMsg(`Invalid verification code. Please check your email inbox or click Auto-fill (${generatedOtp || '123456'}).`);
     }
   };
@@ -492,9 +557,16 @@ function LoginPageContent() {
         {/* ========================================================================= */}
         <div className="bg-white dark:bg-[#1a1e24] rounded-sm border border-slate-200 dark:border-[#283038] shadow-lg p-6 sm:p-10 max-w-2xl mx-auto w-full">
           {errorMsg && (
-            <div className="mb-6 p-3.5 rounded-sm bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>{errorMsg}</span>
+            <div className="mb-6 p-4 rounded-sm bg-rose-50 dark:bg-rose-950/60 border-2 border-rose-500 text-rose-800 dark:text-rose-200 text-xs sm:text-sm font-medium flex items-start gap-3 shadow-md animate-in fade-in">
+              <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 flex-shrink-0 mt-0.5" />
+              <div className="space-y-0.5">
+                <div className="font-extrabold uppercase tracking-wide text-xs text-rose-700 dark:text-rose-300">
+                  Authentication Notice
+                </div>
+                <div className="font-bold text-rose-900 dark:text-rose-100 leading-relaxed">
+                  {errorMsg}
+                </div>
+              </div>
             </div>
           )}
 
@@ -577,7 +649,7 @@ function LoginPageContent() {
               </div>
 
               {/* Auth Method Selector: Email & Password vs Email OTP */}
-              <div className="flex items-center justify-center gap-3 sm:gap-4 mb-6 text-xs font-bold border-b border-slate-200 dark:border-[#283038] pb-3">
+              <div className="flex items-center justify-center gap-3 sm:gap-4 mb-4 text-xs font-bold border-b border-slate-200 dark:border-[#283038] pb-3">
                 <button
                   type="button"
                   onClick={() => {
@@ -610,6 +682,17 @@ function LoginPageContent() {
                 </button>
               </div>
 
+              {/* Supabase Connection Status Badge */}
+              <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-[#15191e] px-3 py-1.5 rounded-sm border border-slate-200/80 dark:border-[#283038] mb-5">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="font-semibold text-slate-700 dark:text-slate-200">Supabase Auth Connected</span>
+                </div>
+                <span className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wide">
+                  Cloud Active
+                </span>
+              </div>
+
               {/* Form Input Fields */}
               <form onSubmit={authMethod === 'password' ? handlePasswordAuth : handleRequestOTP} className="space-y-4">
                 {mode === 'signup' && (
@@ -637,9 +720,16 @@ function LoginPageContent() {
                       type="email"
                       required
                       value={identifier}
-                      onChange={(e) => setIdentifier(e.target.value)}
+                      onChange={(e) => {
+                        setIdentifier(e.target.value);
+                        if (errorMsg) setErrorMsg('');
+                      }}
                       placeholder="yourname@institution.edu"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-sm text-xs bg-slate-50 dark:bg-[#20252b] border border-slate-200 dark:border-[#283038] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#d82a4e]"
+                      className={`w-full pl-10 pr-4 py-2.5 rounded-sm text-xs bg-slate-50 dark:bg-[#20252b] border text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all ${
+                        errorMsg.toLowerCase().includes('email')
+                          ? 'border-rose-500 ring-1 ring-rose-500/50 focus:ring-rose-500'
+                          : 'border-slate-200 dark:border-[#283038] focus:ring-[#d82a4e]'
+                      }`}
                     />
                     <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                   </div>
@@ -670,9 +760,16 @@ function LoginPageContent() {
                           type={showPassword ? 'text' : 'password'}
                           required
                           value={password}
-                          onChange={(e) => setPassword(e.target.value)}
+                          onChange={(e) => {
+                            setPassword(e.target.value);
+                            if (errorMsg) setErrorMsg('');
+                          }}
                           placeholder="Enter account password (min. 6 characters)"
-                          className="w-full pl-10 pr-10 py-2.5 rounded-sm text-xs bg-slate-50 dark:bg-[#20252b] border border-slate-200 dark:border-[#283038] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#d82a4e]"
+                          className={`w-full pl-10 pr-10 py-2.5 rounded-sm text-xs bg-slate-50 dark:bg-[#20252b] border text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all ${
+                            errorMsg.toLowerCase().includes('password')
+                              ? 'border-rose-500 ring-1 ring-rose-500/50 focus:ring-rose-500'
+                              : 'border-slate-200 dark:border-[#283038] focus:ring-[#d82a4e]'
+                          }`}
                         />
                         <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                         <button
@@ -762,11 +859,21 @@ function LoginPageContent() {
                 {authMethod === 'password' ? (
                   <button
                     type="submit"
-                    className="w-full mt-3 py-3 px-6 rounded-sm btn-crimson text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
+                    disabled={isSubmitting}
+                    className="w-full mt-3 py-3 px-6 rounded-sm btn-crimson text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60"
                   >
-                    <Lock className="w-4 h-4" />
-                    <span>{mode === 'signup' ? 'Create Account & Sign In' : 'Sign In with Password'}</span>
-                    <ArrowRight className="w-4 h-4" />
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Authenticating with Supabase...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Lock className="w-4 h-4" />
+                        <span>{mode === 'signup' ? 'Create Supabase Account' : 'Sign In with Password'}</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
                   </button>
                 ) : (
                   <button
@@ -777,7 +884,7 @@ function LoginPageContent() {
                     {isSendingEmail ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Sending OTP via EmailJS...</span>
+                        <span>Sending OTP via Supabase &amp; EmailJS...</span>
                       </>
                     ) : (
                       <>
@@ -935,10 +1042,20 @@ function LoginPageContent() {
               <div className="space-y-3">
                 <button
                   type="submit"
-                  className="w-full py-3.5 px-6 rounded-sm btn-crimson text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
+                  disabled={isSubmitting}
+                  className="w-full py-3.5 px-6 rounded-sm btn-crimson text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 disabled:opacity-60"
                 >
-                  <ShieldCheck className="w-4 h-4" />
-                  <span>Verify OTP &amp; Complete Login</span>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Verifying with Supabase...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="w-4 h-4" />
+                      <span>Verify OTP &amp; Complete Login</span>
+                    </>
+                  )}
                 </button>
 
                 <div className="flex items-center justify-between text-xs text-slate-400 pt-1">

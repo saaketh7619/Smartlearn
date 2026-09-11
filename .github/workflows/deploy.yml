@@ -33,6 +33,12 @@ jobs:
       - name: Build Next.js application
         env:
           GITHUB_ACTIONS: 'true'
+          NEXT_PUBLIC_BASE_PATH: '/Smartlearn'
+          NEXT_PUBLIC_SUPABASE_URL: 'https://wvwhmeceincqfkfryqrs.supabase.co'
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind2d2htZWNlaW5jcWZrZnJ5cXJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkxNDA3MDcsImV4cCI6MjEwNDcxNjcwN30.aEkYQaLv3eydkuhJJ8Gcs1TD9WtnJLNkXL3woYPl4_8'
+          NEXT_PUBLIC_EMAILJS_SERVICE_ID: 'service_nk1ngue'
+          NEXT_PUBLIC_EMAILJS_TEMPLATE_ID: 'template_sptzhpb'
+          NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: 'GoD5merb9lhnJGaD5'
         run: npm run build
 
       - name: Upload GitHub Pages artifact
