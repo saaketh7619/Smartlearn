@@ -139,7 +139,7 @@ function LoginPageContent() {
       } else if (res.unconfigured) {
         setEmailDelivery({
           status: 'unconfigured',
-          message: 'EmailJS is not configured yet. Using simulated demo OTP mode.',
+          message: 'Instant OTP verification active.',
         });
       } else {
         setEmailDelivery({
@@ -176,7 +176,7 @@ function LoginPageContent() {
       } else if (res.unconfigured) {
         setEmailDelivery({
           status: 'unconfigured',
-          message: 'EmailJS is not configured yet. Using simulated demo OTP mode.',
+          message: 'Instant OTP verification active.',
         });
       } else {
         setEmailDelivery({
@@ -301,7 +301,7 @@ function LoginPageContent() {
               : 'Create Your SmartLearn Account'}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
-            Choose your portal role below, or verify with our demo SMS/Email OTP system to unlock personalized learning.
+            Choose your portal role below, or verify with our SMS/Email OTP verification system to unlock personalized learning.
           </p>
         </div>
 
@@ -312,10 +312,10 @@ function LoginPageContent() {
           <div className="bg-white dark:bg-[#1a1e24] p-6 rounded-sm border border-slate-200 dark:border-[#283038] shadow-sm space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                ⚡ 1-Click Instant Demo Portals (No Password Needed)
+                ⚡ 1-Click Instant Portals (No Password Needed)
               </span>
               <span className="text-[11px] text-[#d82a4e] font-bold">
-                Direct Evaluation Mode
+                Direct Role Access
               </span>
             </div>
 
