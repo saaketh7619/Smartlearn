@@ -1028,10 +1028,21 @@ class SmartLearnDatabase {
 
   /** Find subject by id across all classes */
   getSubjectById(subjectId: string): import('@/types').Subject | undefined {
+    if (!subjectId) return undefined;
+    const normalized = subjectId.toLowerCase().trim();
     for (const level of this.curriculum) {
       for (const stream of level.streams) {
         for (const cls of stream.classes) {
-          const sub = cls.subjects.find(s => s.id === subjectId);
+          const sub = cls.subjects.find((s) => {
+            if (s.id === subjectId) return true;
+            const sName = s.name.toLowerCase();
+            if (sName === normalized) return true;
+            if (normalized === `class-10-${sName}` || normalized === `class-10-${sName.replace(/\s+/g, '-')}`) return true;
+            if (normalized === 'class-10-math' && sName.includes('math')) return true;
+            if (normalized === 'class-10-sci' && sName.includes('sci')) return true;
+            if (normalized === 'class-10-social' && sName.includes('social')) return true;
+            return false;
+          });
           if (sub) return sub;
         }
       }

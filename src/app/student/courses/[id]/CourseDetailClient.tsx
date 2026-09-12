@@ -60,7 +60,7 @@ function SubjectCurriculumView({
   const [activeResourceModal, setActiveResourceModal] = useState<LearningResource | null>(null);
 
   // Find class ancestors
-  const classId = academicProfile?.classId || 'cls-sec-10';
+  const classId = subject.classId || academicProfile?.classId || 'class-10';
   const ancestors = getClassAncestors(classId);
 
   const totalChapters = subject.chapters.length;
@@ -555,7 +555,21 @@ export default function CourseDetailClient() {
   }
 
   // Otherwise, handle as general flat Course
-  const course = db.getCourseById(courseId) || db.courses[0];
+  const course = db.getCourseById(courseId) || db.courses[0] || {
+    id: 'course-default',
+    title: 'General Curriculum Course',
+    description: 'Explore comprehensive STEM lessons and modules.',
+    subject: 'General',
+    grade: 'Grade 10',
+    difficulty: 'Intermediate' as const,
+    thumbnail: '',
+    instructorName: 'SmartLearn Faculty',
+    instructorRole: 'Curriculum Director',
+    rating: 4.9,
+    enrollmentCount: 100,
+    durationHours: 10,
+    modules: [],
+  };
   const addXP = useStore((state) => state.addXP);
   const triggerConfetti = useStore((state) => state.triggerConfetti);
 
@@ -566,8 +580,8 @@ export default function CourseDetailClient() {
   const [showAiSummary, setShowAiSummary] = useState(false);
 
   const lessons =
-    course.modules.length > 0 && course.modules[0].lessons.length > 0
-      ? course.modules.flatMap((m) => m.lessons)
+    course?.modules && course.modules.length > 0 && course.modules[0]?.lessons?.length > 0
+      ? course.modules.flatMap((m) => m?.lessons || [])
       : [
           { id: 'les-1', title: '1. Foundations & Intuition', durationMinutes: 15, type: 'video' },
           { id: 'les-2', title: '2. Deep Dive & Core Axioms', durationMinutes: 25, type: 'video' },
