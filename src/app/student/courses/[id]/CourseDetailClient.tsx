@@ -32,6 +32,7 @@ import { db } from '@/lib/db';
 import { useToast } from '@/components/shared/ToastContext';
 import { CourseHierarchyBrowser } from '@/components/shared/CourseHierarchyBrowser';
 import { getClassAncestors } from '@/lib/curriculumData';
+import { assetUrl } from '@/lib/basePath';
 import { Subject, LearningResource, Chapter } from '@/types';
 
 // ============================================================
@@ -91,8 +92,9 @@ function SubjectCurriculumView({
     });
     addXP(15, `Studied ${res.title}`);
 
-    const resourceUrl = res.externalUrl || res.fileUrl;
-    if (resourceUrl) {
+    const rawUrl = res.fileUrl || res.externalUrl;
+    if (rawUrl) {
+      const resourceUrl = rawUrl.startsWith('http') ? rawUrl : assetUrl(rawUrl);
       window.open(resourceUrl, '_blank', 'noopener,noreferrer');
       toast.success('Resource Opened', `Viewing "${res.title}" in a new tab.`);
     } else {
@@ -398,10 +400,23 @@ function SubjectCurriculumView({
                                     {/* Study / Open Button */}
                                     <button
                                       onClick={() => handleOpenResource(res, chapter)}
-                                      className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+                                      className={`px-3.5 py-1.5 rounded-xl text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer ${
+                                        res.type === 'textbook'
+                                          ? 'bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700'
+                                          : 'bg-blue-600 hover:bg-blue-700'
+                                      }`}
                                     >
-                                      <span>Study</span>
-                                      <ExternalLink className="w-3.5 h-3.5" />
+                                      {res.type === 'textbook' ? (
+                                        <>
+                                          <span>Read PDF</span>
+                                          <BookOpen className="w-3.5 h-3.5" />
+                                        </>
+                                      ) : (
+                                        <>
+                                          <span>Study</span>
+                                          <ExternalLink className="w-3.5 h-3.5" />
+                                        </>
+                                      )}
                                     </button>
                                   </div>
                                 </div>

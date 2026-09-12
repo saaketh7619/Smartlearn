@@ -27,6 +27,7 @@ import { useToast } from '@/components/shared/ToastContext';
 import { AcademicProfileBadge } from '@/components/shared/AcademicProfileBadge';
 import { EmptyCurriculumState } from '@/components/shared/EmptyCurriculumState';
 import { getClassAncestors } from '@/lib/curriculumData';
+import { assetUrl } from '@/lib/basePath';
 
 // ============================================================
 // Curriculum-aware subject card for personalised library
@@ -41,6 +42,7 @@ function CurriculumSubjectCard({ subject, classId, classLevel }: {
     (t, ch) => t + ch.resources.length + ch.concepts.reduce((tc, c) => tc + c.resources.length, 0),
     0
   );
+  const hasTextbooks = subject.chapters.some((ch) => ch.resources.some((r) => r.type === 'textbook'));
 
   const subjectColors: Record<string, string> = {
     Mathematics: 'from-blue-500 to-indigo-600',
@@ -57,11 +59,17 @@ function CurriculumSubjectCard({ subject, classId, classLevel }: {
   return (
     <Link
       href={`/student/courses/${subject.id}`}
-      className="group flex flex-col p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+      className="group flex flex-col p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 relative overflow-hidden"
     >
       {/* Gradient header */}
       <div className={`h-20 rounded-2xl bg-gradient-to-br ${gradient} mb-4 flex items-center justify-center relative overflow-hidden`}>
         <BookOpen className="w-8 h-8 text-white/80" />
+        {hasTextbooks && (
+          <span className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-black/40 backdrop-blur-md text-white text-[9px] font-extrabold flex items-center gap-1 border border-white/20">
+            <span>NCERT PDF</span>
+            <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+          </span>
+        )}
         <div className="absolute inset-0 bg-white/5" />
       </div>
 
@@ -88,7 +96,33 @@ function CoursesContent() {
 
   const currentUser = useStore((state) => state.currentUser);
   const academicProfile = useStore((state) => state.academicProfile);
+  const setAcademicProfile = useStore((state) => state.setAcademicProfile);
   const toast = useToast();
+
+  const handleQuickChangeClass = (newClassId: string) => {
+    const classMap: Record<string, { level: string; stream: string; name: string }> = {
+      'class-10': { level: 'School', stream: 'Secondary', name: 'Class 10' },
+      'class-9': { level: 'School', stream: 'Secondary', name: 'Class 9' },
+      'class-8': { level: 'School', stream: 'Secondary', name: 'Class 8' },
+      'class-7': { level: 'School', stream: 'Secondary', name: 'Class 7' },
+      'class-6': { level: 'School', stream: 'Secondary', name: 'Class 6' },
+      'class-11-sci': { level: 'Intermediate / Higher Secondary', stream: 'Science', name: 'Class 11' },
+      'class-12-sci': { level: 'Intermediate / Higher Secondary', stream: 'Science', name: 'Class 12' },
+      'col-yr1': { level: 'College', stream: 'General', name: 'Year 1' },
+    };
+    const target = classMap[newClassId] || { level: 'School', stream: 'Secondary', name: 'Class 10' };
+    setAcademicProfile({
+      educationalLevel: target.level,
+      stream: target.stream,
+      classLevel: target.name,
+      classId: newClassId,
+      board: 'CBSE',
+      subjects: newClassId === 'class-10' ? ['Mathematics', 'Science', 'English', 'Social Science'] : ['General Subjects'],
+      learningGoals: ['exam_prep', 'concept_learning'],
+      onboardingCompleted: true,
+    });
+    toast.info('Class Switched', `Now viewing curriculum for ${target.name} (${target.level}).`);
+  };
 
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [selectedSubject, setSelectedSubject] = useState<string>(initialCategory);
@@ -204,7 +238,7 @@ function CoursesContent() {
             Course Library
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Explore 16+ accredited STEM &amp; humanities courses with adaptive quizzes, video lessons, and AI doubt solvers.
+            Explore accredited CBSE &amp; STEM courses with official NCERT textbooks, adaptive quizzes, and AI doubt solvers.
           </p>
         </div>
 
@@ -239,7 +273,26 @@ function CoursesContent() {
                 Structured chapters, concepts, and materials mapped to your academic profile.
               </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Quick Class Switcher Dropdown */}
+              <div className="flex items-center gap-1.5 bg-white dark:bg-slate-900 border border-blue-200/80 dark:border-blue-800/80 rounded-xl px-2.5 py-1 text-xs shadow-xs">
+                <span className="text-slate-400 font-semibold">Class:</span>
+                <select
+                  value={academicProfile.classId || 'class-10'}
+                  onChange={(e) => handleQuickChangeClass(e.target.value)}
+                  className="bg-transparent font-bold text-blue-600 dark:text-blue-400 focus:outline-none cursor-pointer text-xs pr-1"
+                  aria-label="Select Class Level"
+                >
+                  <option value="class-10">Class 10 (Textbooks Ready 📖)</option>
+                  <option value="class-9">Class 9 (Coming Soon)</option>
+                  <option value="class-8">Class 8 (Coming Soon)</option>
+                  <option value="class-7">Class 7 (Coming Soon)</option>
+                  <option value="class-6">Class 6 (Coming Soon)</option>
+                  <option value="class-11-sci">Class 11 Science (Coming Soon)</option>
+                  <option value="class-12-sci">Class 12 Science (Coming Soon)</option>
+                  <option value="col-yr1">College Year 1 (Coming Soon)</option>
+                </select>
+              </div>
               <AcademicProfileBadge profile={academicProfile} />
               <Link
                 href="/student/onboarding"
@@ -251,15 +304,143 @@ function CoursesContent() {
           </div>
 
           {curriculumSubjects.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {curriculumSubjects.map((sub) => (
-                <CurriculumSubjectCard
-                  key={sub.id}
-                  subject={sub}
-                  classId={academicProfile.classId}
-                  classLevel={academicProfile.classLevel}
-                />
-              ))}
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                {curriculumSubjects.map((sub) => (
+                  <CurriculumSubjectCard
+                    key={sub.id}
+                    subject={sub}
+                    classId={academicProfile.classId}
+                    classLevel={academicProfile.classLevel}
+                  />
+                ))}
+              </div>
+
+              {/* Class 10 Dedicated NCERT Textbook Hub */}
+              {academicProfile.classId === 'class-10' && (
+                <div className="p-5 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-blue-200/80 dark:border-blue-800/60 shadow-xs space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-xs">
+                        <BookOpen className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">
+                          Class 10 NCERT Digital Textbooks &amp; Solutions
+                        </h3>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                          Complete chapter PDFs for Mathematics &amp; Science + Social Science modules — offline ready and mapped to CBSE 2025-26.
+                        </p>
+                      </div>
+                    </div>
+                    <span className="px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold border border-emerald-200 dark:border-emerald-800 w-fit flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                      Official 10th NCERT Books Attached
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                    {/* Mathematics Card */}
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-50/70 to-indigo-50/50 dark:from-blue-950/30 dark:to-indigo-950/20 border border-blue-200/80 dark:border-blue-800/40 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <span className="px-2 py-0.5 rounded-md bg-blue-600 text-white text-[10px] font-bold uppercase">
+                            14 Chapters
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-medium">PDF Books</span>
+                        </div>
+                        <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">Mathematics Textbook</h4>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                          Real Numbers, Polynomials, Linear Equations, Trigonometry, Coordinate Geometry, Statistics &amp; Probability + Solutions.
+                        </p>
+                      </div>
+                      <div className="pt-3 mt-3 border-t border-blue-200/50 dark:border-blue-900/40 flex items-center justify-between gap-2">
+                        <a
+                          href={assetUrl('/textbooks/class-10/mathematics/jemh101.pdf')}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1"
+                        >
+                          <span>Read Ch 1 PDF</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </a>
+                        <Link
+                          href={`/student/courses/${curriculumSubjects.find(s => s.name === 'Mathematics')?.id || 'class-10-math'}`}
+                          className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                        >
+                          All 14 Chapters &rarr;
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* Science Card */}
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50/70 to-teal-50/50 dark:from-emerald-950/30 dark:to-teal-950/20 border border-emerald-200/80 dark:border-emerald-800/40 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <span className="px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[10px] font-bold uppercase">
+                            13 Chapters
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-medium">PDF Books</span>
+                        </div>
+                        <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">Science Textbook</h4>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                          Chemical Reactions, Acids &amp; Bases, Life Processes, Reproduction, Light, Electricity, Magnetic Effects &amp; Solutions.
+                        </p>
+                      </div>
+                      <div className="pt-3 mt-3 border-t border-emerald-200/50 dark:border-emerald-900/40 flex items-center justify-between gap-2">
+                        <a
+                          href={assetUrl('/textbooks/class-10/science/jesc101.pdf')}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1"
+                        >
+                          <span>Read Ch 1 PDF</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </a>
+                        <Link
+                          href={`/student/courses/${curriculumSubjects.find(s => s.name === 'Science')?.id || 'class-10-sci'}`}
+                          className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
+                        >
+                          All 13 Chapters &rarr;
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* Social Science Card */}
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-50/70 to-violet-50/50 dark:from-purple-950/30 dark:to-violet-950/20 border border-purple-200/80 dark:border-purple-800/40 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <span className="px-2 py-0.5 rounded-md bg-purple-600 text-white text-[10px] font-bold uppercase">
+                            4 Core Books
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-medium">CBSE / NCERT</span>
+                        </div>
+                        <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">Social Science</h4>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                          History (Nationalism in Europe &amp; India), Geography (Resources &amp; Water), Civics (Power Sharing &amp; Federalism), Economics.
+                        </p>
+                      </div>
+                      <div className="pt-3 mt-3 border-t border-purple-200/50 dark:border-purple-900/40 flex items-center justify-between gap-2">
+                        <Link
+                          href={`/student/courses/${curriculumSubjects.find(s => s.name === 'Social Science')?.id || 'class-10-social'}`}
+                          className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1"
+                        >
+                          <span>Open Chapters</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </Link>
+                        <a
+                          href="https://ncert.nic.in/textbook.php?jess1=0-5"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1"
+                        >
+                          NCERT Portal &rarr;
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <EmptyCurriculumState
