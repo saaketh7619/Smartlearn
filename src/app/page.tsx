@@ -230,7 +230,7 @@ export default function LandingPage() {
           {/* Primary Action Button: Prominent Get Started button */}
           <div className="pt-6 max-w-2xl mx-auto flex items-center justify-center">
             <Link
-              href="/get-started"
+              href="/get-started/"
               id="hero-get-started-btn"
               className="btn-crimson inline-flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-md text-base sm:text-lg font-extrabold tracking-wide uppercase shadow-2xl hover:scale-105 transition-all cursor-pointer focus:outline-none focus:ring-4 focus:ring-[#d82a4e]/50"
             >

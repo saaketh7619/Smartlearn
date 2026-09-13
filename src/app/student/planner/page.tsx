@@ -149,7 +149,9 @@ export default function StudyPlannerPage() {
             const existingIds = new Set(prev.map((s) => s.id));
             const fresh = mapped.filter((m) => !existingIds.has(m.id));
             if (fresh.length > 0) {
-              toast.info('Test Remediation Synced', `${fresh.length} weak topic sessions imported into your schedule.`);
+              setTimeout(() => {
+                toast.info('Test Remediation Synced', `${fresh.length} weak topic sessions imported into your schedule.`);
+              }, 0);
               return [...prev, ...fresh];
             }
             return prev;

@@ -68,29 +68,6 @@ export function Navbar() {
     },
   };
 
-  // Proactively prefetch all navbar and portal routes on mount for instantaneous (0ms) clicks
-  useEffect(() => {
-    const routesToPreload = [
-      '/',
-      '/about/',
-      '/student/courses/',
-      '/blog/',
-      '/contact/',
-      '/get-started/',
-      '/login/',
-      '/student/',
-      '/teacher/',
-      '/parent/',
-      '/admin/',
-    ];
-    routesToPreload.forEach((r) => {
-      try {
-        router.prefetch(r);
-      } catch {
-        // ignore
-      }
-    });
-  }, [router]);
 
   const handleSwitchRole = (role: Role) => {
     switchDemoRole(role);
