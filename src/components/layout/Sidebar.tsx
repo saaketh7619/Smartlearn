@@ -126,12 +126,19 @@ export function Sidebar() {
             const isRootRole = item.href === '/student/' || item.href === '/teacher/' || item.href === '/parent/' || item.href === '/admin/';
             const isActive = pathname === item.href || pathname === cleanHref || (!isRootRole && pathname.startsWith(cleanHref));
             return (
-              <Link
+              <button
                 key={item.href}
-                href={item.href}
-                prefetch={true}
-                onClick={() => setMobileOpen(false)}
-                className={`flex items-center justify-between px-3.5 py-2.5 rounded-md text-xs font-semibold transition-all ${
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  router.push(item.href);
+                }}
+                onMouseEnter={() => {
+                  try {
+                    router.prefetch(item.href);
+                  } catch {}
+                }}
+                className={`w-full text-left flex items-center justify-between px-3.5 py-2.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                   isActive
                     ? 'bg-[#d82a4e] text-white font-bold shadow-md shadow-red-900/25'
                     : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#20252b]'
@@ -152,7 +159,7 @@ export function Sidebar() {
                     {item.badge}
                   </span>
                 )}
-              </Link>
+              </button>
             );
           })}
         </div>
@@ -228,10 +235,10 @@ export function Sidebar() {
         aria-label="Mobile Navigation"
         className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#1a1e24]/95 backdrop-blur-md border-t border-slate-200 dark:border-[#283038] px-2 py-1.5 flex items-center justify-around shadow-lg"
       >
-        <Link
-          href={role === 'STUDENT' ? '/student/' : role === 'TEACHER' ? '/teacher/' : role === 'PARENT' ? '/parent/' : '/admin/'}
-          prefetch={true}
-          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
+        <button
+          type="button"
+          onClick={() => router.push(role === 'STUDENT' ? '/student/' : role === 'TEACHER' ? '/teacher/' : role === 'PARENT' ? '/parent/' : '/admin/')}
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors cursor-pointer ${
             pathname === '/student/' || pathname === '/teacher/' || pathname === '/parent/' || pathname === '/admin/'
               ? 'text-[#d82a4e] font-bold'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
@@ -239,14 +246,14 @@ export function Sidebar() {
         >
           <LayoutDashboard className="w-4 h-4" />
           <span>Home</span>
-        </Link>
+        </button>
 
         {role === 'STUDENT' && (
           <>
-            <Link
-              href="/student/courses/"
-              prefetch={true}
-              className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
+            <button
+              type="button"
+              onClick={() => router.push('/student/courses/')}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors cursor-pointer ${
                 pathname.startsWith('/student/courses')
                   ? 'text-[#d82a4e] font-bold'
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
@@ -254,12 +261,12 @@ export function Sidebar() {
             >
               <BookOpen className="w-4 h-4" />
               <span>Courses</span>
-            </Link>
+            </button>
 
-            <Link
-              href="/student/tutor/"
-              prefetch={true}
-              className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
+            <button
+              type="button"
+              onClick={() => router.push('/student/tutor/')}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors cursor-pointer ${
                 pathname.startsWith('/student/tutor')
                   ? 'text-blue-500 font-bold'
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
@@ -267,12 +274,12 @@ export function Sidebar() {
             >
               <BrainCircuit className="w-4 h-4" />
               <span>AI Tutor</span>
-            </Link>
+            </button>
 
-            <Link
-              href="/student/tests/"
-              prefetch={true}
-              className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
+            <button
+              type="button"
+              onClick={() => router.push('/student/tests/')}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors cursor-pointer ${
                 pathname.startsWith('/student/tests')
                   ? 'text-[#d82a4e] font-bold'
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
@@ -280,7 +287,7 @@ export function Sidebar() {
             >
               <FileQuestion className="w-4 h-4" />
               <span>Tests</span>
-            </Link>
+            </button>
           </>
         )}
 

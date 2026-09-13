@@ -172,42 +172,50 @@ export function Navbar() {
                 <span>🚀 Choose Portal / Onboarding</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
-              <Link
-                href="/student/"
-                prefetch={true}
-                onClick={() => switchDemoRole('STUDENT')}
+              <button
+                type="button"
+                onClick={() => {
+                  switchDemoRole('STUDENT');
+                  router.push('/student/');
+                }}
                 className="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-[#20252b] flex items-center justify-between cursor-pointer"
               >
                 <span>🎓 Student Workspace</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-blue-500" />
-              </Link>
-              <Link
-                href="/teacher/"
-                prefetch={true}
-                onClick={() => switchDemoRole('TEACHER')}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  switchDemoRole('TEACHER');
+                  router.push('/teacher/');
+                }}
                 className="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-[#20252b] flex items-center justify-between cursor-pointer"
               >
                 <span>👩‍🏫 Teacher Hub</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-purple-500" />
-              </Link>
-              <Link
-                href="/parent/"
-                prefetch={true}
-                onClick={() => switchDemoRole('PARENT')}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  switchDemoRole('PARENT');
+                  router.push('/parent/');
+                }}
                 className="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-[#20252b] flex items-center justify-between cursor-pointer"
               >
                 <span>👨‍👩‍👧 Parent Portal</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-emerald-500" />
-              </Link>
-              <Link
-                href="/admin/"
-                prefetch={true}
-                onClick={() => switchDemoRole('ADMIN')}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  switchDemoRole('ADMIN');
+                  router.push('/admin/');
+                }}
                 className="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-[#20252b] flex items-center justify-between cursor-pointer"
               >
                 <span>⚡ Admin Console</span>
                 <ArrowUpRight className="w-3.5 h-3.5 text-amber-500" />
-              </Link>
+              </button>
             </div>
           </div>
 
@@ -276,42 +284,50 @@ export function Navbar() {
                       <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                         Switch Active Portal
                       </div>
-                      <Link
-                        href="/student/"
-                        prefetch={true}
-                        onClick={() => handleSwitchRole('STUDENT')}
-                        className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-left hover:bg-slate-100 dark:hover:bg-[#20252b]"
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleSwitchRole('STUDENT');
+                          router.push('/student/');
+                        }}
+                        className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-left hover:bg-slate-100 dark:hover:bg-[#20252b] cursor-pointer"
                       >
                         <span>🎓 Student (Alex)</span>
                         {currentRole === 'STUDENT' && <span className="text-[#d82a4e] text-[10px] font-bold">Active</span>}
-                      </Link>
-                      <Link
-                        href="/teacher/"
-                        prefetch={true}
-                        onClick={() => handleSwitchRole('TEACHER')}
-                        className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-left hover:bg-slate-100 dark:hover:bg-[#20252b]"
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleSwitchRole('TEACHER');
+                          router.push('/teacher/');
+                        }}
+                        className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-left hover:bg-slate-100 dark:hover:bg-[#20252b] cursor-pointer"
                       >
                         <span>👩‍🏫 Teacher (Sarah)</span>
                         {currentRole === 'TEACHER' && <span className="text-[#d82a4e] text-[10px] font-bold">Active</span>}
-                      </Link>
-                      <Link
-                        href="/parent/"
-                        prefetch={true}
-                        onClick={() => handleSwitchRole('PARENT')}
-                        className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-left hover:bg-slate-100 dark:hover:bg-[#20252b]"
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleSwitchRole('PARENT');
+                          router.push('/parent/');
+                        }}
+                        className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-left hover:bg-slate-100 dark:hover:bg-[#20252b] cursor-pointer"
                       >
                         <span>👨‍👩‍👧 Parent (Priya)</span>
                         {currentRole === 'PARENT' && <span className="text-emerald-500 text-[10px] font-bold">Active</span>}
-                      </Link>
-                      <Link
-                        href="/admin/"
-                        prefetch={true}
-                        onClick={() => handleSwitchRole('ADMIN')}
-                        className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-left hover:bg-slate-100 dark:hover:bg-[#20252b]"
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleSwitchRole('ADMIN');
+                          router.push('/admin/');
+                        }}
+                        className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-left hover:bg-slate-100 dark:hover:bg-[#20252b] cursor-pointer"
                       >
                         <span>⚡ Admin (Marcus)</span>
                         {currentRole === 'ADMIN' && <span className="text-amber-500 text-[10px] font-bold">Active</span>}
-                      </Link>
+                      </button>
                     </div>
                   </>
                 )}

@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Sparkles,
@@ -51,6 +50,15 @@ export default function StudentDashboard() {
   const courses = db.courses;
 
   const lastViewed = recentlyViewed.length > 0 ? recentlyViewed[0] : null;
+
+  useEffect(() => {
+    // Prefetch all key student routes in idle time for instantaneous transitions
+    router.prefetch('/student/courses/');
+    router.prefetch('/student/tutor/');
+    router.prefetch('/student/revision/');
+    router.prefetch('/student/analytics/');
+    router.prefetch('/student/tests/');
+  }, [router]);
 
   // Chart 1: Mastery Over Time
   const masteryData = [
@@ -143,13 +151,14 @@ export default function StudentDashboard() {
               </p>
             </div>
           </div>
-          <Link
-            href="/student/onboarding/"
-            prefetch={true}
-            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-xs flex-shrink-0"
+          <button
+            type="button"
+            onClick={() => router.push('/student/onboarding/')}
+            onMouseEnter={() => router.prefetch('/student/onboarding/')}
+            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-xs flex-shrink-0 cursor-pointer"
           >
             Complete Profile &rarr;
-          </Link>
+          </button>
         </div>
       )}
 
@@ -208,14 +217,15 @@ export default function StudentDashboard() {
             <span className="text-xs text-slate-500">
               {academicProfile ? `${academicProfile.classLevel} Syllabus` : 'Module 2 of 4 · 2 lessons remaining'}
             </span>
-            <Link
-              href={lastViewed ? '/student/courses/' : '/student/courses/course-calc-1/'}
-              prefetch={true}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2"
+            <button
+              type="button"
+              onClick={() => router.push(lastViewed ? '/student/courses/' : '/student/courses/course-calc-1/')}
+              onMouseEnter={() => router.prefetch(lastViewed ? '/student/courses/' : '/student/courses/course-calc-1/')}
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer"
             >
               <Play className="w-3.5 h-3.5 fill-white" />
               Resume Study
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -255,14 +265,15 @@ export default function StudentDashboard() {
             </div>
           </div>
 
-          <Link
-            href="/student/tutor/"
-            prefetch={true}
-            className="mt-5 w-full py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold text-center transition-all hover:opacity-95 shadow-xs flex items-center justify-center gap-1.5"
+          <button
+            type="button"
+            onClick={() => router.push('/student/tutor/')}
+            onMouseEnter={() => router.prefetch('/student/tutor/')}
+            className="mt-5 w-full py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold text-center transition-all hover:opacity-95 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer border-0"
           >
             Open Full AI Tutor Chat
             <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          </button>
         </div>
       </div>
 
@@ -273,13 +284,14 @@ export default function StudentDashboard() {
             <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">AI Suggested For You</h3>
             <p className="text-xs text-slate-500">Based on your Grade 10 curriculum and weak topic diagnostics</p>
           </div>
-          <Link
-            href="/student/courses/"
-            prefetch={true}
-            className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+          <button
+            type="button"
+            onClick={() => router.push('/student/courses/')}
+            onMouseEnter={() => router.prefetch('/student/courses/')}
+            className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-0 p-0"
           >
             Explore All Courses →
-          </Link>
+          </button>
         </div>
 
         <div className="flex gap-4 overflow-x-auto pb-3 pt-1 scrollbar-thin">
@@ -315,14 +327,15 @@ export default function StudentDashboard() {
 
               <div className="p-4 pt-0 border-t border-slate-100 dark:border-slate-800/60 mt-2 flex items-center justify-between text-xs">
                 <span className="text-slate-400 text-[11px]">{course.durationHours}h total</span>
-                <Link
-                  href={`/student/courses/${course.id}/`}
-                  prefetch={true}
-                  className="font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                <button
+                  type="button"
+                  onClick={() => router.push(`/student/courses/${course.id}/`)}
+                  onMouseEnter={() => router.prefetch(`/student/courses/${course.id}/`)}
+                  className="font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-0 p-0"
                 >
                   View Course
                   <ArrowRight className="w-3 h-3" />
-                </Link>
+                </button>
               </div>
             </div>
           ))}
@@ -383,13 +396,14 @@ export default function StudentDashboard() {
               </h3>
               <p className="text-xs text-slate-500">Weak vs Strong areas across STEM</p>
             </div>
-            <Link
-              href="/student/analytics/"
-              prefetch={true}
-              className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+            <button
+              type="button"
+              onClick={() => router.push('/student/analytics/')}
+              onMouseEnter={() => router.prefetch('/student/analytics/')}
+              className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer bg-transparent border-0 p-0"
             >
               Full Analytics →
-            </Link>
+            </button>
           </div>
 
           <div className="h-64 w-full">

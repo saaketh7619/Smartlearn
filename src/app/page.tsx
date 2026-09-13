@@ -542,15 +542,14 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="space-y-2 pt-2">
-              <Link
-                href="/student/"
-                prefetch={true}
-                onClick={() => switchDemoRole('STUDENT')}
+              <button
+                type="button"
+                onClick={() => handleLaunchDemo('STUDENT')}
                 className="w-full py-2.5 rounded-sm bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
               >
                 <span>Launch Student Hub</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              </button>
               <Link
                 href="/login/?role=STUDENT"
                 prefetch={true}
@@ -575,15 +574,14 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="space-y-2 pt-2">
-              <Link
-                href="/teacher/"
-                prefetch={true}
-                onClick={() => switchDemoRole('TEACHER')}
+              <button
+                type="button"
+                onClick={() => handleLaunchDemo('TEACHER')}
                 className="w-full py-2.5 rounded-sm btn-crimson text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
               >
                 <span>Launch Teacher Hub</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              </button>
               <Link
                 href="/login/?role=TEACHER"
                 prefetch={true}
@@ -608,15 +606,14 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="space-y-2 pt-2">
-              <Link
-                href="/parent/"
-                prefetch={true}
-                onClick={() => switchDemoRole('PARENT')}
+              <button
+                type="button"
+                onClick={() => handleLaunchDemo('PARENT')}
                 className="w-full py-2.5 rounded-sm bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
               >
                 <span>Launch Parent Hub</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              </button>
               <Link
                 href="/login/?role=PARENT"
                 prefetch={true}
@@ -641,15 +638,14 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="space-y-2 pt-2">
-              <Link
-                href="/admin/"
-                prefetch={true}
-                onClick={() => switchDemoRole('ADMIN')}
+              <button
+                type="button"
+                onClick={() => handleLaunchDemo('ADMIN')}
                 className="w-full py-2.5 rounded-sm bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
               >
                 <span>Launch Admin Hub</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              </button>
               <Link
                 href="/login/?role=ADMIN"
                 prefetch={true}

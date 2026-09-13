@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   GraduationCap, BookOpen, Target, Edit3, AlertTriangle, Check, Flame,
   Star, Coins, Zap, Clock, Bookmark, Eye, ChevronRight, ArrowRight,
@@ -18,6 +18,7 @@ const GOAL_LABELS: Record<string, string> = {
 };
 
 export default function StudentProfilePage() {
+  const router = useRouter();
   const { currentUser, academicProfile, recentlyViewed, bookmarkedResourceIds } = useStore();
 
   if (!currentUser) return null;
@@ -33,14 +34,15 @@ export default function StudentProfilePage() {
           </h1>
           <p className="text-xs text-slate-500 mt-1">Your academic identity and learning progress</p>
         </div>
-        <Link
-          href="/student/onboarding/"
-          prefetch={true}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-xs font-bold hover:bg-blue-100 dark:hover:bg-blue-950/60 transition-colors"
+        <button
+          type="button"
+          onClick={() => router.push('/student/onboarding/')}
+          onMouseEnter={() => router.prefetch('/student/onboarding/')}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-xs font-bold hover:bg-blue-100 dark:hover:bg-blue-950/60 transition-colors cursor-pointer"
         >
           <Edit3 className="w-3.5 h-3.5" />
           Edit Academic Profile
-        </Link>
+        </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -122,9 +124,14 @@ export default function StudentProfilePage() {
                   <GraduationCap className="w-4 h-4 text-blue-500" />
                   Academic Profile
                 </h3>
-                <Link href="/student/onboarding/" prefetch={true} className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => router.push('/student/onboarding/')}
+                  onMouseEnter={() => router.prefetch('/student/onboarding/')}
+                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-0 p-0"
+                >
                   Update <Edit3 className="w-3 h-3" />
-                </Link>
+                </button>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -168,14 +175,15 @@ export default function StudentProfilePage() {
               </div>
 
               {/* Go to courses CTA */}
-              <Link
-                href="/student/courses/"
-                prefetch={true}
-                className="flex items-center justify-between p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/40 text-xs font-bold text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-950/50 transition-colors"
+              <button
+                type="button"
+                onClick={() => router.push('/student/courses/')}
+                onMouseEnter={() => router.prefetch('/student/courses/')}
+                className="w-full flex items-center justify-between p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/40 text-xs font-bold text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-950/50 transition-colors cursor-pointer"
               >
                 <span>View your personalised {academicProfile.classLevel} curriculum</span>
                 <ArrowRight className="w-4 h-4" />
-              </Link>
+              </button>
             </div>
           ) : (
             /* No profile yet */
@@ -185,14 +193,15 @@ export default function StudentProfilePage() {
                 <h3 className="font-bold text-slate-900 dark:text-white">Academic Profile Not Set</h3>
                 <p className="text-xs text-slate-500 mt-1">Complete your profile to see personalised courses and resources.</p>
               </div>
-              <Link
-                href="/student/onboarding/"
-                prefetch={true}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 transition-colors shadow-sm"
+              <button
+                type="button"
+                onClick={() => router.push('/student/onboarding/')}
+                onMouseEnter={() => router.prefetch('/student/onboarding/')}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 transition-colors shadow-sm cursor-pointer border-0"
               >
                 <GraduationCap className="w-3.5 h-3.5" />
                 Set Up My Profile
-              </Link>
+              </button>
             </div>
           )}
 
@@ -204,7 +213,14 @@ export default function StudentProfilePage() {
                   <Clock className="w-4 h-4 text-slate-400" />
                   Recently Viewed
                 </h3>
-                <Link href="/student/courses/" prefetch={true} className="text-xs text-blue-600 dark:text-blue-400 hover:underline">View all →</Link>
+                <button
+                  type="button"
+                  onClick={() => router.push('/student/courses/')}
+                  onMouseEnter={() => router.prefetch('/student/courses/')}
+                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline cursor-pointer bg-transparent border-0 p-0"
+                >
+                  View all →
+                </button>
               </div>
               <div className="space-y-2">
                 {recentlyViewed.slice(0, 5).map((item) => (
