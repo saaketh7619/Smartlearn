@@ -356,9 +356,9 @@ export default function BlogPage() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
           <p>Copyright &copy; 2026 SmartLearn Ecosystem. All rights reserved.</p>
           <div className="flex items-center gap-5 font-semibold text-slate-600 dark:text-slate-400">
-            <Link href="/terms" className="hover:text-[#d82a4e] transition-colors">Terms &amp; Conditions</Link>
-            <Link href="/login?mode=signup" className="hover:text-[#d82a4e] transition-colors">Register</Link>
-            <Link href="/privacy" className="hover:text-[#d82a4e] transition-colors">Privacy Policy</Link>
+            <Link href="/terms/" prefetch={true} className="hover:text-[#d82a4e] transition-colors">Terms &amp; Conditions</Link>
+            <Link href="/login/?mode=signup" prefetch={true} className="hover:text-[#d82a4e] transition-colors">Register</Link>
+            <Link href="/privacy/" prefetch={true} className="hover:text-[#d82a4e] transition-colors">Privacy Policy</Link>
           </div>
         </div>
       </footer>

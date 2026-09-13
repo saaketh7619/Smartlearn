@@ -465,7 +465,8 @@ export default function AdaptiveTestRunnerClient() {
 
                 {/* Action 3: Ask AI Tutor */}
                 <Link
-                  href={`/student/tutor?topic=${encodeURIComponent(weakTopics[0])}`}
+                  href={`/student/tutor/?topic=${encodeURIComponent(weakTopics[0])}`}
+                  prefetch={true}
                   className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-800/80 hover:border-blue-500 transition-all text-left space-y-1 shadow-xs block group"
                 >
                   <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">

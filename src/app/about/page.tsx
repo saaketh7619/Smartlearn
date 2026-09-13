@@ -61,10 +61,10 @@ export default function AboutPage() {
           SmartLearn is an AI-powered education ecosystem that brings students, teachers, and parents together on one unified platform — with personalized learning, real-time analytics, and transparent progress tracking.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Link href="/login" className="btn-crimson px-8 py-3 rounded-xl text-sm font-bold inline-flex items-center gap-2">
+          <Link href="/login/" prefetch={true} className="btn-crimson px-8 py-3 rounded-xl text-sm font-bold inline-flex items-center gap-2">
             Explore the Platform <ArrowRight className="w-4 h-4" />
           </Link>
-          <Link href="/student/courses" className="px-8 py-3 rounded-xl bg-slate-100 dark:bg-[#1a1e24] border border-slate-200 dark:border-[#283038] text-sm font-semibold hover:bg-slate-200 dark:hover:bg-[#20252b] transition-colors">
+          <Link href="/student/courses/" prefetch={true} className="px-8 py-3 rounded-xl bg-slate-100 dark:bg-[#1a1e24] border border-slate-200 dark:border-[#283038] text-sm font-semibold hover:bg-slate-200 dark:hover:bg-[#20252b] transition-colors">
             Browse Courses
           </Link>
         </div>

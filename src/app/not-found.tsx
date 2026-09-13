@@ -56,14 +56,16 @@ export default function NotFound() {
             <span className="text-xs font-bold">Home</span>
           </Link>
           <Link
-            href="/student/courses"
+            href="/student/courses/"
+            prefetch={true}
             className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white dark:bg-[#1a1e24] border border-slate-200 dark:border-[#283038] hover:border-blue-500/40 hover:shadow-md transition-all"
           >
             <BookOpen className="w-5 h-5 text-blue-500" />
             <span className="text-xs font-bold">Courses</span>
           </Link>
           <Link
-            href="/student/tutor"
+            href="/student/tutor/"
+            prefetch={true}
             className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white dark:bg-[#1a1e24] border border-slate-200 dark:border-[#283038] hover:border-indigo-500/40 hover:shadow-md transition-all"
           >
             <BrainCircuit className="w-5 h-5 text-indigo-500" />
@@ -72,7 +74,8 @@ export default function NotFound() {
         </div>
 
         <Link
-          href="/login"
+          href="/login/"
+          prefetch={true}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#d82a4e] text-white text-sm font-bold hover:bg-[#c32646] transition-colors shadow-md shadow-rose-500/20"
         >
           <span>Go to Dashboard</span>

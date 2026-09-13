@@ -296,7 +296,8 @@ function CoursesContent() {
               </div>
               <AcademicProfileBadge profile={academicProfile} />
               <Link
-                href="/student/onboarding"
+                href="/student/onboarding/"
+                prefetch={true}
                 className="text-xs font-semibold px-3 py-1.5 rounded-xl border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
               >
                 Change Class
@@ -366,7 +367,8 @@ function CoursesContent() {
                           <ArrowRight className="w-3 h-3" />
                         </a>
                         <Link
-                          href={`/student/courses/${curriculumSubjects.find(s => s.name === 'Mathematics')?.id || 'class-10-math'}`}
+                          href={`/student/courses/${curriculumSubjects.find(s => s.name === 'Mathematics')?.id || 'class-10-math'}/`}
+                          prefetch={true}
                           className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
                         >
                           All 14 Chapters &rarr;
@@ -399,7 +401,8 @@ function CoursesContent() {
                           <ArrowRight className="w-3 h-3" />
                         </a>
                         <Link
-                          href={`/student/courses/${curriculumSubjects.find(s => s.name === 'Science')?.id || 'class-10-sci'}`}
+                          href={`/student/courses/${curriculumSubjects.find(s => s.name === 'Science')?.id || 'class-10-sci'}/`}
+                          prefetch={true}
                           className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
                         >
                           All 13 Chapters &rarr;
@@ -423,7 +426,8 @@ function CoursesContent() {
                       </div>
                       <div className="pt-3 mt-3 border-t border-purple-200/50 dark:border-purple-900/40 flex items-center justify-between gap-2">
                         <Link
-                          href={`/student/courses/${curriculumSubjects.find(s => s.name === 'Social Science')?.id || 'class-10-social'}`}
+                          href={`/student/courses/${curriculumSubjects.find(s => s.name === 'Social Science')?.id || 'class-10-social'}/`}
+                          prefetch={true}
                           className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1"
                         >
                           <span>Open Chapters</span>
@@ -466,7 +470,8 @@ function CoursesContent() {
             </div>
           </div>
           <Link
-            href="/student/onboarding"
+            href="/student/onboarding/"
+            prefetch={true}
             className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-xs"
           >
             Get Started &rarr;

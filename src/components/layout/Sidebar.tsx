@@ -49,38 +49,6 @@ export function Sidebar() {
 
   const role = currentUser?.role || 'STUDENT';
 
-  // Pre-warm the most frequent portal routes into Next.js router cache for instant switching
-  React.useEffect(() => {
-    try {
-      if (role === 'STUDENT') {
-        router.prefetch('/student/');
-        router.prefetch('/student/courses/');
-        router.prefetch('/student/tutor/');
-        router.prefetch('/student/tests/');
-        router.prefetch('/student/planner/');
-        router.prefetch('/student/revision/');
-        router.prefetch('/student/analytics/');
-      } else if (role === 'TEACHER') {
-        router.prefetch('/teacher/');
-        router.prefetch('/teacher/roster/');
-        router.prefetch('/teacher/generator/');
-        router.prefetch('/teacher/tests/create/');
-        router.prefetch('/teacher/analytics/');
-        router.prefetch('/teacher/messages/');
-      } else if (role === 'PARENT') {
-        router.prefetch('/parent/');
-        router.prefetch('/parent/progress/');
-        router.prefetch('/parent/alerts/');
-        router.prefetch('/parent/messages/');
-      } else if (role === 'ADMIN') {
-        router.prefetch('/admin/');
-        router.prefetch('/admin/curriculum/');
-        router.prefetch('/admin/users/');
-        router.prefetch('/admin/courses/');
-      }
-    } catch (e) {}
-  }, [role, router]);
-
   const studentNav: NavLinkItem[] = [
     { title: 'Dashboard', href: '/student/', icon: <LayoutDashboard className="w-4 h-4" /> },
     { title: 'My Profile & Class', href: '/student/profile/', icon: <GraduationCap className="w-4 h-4 text-emerald-500" /> },
@@ -127,6 +95,15 @@ export function Sidebar() {
   if (role === 'TEACHER') currentNav = teacherNav;
   if (role === 'PARENT') currentNav = parentNav;
   if (role === 'ADMIN') currentNav = adminNav;
+
+  // Pre-warm all routes in the current portal navigation into router cache for instant 0ms switching
+  React.useEffect(() => {
+    try {
+      currentNav.forEach((item) => {
+        router.prefetch(item.href);
+      });
+    } catch (e) {}
+  }, [currentNav, router]);
 
   const NavContent = () => (
     <div className="flex flex-col h-full justify-between p-3.5">

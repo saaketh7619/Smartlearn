@@ -209,7 +209,8 @@ export default function StudentDashboard() {
               {academicProfile ? `${academicProfile.classLevel} Syllabus` : 'Module 2 of 4 · 2 lessons remaining'}
             </span>
             <Link
-              href={lastViewed ? '/student/courses' : '/student/courses/course-calc-1'}
+              href={lastViewed ? '/student/courses/' : '/student/courses/course-calc-1/'}
+              prefetch={true}
               className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2"
             >
               <Play className="w-3.5 h-3.5 fill-white" />

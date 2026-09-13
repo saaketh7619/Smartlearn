@@ -79,6 +79,9 @@ export function Navbar() {
       router.prefetch('/student/courses/');
       router.prefetch('/get-started/');
       router.prefetch('/login/');
+      router.prefetch('/about/');
+      router.prefetch('/blog/');
+      router.prefetch('/contact/');
     } catch (e) {}
   }, [router]);
 
