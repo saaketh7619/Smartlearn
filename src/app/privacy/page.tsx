@@ -63,7 +63,7 @@ export default function PrivacyPage() {
             <p className="text-slate-600 dark:text-slate-400">
               For privacy-related questions, contact our Data Protection team at{' '}
               <a href="mailto:privacy@smartlearn.edu" className="text-[#d82a4e] hover:underline">privacy@smartlearn.edu</a>
-              {' '}or visit our <Link href="/contact" className="text-[#d82a4e] hover:underline">Contact page</Link>.
+              {' '}or visit our <Link href="/contact/" prefetch={true} className="text-[#d82a4e] hover:underline">Contact page</Link>.
             </p>
           </section>
         </div>

@@ -81,7 +81,7 @@ export default function BlogPage() {
   const handleCourseSearch = (e: React.FormEvent) => {
     e.preventDefault();
     switchDemoRole('STUDENT');
-    router.push(`/student/courses?q=${encodeURIComponent(courseSearch)}`);
+    router.push(`/student/courses/?q=${encodeURIComponent(courseSearch)}`);
   };
 
   const filteredPosts = blogPosts.filter((post) => {
@@ -227,7 +227,7 @@ export default function BlogPage() {
                         onClick={() => {
                           triggerConfetti();
                           switchDemoRole('STUDENT');
-                          router.push('/student/courses');
+                          router.push('/student/courses/');
                         }}
                         className="btn-crimson px-6 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider cursor-pointer shadow-md inline-flex items-center gap-1.5"
                       >
@@ -274,7 +274,7 @@ export default function BlogPage() {
                     key={cat.name}
                     onClick={() => {
                       switchDemoRole('STUDENT');
-                      router.push('/student/courses');
+                      router.push('/student/courses/');
                     }}
                     className="flex items-center justify-between hover:text-[#d82a4e] cursor-pointer transition-colors"
                   >
@@ -310,7 +310,7 @@ export default function BlogPage() {
                     key={tag}
                     onClick={() => {
                       switchDemoRole('STUDENT');
-                      router.push(`/student/courses?q=${encodeURIComponent(tag)}`);
+                      router.push(`/student/courses/?q=${encodeURIComponent(tag)}`);
                     }}
                     className="px-3 py-1.5 rounded-sm bg-[#d82a4e] hover:bg-[#c32646] text-white text-[11px] font-bold uppercase transition-all shadow-xs cursor-pointer"
                   >
@@ -340,7 +340,7 @@ export default function BlogPage() {
               <button
                 onClick={() => {
                   switchDemoRole('STUDENT');
-                  router.push('/student/courses');
+                  router.push('/student/courses/');
                 }}
                 className="w-full py-2.5 rounded-sm bg-[#1a1e24] hover:bg-black text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-md"
               >

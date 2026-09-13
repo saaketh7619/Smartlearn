@@ -96,9 +96,9 @@ export function WelcomeSplashModal() {
     setWelcomeSplashOpen(false);
     triggerConfetti();
     if (signup) {
-      router.push('/login?mode=signup');
+      router.push('/login/?mode=signup');
     } else {
-      router.push('/login');
+      router.push('/login/');
     }
   };
 

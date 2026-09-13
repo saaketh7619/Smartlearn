@@ -157,8 +157,8 @@ function SubjectCurriculumView({
       {/* Breadcrumb Navigation */}
       <CourseHierarchyBrowser
         items={[
-          { label: ancestors.level?.name || 'School', href: '/student/courses' },
-          { label: ancestors.classLevel?.name || 'Class 10', href: '/student/courses' },
+          { label: ancestors.level?.name || 'School', href: '/student/courses/' },
+          { label: ancestors.classLevel?.name || 'Class 10', href: '/student/courses/' },
           { label: subject.name },
         ]}
       />
@@ -205,7 +205,8 @@ function SubjectCurriculumView({
             </div>
 
             <Link
-              href={`/student/tutor?q=I%20need%20help%20with%20${encodeURIComponent(subject.name)}`}
+              href={`/student/tutor/?q=I%20need%20help%20with%20${encodeURIComponent(subject.name)}`}
+              prefetch={true}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-blue-700 hover:bg-blue-50 text-xs font-bold transition-all shadow-md"
             >
               <BrainCircuit className="w-4 h-4 text-blue-600" />
@@ -473,7 +474,8 @@ function SubjectCurriculumView({
               Ask our SmartLearn AI tutor for step-by-step mathematical proofs, intuitive analogies, or practice questions.
             </p>
             <Link
-              href={`/student/tutor?q=Explain%20key%20theorems%20in%20${encodeURIComponent(subject.name)}`}
+              href={`/student/tutor/?q=Explain%20key%20theorems%20in%20${encodeURIComponent(subject.name)}`}
+              prefetch={true}
               className="block text-center py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all shadow-sm"
             >
               Open AI Tutor for {subject.name}
@@ -604,7 +606,8 @@ export default function CourseDetailClient() {
       {/* Back button */}
       <div className="flex items-center justify-between">
         <Link
-          href="/student/courses"
+          href="/student/courses/"
+          prefetch={true}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -758,7 +761,8 @@ export default function CourseDetailClient() {
           {/* Quick AI Tutor Help trigger */}
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
             <Link
-              href={`/student/tutor?q=I%20have%20a%20doubt%20on%20${encodeURIComponent(course.title)}`}
+              href={`/student/tutor/?q=I%20have%20a%20doubt%20on%20${encodeURIComponent(course.title)}`}
+              prefetch={true}
               className="inline-flex items-center justify-center gap-2 text-xs font-bold text-purple-600 dark:text-purple-400 hover:underline"
             >
               <HelpCircle className="w-3.5 h-3.5" />

@@ -139,8 +139,8 @@ export default function StudentOnboardingPage() {
     );
 
     setTimeout(() => {
-      router.push('/student');
-    }, 800);
+      router.push('/student/');
+    }, 200);
   };
 
   const toggleSubject = (subject: string) => {
@@ -414,7 +414,7 @@ export default function StudentOnboardingPage() {
                     if (typeof window !== 'undefined') {
                       sessionStorage.setItem('sl_skip_onboarding', 'true');
                     }
-                    router.push('/student');
+                    router.push('/student/');
                   }}
                   className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer"
                 >

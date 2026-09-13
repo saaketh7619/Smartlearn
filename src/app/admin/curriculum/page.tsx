@@ -81,7 +81,8 @@ export default function AdminCurriculumPage() {
           </p>
         </div>
         <Link
-          href="/admin/curriculum/upload"
+          href="/admin/curriculum/upload/"
+          prefetch={true}
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#d82a4e] hover:bg-[#c32646] text-white text-xs font-bold transition-all shadow-sm shadow-rose-500/20 hover:shadow-md flex-shrink-0"
         >
           <Upload className="w-3.5 h-3.5" />
@@ -202,7 +203,8 @@ export default function AdminCurriculumPage() {
                           <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex-1">{cls.name}</span>
                           <span className="text-[10px] text-slate-400">{cls.subjects.length} subjects</span>
                           <Link
-                            href={`/admin/curriculum/upload?classId=${cls.id}`}
+                            href={`/admin/curriculum/upload/?classId=${cls.id}`}
+                            prefetch={true}
                             className="px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 text-[10px] font-bold hover:bg-blue-100 transition-colors flex items-center gap-1"
                           >
                             <PlusCircle className="w-3 h-3" /> Add Subject

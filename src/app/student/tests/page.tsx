@@ -83,7 +83,8 @@ export default function TestsHubPage() {
               </p>
             </div>
             <Link
-              href="/student/tests/test-adaptive-math-1/take"
+              href="/student/tests/test-adaptive-math-1/take/"
+              prefetch={true}
               className="px-6 py-3 rounded-2xl bg-white text-slate-900 text-xs font-black shadow-lg hover:scale-105 transition-transform flex items-center gap-2 whitespace-nowrap"
             >
               <Zap className="w-4 h-4 fill-amber-500 text-amber-500" />
@@ -126,7 +127,8 @@ export default function TestsHubPage() {
                     Anti-Cheat Enabled
                   </span>
                   <Link
-                    href={`/student/tests/${t.id}/take`}
+                    href={`/student/tests/${t.id}/take/`}
+                    prefetch={true}
                     className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1"
                   >
                     Take Test

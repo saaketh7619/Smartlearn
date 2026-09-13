@@ -34,7 +34,8 @@ export default function StudentProfilePage() {
           <p className="text-xs text-slate-500 mt-1">Your academic identity and learning progress</p>
         </div>
         <Link
-          href="/student/onboarding"
+          href="/student/onboarding/"
+          prefetch={true}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-xs font-bold hover:bg-blue-100 dark:hover:bg-blue-950/60 transition-colors"
         >
           <Edit3 className="w-3.5 h-3.5" />
@@ -121,7 +122,7 @@ export default function StudentProfilePage() {
                   <GraduationCap className="w-4 h-4 text-blue-500" />
                   Academic Profile
                 </h3>
-                <Link href="/student/onboarding" className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+                <Link href="/student/onboarding/" prefetch={true} className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
                   Update <Edit3 className="w-3 h-3" />
                 </Link>
               </div>
@@ -168,7 +169,8 @@ export default function StudentProfilePage() {
 
               {/* Go to courses CTA */}
               <Link
-                href="/student/courses"
+                href="/student/courses/"
+                prefetch={true}
                 className="flex items-center justify-between p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/40 text-xs font-bold text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-950/50 transition-colors"
               >
                 <span>View your personalised {academicProfile.classLevel} curriculum</span>
@@ -184,7 +186,8 @@ export default function StudentProfilePage() {
                 <p className="text-xs text-slate-500 mt-1">Complete your profile to see personalised courses and resources.</p>
               </div>
               <Link
-                href="/student/onboarding"
+                href="/student/onboarding/"
+                prefetch={true}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 transition-colors shadow-sm"
               >
                 <GraduationCap className="w-3.5 h-3.5" />
@@ -201,7 +204,7 @@ export default function StudentProfilePage() {
                   <Clock className="w-4 h-4 text-slate-400" />
                   Recently Viewed
                 </h3>
-                <Link href="/student/courses" className="text-xs text-blue-600 dark:text-blue-400 hover:underline">View all →</Link>
+                <Link href="/student/courses/" prefetch={true} className="text-xs text-blue-600 dark:text-blue-400 hover:underline">View all →</Link>
               </div>
               <div className="space-y-2">
                 {recentlyViewed.slice(0, 5).map((item) => (

@@ -46,7 +46,7 @@ export function AcademicProfileBadge({
   if (!linkToProfile) return content;
 
   return (
-    <Link href="/student/profile" className="block hover:opacity-80 transition-opacity">
+    <Link href="/student/profile/" prefetch={true} className="block hover:opacity-80 transition-opacity">
       {content}
     </Link>
   );

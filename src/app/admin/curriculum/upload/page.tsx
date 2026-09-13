@@ -235,7 +235,7 @@ function AdminCurriculumUploadContent() {
         `${subjectName} for ${currentClass?.name} has been ${publishMode === 'published' ? 'published and is now live for students' : 'saved as a draft'}.`
       );
 
-      setTimeout(() => router.push('/admin/curriculum'), 800);
+      setTimeout(() => router.push('/admin/curriculum/'), 200);
     } catch (e) {
       toast.error('Upload Failed', 'There was an error saving the content. Please try again.');
     } finally {

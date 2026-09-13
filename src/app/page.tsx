@@ -263,7 +263,7 @@ export default function LandingPage() {
                 key={idx}
                 onClick={() => {
                   switchDemoRole('STUDENT');
-                  router.push('/student/courses');
+                  router.push('/student/courses/');
                 }}
                 className="group cursor-pointer rounded-sm overflow-hidden border border-slate-200 dark:border-[#283038] shadow-sm hover:shadow-2xl transition-all duration-300"
               >
@@ -387,7 +387,7 @@ export default function LandingPage() {
               key={c.id}
               onClick={() => {
                 switchDemoRole('STUDENT');
-                router.push('/student/courses');
+                router.push('/student/courses/');
               }}
               className="bg-white dark:bg-[#1a1e24] rounded-sm overflow-hidden border border-slate-200 dark:border-[#283038] shadow-sm hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between"
             >
@@ -542,15 +542,18 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="space-y-2 pt-2">
-              <button
-                onClick={() => handleLaunchDemo('STUDENT')}
+              <Link
+                href="/student/"
+                prefetch={true}
+                onClick={() => switchDemoRole('STUDENT')}
                 className="w-full py-2.5 rounded-sm bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
               >
                 <span>Launch Student Hub</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              </Link>
               <Link
-                href="/login?role=STUDENT"
+                href="/login/?role=STUDENT"
+                prefetch={true}
                 className="block text-center text-[11px] font-semibold text-slate-500 hover:text-blue-600 transition-colors"
               >
                 Sign in with OTP ➔
@@ -572,15 +575,18 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="space-y-2 pt-2">
-              <button
-                onClick={() => handleLaunchDemo('TEACHER')}
+              <Link
+                href="/teacher/"
+                prefetch={true}
+                onClick={() => switchDemoRole('TEACHER')}
                 className="w-full py-2.5 rounded-sm btn-crimson text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
               >
                 <span>Launch Teacher Hub</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              </Link>
               <Link
-                href="/login?role=TEACHER"
+                href="/login/?role=TEACHER"
+                prefetch={true}
                 className="block text-center text-[11px] font-semibold text-slate-500 hover:text-[#d82a4e] transition-colors"
               >
                 Sign in with OTP ➔
@@ -602,15 +608,18 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="space-y-2 pt-2">
-              <button
-                onClick={() => handleLaunchDemo('PARENT')}
+              <Link
+                href="/parent/"
+                prefetch={true}
+                onClick={() => switchDemoRole('PARENT')}
                 className="w-full py-2.5 rounded-sm bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
               >
                 <span>Launch Parent Hub</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              </Link>
               <Link
-                href="/login?role=PARENT"
+                href="/login/?role=PARENT"
+                prefetch={true}
                 className="block text-center text-[11px] font-semibold text-slate-500 hover:text-emerald-600 transition-colors"
               >
                 Sign in with OTP ➔
@@ -632,15 +641,18 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="space-y-2 pt-2">
-              <button
-                onClick={() => handleLaunchDemo('ADMIN')}
+              <Link
+                href="/admin/"
+                prefetch={true}
+                onClick={() => switchDemoRole('ADMIN')}
                 className="w-full py-2.5 rounded-sm bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
               >
                 <span>Launch Admin Hub</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              </Link>
               <Link
-                href="/login?role=ADMIN"
+                href="/login/?role=ADMIN"
+                prefetch={true}
                 className="block text-center text-[11px] font-semibold text-slate-500 hover:text-amber-600 transition-colors"
               >
                 Sign in with OTP ➔
@@ -726,7 +738,8 @@ export default function LandingPage() {
         </p>
         <div className="pt-2">
           <Link
-            href="/login?mode=signup"
+            href="/login/?mode=signup"
+            prefetch={true}
             className="btn-crimson px-9 py-3.5 rounded-sm text-sm font-bold uppercase tracking-wide shadow-lg cursor-pointer inline-flex items-center gap-2"
           >
             <span>Get Started Free</span>
@@ -753,11 +766,11 @@ export default function LandingPage() {
           <div className="space-y-2">
             <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">STEM Courses</h4>
             <ul className="space-y-1.5">
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Mathematics</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Physics</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Chemistry</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Computer Science</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Biology</Link></li>
+              <li><Link href="/student/courses/" prefetch={true} className="hover:text-[#d82a4e]">Mathematics</Link></li>
+              <li><Link href="/student/courses/" prefetch={true} className="hover:text-[#d82a4e]">Physics</Link></li>
+              <li><Link href="/student/courses/" prefetch={true} className="hover:text-[#d82a4e]">Chemistry</Link></li>
+              <li><Link href="/student/courses/" prefetch={true} className="hover:text-[#d82a4e]">Computer Science</Link></li>
+              <li><Link href="/student/courses/" prefetch={true} className="hover:text-[#d82a4e]">Biology</Link></li>
             </ul>
           </div>
 
@@ -765,10 +778,10 @@ export default function LandingPage() {
           <div className="space-y-2">
             <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">Humanities</h4>
             <ul className="space-y-1.5">
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Literature &amp; Rhetoric</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">World History</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Economics</Link></li>
-              <li><Link href="/student/courses" className="hover:text-[#d82a4e]">Social Sciences</Link></li>
+              <li><Link href="/student/courses/" prefetch={true} className="hover:text-[#d82a4e]">Literature &amp; Rhetoric</Link></li>
+              <li><Link href="/student/courses/" prefetch={true} className="hover:text-[#d82a4e]">World History</Link></li>
+              <li><Link href="/student/courses/" prefetch={true} className="hover:text-[#d82a4e]">Economics</Link></li>
+              <li><Link href="/student/courses/" prefetch={true} className="hover:text-[#d82a4e]">Social Sciences</Link></li>
             </ul>
           </div>
 
@@ -776,10 +789,10 @@ export default function LandingPage() {
           <div className="space-y-2">
             <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">Platform</h4>
             <ul className="space-y-1.5">
-              <li><Link href="/about" className="hover:text-[#d82a4e]">About SmartLearn</Link></li>
-              <li><Link href="/blog" className="hover:text-[#d82a4e]">Blog &amp; Research</Link></li>
-              <li><Link href="/contact" className="hover:text-[#d82a4e]">Contact Support</Link></li>
-              <li><Link href="/login?mode=signup" className="hover:text-[#d82a4e]">Create Account</Link></li>
+              <li><Link href="/about/" prefetch={true} className="hover:text-[#d82a4e]">About SmartLearn</Link></li>
+              <li><Link href="/blog/" prefetch={true} className="hover:text-[#d82a4e]">Blog &amp; Research</Link></li>
+              <li><Link href="/contact/" prefetch={true} className="hover:text-[#d82a4e]">Contact Support</Link></li>
+              <li><Link href="/login/?mode=signup" prefetch={true} className="hover:text-[#d82a4e]">Create Account</Link></li>
             </ul>
           </div>
 
@@ -814,9 +827,9 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
           <p>Copyright &copy;{new Date().getFullYear()} SmartLearn Education Platform. All rights reserved.</p>
           <div className="flex items-center gap-5 font-semibold text-slate-600 dark:text-slate-400">
-            <Link href="/terms" className="hover:text-[#d82a4e]">Terms &amp; Conditions</Link>
-            <Link href="/login?mode=signup" className="hover:text-[#d82a4e]">Register</Link>
-            <Link href="/privacy" className="hover:text-[#d82a4e]">Privacy Policy</Link>
+            <Link href="/terms/" prefetch={true} className="hover:text-[#d82a4e]">Terms &amp; Conditions</Link>
+            <Link href="/login/?mode=signup" prefetch={true} className="hover:text-[#d82a4e]">Register</Link>
+            <Link href="/privacy/" prefetch={true} className="hover:text-[#d82a4e]">Privacy Policy</Link>
           </div>
         </div>
       </footer>

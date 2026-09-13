@@ -144,7 +144,8 @@ export default function StudentDashboard() {
             </div>
           </div>
           <Link
-            href="/student/onboarding"
+            href="/student/onboarding/"
+            prefetch={true}
             className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-xs flex-shrink-0"
           >
             Complete Profile &rarr;
@@ -239,13 +240,13 @@ export default function StudentDashboard() {
 
             <div className="space-y-1.5">
               <button
-                onClick={() => router.push('/student/tutor?q=Explain%20Quadratic%20discriminant%20simply')}
+                onClick={() => router.push('/student/tutor/?q=Explain%20Quadratic%20discriminant%20simply')}
                 className="w-full text-left p-2 rounded-xl bg-white/80 dark:bg-slate-900/80 hover:bg-white dark:hover:bg-slate-800 text-[11px] font-medium text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors truncate"
               >
                 💡 Explain discriminant (b² - 4ac) simply
               </button>
               <button
-                onClick={() => router.push('/student/tutor?q=Derive%20the%20Chain%20Rule%20step%20by%20step')}
+                onClick={() => router.push('/student/tutor/?q=Derive%20the%20Chain%20Rule%20step%20by%20step')}
                 className="w-full text-left p-2 rounded-xl bg-white/80 dark:bg-slate-900/80 hover:bg-white dark:hover:bg-slate-800 text-[11px] font-medium text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors truncate"
               >
                 📐 Derive the Chain Rule with an analogy
@@ -254,7 +255,8 @@ export default function StudentDashboard() {
           </div>
 
           <Link
-            href="/student/tutor"
+            href="/student/tutor/"
+            prefetch={true}
             className="mt-5 w-full py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold text-center transition-all hover:opacity-95 shadow-xs flex items-center justify-center gap-1.5"
           >
             Open Full AI Tutor Chat
@@ -271,7 +273,8 @@ export default function StudentDashboard() {
             <p className="text-xs text-slate-500">Based on your Grade 10 curriculum and weak topic diagnostics</p>
           </div>
           <Link
-            href="/student/courses"
+            href="/student/courses/"
+            prefetch={true}
             className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
           >
             Explore All Courses →
@@ -312,7 +315,8 @@ export default function StudentDashboard() {
               <div className="p-4 pt-0 border-t border-slate-100 dark:border-slate-800/60 mt-2 flex items-center justify-between text-xs">
                 <span className="text-slate-400 text-[11px]">{course.durationHours}h total</span>
                 <Link
-                  href={`/student/courses/${course.id}`}
+                  href={`/student/courses/${course.id}/`}
+                  prefetch={true}
                   className="font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
                 >
                   View Course
@@ -379,7 +383,8 @@ export default function StudentDashboard() {
               <p className="text-xs text-slate-500">Weak vs Strong areas across STEM</p>
             </div>
             <Link
-              href="/student/analytics"
+              href="/student/analytics/"
+              prefetch={true}
               className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
             >
               Full Analytics →

@@ -18,7 +18,7 @@ export default function TermsPage() {
         <div className="space-y-6 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
           <section className="bg-white dark:bg-[#1a1e24] rounded-2xl border border-slate-200 dark:border-[#283038] p-6 space-y-3">
             <h2 className="text-base font-extrabold text-slate-900 dark:text-white">1. Acceptance of Terms</h2>
-            <p className="text-slate-600 dark:text-slate-400">By accessing or using SmartLearn, you agree to be bound by these Terms and Conditions and our <Link href="/privacy" className="text-[#d82a4e] hover:underline">Privacy Policy</Link>. If you do not agree, please do not use the platform.</p>
+            <p className="text-slate-600 dark:text-slate-400">By accessing or using SmartLearn, you agree to be bound by these Terms and Conditions and our <Link href="/privacy/" prefetch={true} className="text-[#d82a4e] hover:underline">Privacy Policy</Link>. If you do not agree, please do not use the platform.</p>
           </section>
 
           <section className="bg-white dark:bg-[#1a1e24] rounded-2xl border border-slate-200 dark:border-[#283038] p-6 space-y-3">
@@ -59,7 +59,7 @@ export default function TermsPage() {
           <section className="bg-white dark:bg-[#1a1e24] rounded-2xl border border-slate-200 dark:border-[#283038] p-6 space-y-3">
             <h2 className="text-base font-extrabold text-slate-900 dark:text-white">8. Contact</h2>
             <p className="text-slate-600 dark:text-slate-400">
-              Questions about these terms? <Link href="/contact" className="text-[#d82a4e] hover:underline">Contact us</Link> or email <a href="mailto:legal@smartlearn.edu" className="text-[#d82a4e] hover:underline">legal@smartlearn.edu</a>.
+              Questions about these terms? <Link href="/contact/" prefetch={true} className="text-[#d82a4e] hover:underline">Contact us</Link> or email <a href="mailto:legal@smartlearn.edu" className="text-[#d82a4e] hover:underline">legal@smartlearn.edu</a>.
             </p>
           </section>
         </div>

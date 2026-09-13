@@ -10,7 +10,7 @@ export const DEMO_ACCOUNTS = {
     label: 'Demo Student',
     accent: 'blue',
     description: 'Explore adaptive mock tests, AI tutor, study planner, gamified XP, and courses.',
-    redirectUrl: '/student',
+    redirectUrl: '/student/',
   },
   TEACHER: {
     email: 'teacher@smartlearn.edu',
@@ -20,7 +20,7 @@ export const DEMO_ACCOUNTS = {
     label: 'Demo Teacher',
     accent: 'purple',
     description: 'Class average analytics, AI question paper generator, and anti-cheat test controls.',
-    redirectUrl: '/teacher',
+    redirectUrl: '/teacher/',
   },
   PARENT: {
     email: 'parent@smartlearn.edu',
@@ -30,7 +30,7 @@ export const DEMO_ACCOUNTS = {
     label: 'Demo Parent',
     accent: 'emerald',
     description: 'Multi-child selector, progress ring, smart alerts, and text-to-speech read aloud.',
-    redirectUrl: '/parent',
+    redirectUrl: '/parent/',
   },
   ADMIN: {
     email: 'admin@smartlearn.edu',
@@ -40,7 +40,7 @@ export const DEMO_ACCOUNTS = {
     label: 'Demo Admin',
     accent: 'amber',
     description: 'KPI stat cards, user management with RBAC, moderation queue, and support tickets.',
-    redirectUrl: '/admin',
+    redirectUrl: '/admin/',
   },
 };
 

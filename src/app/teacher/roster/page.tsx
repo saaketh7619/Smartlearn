@@ -204,7 +204,8 @@ export default function TeacherRosterPage() {
             {/* Actions */}
             <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <Link
-                href={`/teacher/messages?to=${encodeURIComponent(selectedStudent.name)}`}
+                href={`/teacher/messages/?to=${encodeURIComponent(selectedStudent.name)}`}
+                prefetch={true}
                 className="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2"
               >
                 <MessageSquare className="w-4 h-4" />

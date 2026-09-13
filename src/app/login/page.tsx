@@ -82,7 +82,15 @@ function LoginPageContent() {
   useEffect(() => {
     const config = getEmailJsConfig();
     setIsEmailJsConfigured(Boolean(config.serviceId && config.templateId && config.publicKey));
-  }, []);
+    try {
+      router.prefetch('/student/');
+      router.prefetch('/teacher/');
+      router.prefetch('/parent/');
+      router.prefetch('/admin/');
+    } catch {
+      // ignore
+    }
+  }, [router]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -246,7 +254,7 @@ function LoginPageContent() {
       loginUser(localRes.user);
       setTimeout(() => {
         router.push(roleDashboards[selectedRole]);
-      }, 400);
+      }, 50);
       return;
     } else {
       // mode === 'signin'
@@ -260,7 +268,7 @@ function LoginPageContent() {
         signInWithPassword(cleanEmail, password, selectedRole).catch(() => {});
         setTimeout(() => {
           router.push(roleDashboards[selectedRole]);
-        }, 400);
+        }, 50);
         return;
       }
 
@@ -295,7 +303,7 @@ function LoginPageContent() {
           loginUser(res.user);
           setTimeout(() => {
             router.push(roleDashboards[selectedRole]);
-          }, 400);
+          }, 50);
           return;
         }
       } catch {
@@ -457,7 +465,7 @@ function LoginPageContent() {
       loginUser(verifiedUser);
       setTimeout(() => {
         router.push(roleDashboards[selectedRole]);
-      }, 400);
+      }, 50);
       return;
     }
 
@@ -470,7 +478,7 @@ function LoginPageContent() {
         loginUser(sbRes.user);
         setTimeout(() => {
           router.push(roleDashboards[selectedRole]);
-        }, 400);
+        }, 50);
         return;
       }
     } catch {

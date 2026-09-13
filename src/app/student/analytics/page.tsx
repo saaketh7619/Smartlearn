@@ -298,7 +298,8 @@ export default function StudentAnalyticsPage() {
             Recent Assessment History
           </h3>
           <Link
-            href="/student/tests"
+            href="/student/tests/"
+            prefetch={true}
             className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
           >
             <span>All Tests</span>

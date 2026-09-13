@@ -96,7 +96,7 @@ export default function CreateTestPage() {
     };
     db.tests.unshift(newTest);
     triggerConfetti();
-    router.push('/teacher');
+    router.push('/teacher/');
   };
 
   return (

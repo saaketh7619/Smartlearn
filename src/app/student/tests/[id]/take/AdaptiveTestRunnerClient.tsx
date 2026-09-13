@@ -333,7 +333,8 @@ export default function AdaptiveTestRunnerClient() {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
             <Link
-              href="/student/tests"
+              href="/student/tests/"
+              prefetch={true}
               className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 text-center transition-colors"
             >
               Cancel &amp; Return
@@ -496,7 +497,8 @@ export default function AdaptiveTestRunnerClient() {
               Retake Diagnostic
             </button>
             <Link
-              href="/student/tests"
+              href="/student/tests/"
+              prefetch={true}
               className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-md"
             >
               Back to Tests Hub
@@ -873,7 +875,7 @@ export default function AdaptiveTestRunnerClient() {
                 Stay in Test
               </button>
               <button
-                onClick={() => router.push('/student/tests')}
+                onClick={() => router.push('/student/tests/')}
                 className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-md cursor-pointer"
               >
                 Yes, Quit Assessment

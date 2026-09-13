@@ -57,7 +57,8 @@ export function EmptyCurriculumState({
       {/* CTA */}
       {isAdmin ? (
         <Link
-          href="/admin/curriculum/upload"
+          href="/admin/curriculum/upload/"
+          prefetch={true}
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-sm shadow-blue-500/20 hover:shadow-md"
         >
           <Sparkles className="w-3.5 h-3.5" />

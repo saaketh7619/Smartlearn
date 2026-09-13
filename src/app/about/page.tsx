@@ -27,9 +27,9 @@ export default function AboutPage() {
   ];
 
   const portals = [
-    { role: 'Student', icon: <GraduationCap className="w-5 h-5" />, color: 'blue', desc: 'Adaptive tests, AI doubt tutor, gamified XP, study planner, and analytics.', href: '/student' },
-    { role: 'Teacher', icon: <Users className="w-5 h-5" />, color: 'purple', desc: 'Class performance analytics, AI lesson planner, question paper generator.', href: '/teacher' },
-    { role: 'Parent', icon: <HeartHandshake className="w-5 h-5" />, color: 'emerald', desc: 'Multi-child progress view, smart alerts, and read-aloud activity summaries.', href: '/parent' },
+    { role: 'Student', icon: <GraduationCap className="w-5 h-5" />, color: 'blue', desc: 'Adaptive tests, AI doubt tutor, gamified XP, study planner, and analytics.', href: '/student/' },
+    { role: 'Teacher', icon: <Users className="w-5 h-5" />, color: 'purple', desc: 'Class performance analytics, AI lesson planner, question paper generator.', href: '/teacher/' },
+    { role: 'Parent', icon: <HeartHandshake className="w-5 h-5" />, color: 'emerald', desc: 'Multi-child progress view, smart alerts, and read-aloud activity summaries.', href: '/parent/' },
   ];
 
   const features = [
@@ -94,6 +94,7 @@ export default function AboutPage() {
             <Link
               key={p.role}
               href={p.href}
+              prefetch={true}
               className="p-6 rounded-3xl bg-white dark:bg-[#1a1e24] border border-slate-200 dark:border-[#283038] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all group space-y-3"
             >
               <div className={`w-10 h-10 rounded-2xl bg-${p.color}-500/10 text-${p.color}-500 flex items-center justify-center`}>
@@ -124,7 +125,7 @@ export default function AboutPage() {
       <section className="py-16 px-4 sm:px-8 max-w-2xl mx-auto text-center space-y-4 border-t border-slate-200 dark:border-[#283038]">
         <h2 className="text-xl font-extrabold">Ready to get started?</h2>
         <p className="text-sm text-slate-500">Experience adaptive AI learning — no credit card required for demo access.</p>
-        <Link href="/login" className="btn-crimson px-8 py-3 rounded-xl text-sm font-bold inline-flex items-center gap-2">
+        <Link href="/login/" prefetch={true} className="btn-crimson px-8 py-3 rounded-xl text-sm font-bold inline-flex items-center gap-2">
           Start Learning Free <ArrowRight className="w-4 h-4" />
         </Link>
       </section>

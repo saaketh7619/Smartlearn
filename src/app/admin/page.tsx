@@ -164,7 +164,8 @@ export default function AdminDashboardPage() {
                 </div>
                 <p className="text-[11px] text-slate-500">Student forum posts pending review</p>
                 <Link
-                  href="/admin/moderation"
+                  href="/admin/moderation/"
+                  prefetch={true}
                   className="mt-2 text-[11px] font-bold text-amber-600 dark:text-amber-400 hover:underline inline-block"
                 >
                   Review Queue →
@@ -180,7 +181,8 @@ export default function AdminDashboardPage() {
                 </div>
                 <p className="text-[11px] text-slate-500">Audio playback ticket logged by Alex</p>
                 <Link
-                  href="/admin/tickets"
+                  href="/admin/tickets/"
+                  prefetch={true}
                   className="mt-2 text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline inline-block"
                 >
                   Manage Tickets →
@@ -190,7 +192,8 @@ export default function AdminDashboardPage() {
           </div>
 
           <Link
-            href="/admin/users"
+            href="/admin/users/"
+            prefetch={true}
             className="w-full py-2.5 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold text-center transition-all hover:opacity-90 shadow-md flex items-center justify-center gap-1.5"
           >
             <Users className="w-3.5 h-3.5" />

@@ -49,6 +49,38 @@ export function Sidebar() {
 
   const role = currentUser?.role || 'STUDENT';
 
+  // Pre-warm the most frequent portal routes into Next.js router cache for instant switching
+  React.useEffect(() => {
+    try {
+      if (role === 'STUDENT') {
+        router.prefetch('/student/');
+        router.prefetch('/student/courses/');
+        router.prefetch('/student/tutor/');
+        router.prefetch('/student/tests/');
+        router.prefetch('/student/planner/');
+        router.prefetch('/student/revision/');
+        router.prefetch('/student/analytics/');
+      } else if (role === 'TEACHER') {
+        router.prefetch('/teacher/');
+        router.prefetch('/teacher/roster/');
+        router.prefetch('/teacher/generator/');
+        router.prefetch('/teacher/tests/create/');
+        router.prefetch('/teacher/analytics/');
+        router.prefetch('/teacher/messages/');
+      } else if (role === 'PARENT') {
+        router.prefetch('/parent/');
+        router.prefetch('/parent/progress/');
+        router.prefetch('/parent/alerts/');
+        router.prefetch('/parent/messages/');
+      } else if (role === 'ADMIN') {
+        router.prefetch('/admin/');
+        router.prefetch('/admin/curriculum/');
+        router.prefetch('/admin/users/');
+        router.prefetch('/admin/courses/');
+      }
+    } catch (e) {}
+  }, [role, router]);
+
   const studentNav: NavLinkItem[] = [
     { title: 'Dashboard', href: '/student/', icon: <LayoutDashboard className="w-4 h-4" /> },
     { title: 'My Profile & Class', href: '/student/profile/', icon: <GraduationCap className="w-4 h-4 text-emerald-500" /> },
@@ -220,9 +252,10 @@ export function Sidebar() {
         className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#1a1e24]/95 backdrop-blur-md border-t border-slate-200 dark:border-[#283038] px-2 py-1.5 flex items-center justify-around shadow-lg"
       >
         <Link
-          href={role === 'STUDENT' ? '/student' : role === 'TEACHER' ? '/teacher' : role === 'PARENT' ? '/parent' : '/admin'}
+          href={role === 'STUDENT' ? '/student/' : role === 'TEACHER' ? '/teacher/' : role === 'PARENT' ? '/parent/' : '/admin/'}
+          prefetch={true}
           className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
-            pathname === '/student' || pathname === '/teacher' || pathname === '/parent' || pathname === '/admin'
+            pathname === '/student/' || pathname === '/teacher/' || pathname === '/parent/' || pathname === '/admin/'
               ? 'text-[#d82a4e] font-bold'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
           }`}
@@ -234,7 +267,8 @@ export function Sidebar() {
         {role === 'STUDENT' && (
           <>
             <Link
-              href="/student/courses"
+              href="/student/courses/"
+              prefetch={true}
               className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
                 pathname.startsWith('/student/courses')
                   ? 'text-[#d82a4e] font-bold'
@@ -246,7 +280,8 @@ export function Sidebar() {
             </Link>
 
             <Link
-              href="/student/tutor"
+              href="/student/tutor/"
+              prefetch={true}
               className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
                 pathname.startsWith('/student/tutor')
                   ? 'text-blue-500 font-bold'
@@ -258,7 +293,8 @@ export function Sidebar() {
             </Link>
 
             <Link
-              href="/student/tests"
+              href="/student/tests/"
+              prefetch={true}
               className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] font-semibold transition-colors ${
                 pathname.startsWith('/student/tests')
                   ? 'text-[#d82a4e] font-bold'

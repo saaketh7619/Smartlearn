@@ -192,7 +192,8 @@ export default function GetStartedPage() {
               <div className="pt-6 mt-6 border-t border-slate-100 dark:border-[#283038] space-y-2">
                 {/* Primary Action: Direct Portal Launch */}
                 <Link
-                  href={`/${role.id}`}
+                  href={`/${role.id}/`}
+                  prefetch={true}
                   className={`w-full py-2.5 px-4 rounded-sm text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm ${role.buttonColor}`}
                 >
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -202,14 +203,16 @@ export default function GetStartedPage() {
                 {/* Secondary Actions */}
                 <div className="flex gap-2">
                   <Link
-                    href={`/login?role=${role.id}&mode=signin`}
+                    href={`/login/?role=${role.id}&mode=signin`}
+                    prefetch={true}
                     className="flex-1 py-1.5 px-2 rounded-sm text-[11px] font-bold flex items-center justify-center gap-1 bg-slate-100 dark:bg-[#20252b] hover:bg-slate-200 dark:hover:bg-[#283038] text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-[#283038] transition-all"
                   >
                     <LogIn className="w-3 h-3" />
                     <span>Sign In</span>
                   </Link>
                   <Link
-                    href={`/login?role=${role.id}&mode=signup`}
+                    href={`/login/?role=${role.id}&mode=signup`}
+                    prefetch={true}
                     className="flex-1 py-1.5 px-2 rounded-sm text-[11px] font-bold flex items-center justify-center gap-1 bg-slate-100 dark:bg-[#20252b] hover:bg-slate-200 dark:hover:bg-[#283038] text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-[#283038] transition-all"
                   >
                     <UserPlus className="w-3 h-3" />
@@ -238,7 +241,8 @@ export default function GetStartedPage() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Link
-              href="/login"
+              href="/login/"
+              prefetch={true}
               className="px-4 py-2 rounded-sm bg-[#d82a4e] hover:bg-[#b81d3d] text-white text-xs font-bold transition-all inline-flex items-center gap-1.5"
             >
               <span>Explore Instant Demo Mode</span>

@@ -268,7 +268,8 @@ export default function ParentDashboardPage() {
           </div>
 
           <Link
-            href="/parent/progress"
+            href="/parent/progress/"
+            prefetch={true}
             className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
           >
             View Full Progress Trends →
@@ -300,7 +301,8 @@ export default function ParentDashboardPage() {
 
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
             <Link
-              href="/parent/messages"
+              href="/parent/messages/"
+              prefetch={true}
               className="w-full py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold text-center transition-all shadow-md flex items-center justify-center gap-1.5"
             >
               <MessageSquare className="w-3.5 h-3.5" />

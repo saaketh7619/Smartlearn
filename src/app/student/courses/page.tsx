@@ -58,7 +58,8 @@ function CurriculumSubjectCard({ subject, classId, classLevel }: {
 
   return (
     <Link
-      href={`/student/courses/${subject.id}`}
+      href={`/student/courses/${subject.id}/`}
+      prefetch={true}
       className="group flex flex-col p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 relative overflow-hidden"
     >
       {/* Gradient header */}
@@ -686,7 +687,8 @@ function CoursesContent() {
                         </p>
                       </div>
                       <Link
-                        href={`/student/courses/${course.id}`}
+                        href={`/student/courses/${course.id}/`}
+                        prefetch={true}
                         className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1 ${
                           isEnrolled
                             ? 'bg-emerald-600 hover:bg-emerald-700 text-white'

@@ -60,21 +60,24 @@ export default function TeacherDashboardPage() {
           {/* Quick Action Buttons */}
           <div className="flex flex-wrap items-center gap-2.5">
             <Link
-              href="/teacher/tests/create"
+              href="/teacher/tests/create/"
+              prefetch={true}
               className="px-4 py-2.5 rounded-2xl bg-white text-purple-900 text-xs font-black hover:bg-purple-50 transition-all shadow-md flex items-center gap-2"
             >
               <PlusCircle className="w-4 h-4 text-purple-600" />
               Create Test
             </Link>
             <Link
-              href="/teacher/generator"
+              href="/teacher/generator/"
+              prefetch={true}
               className="px-4 py-2.5 rounded-2xl bg-purple-600/80 hover:bg-purple-600 text-white text-xs font-bold border border-white/20 transition-all flex items-center gap-2"
             >
               <Wand2 className="w-4 h-4" />
               AI Paper Gen
             </Link>
             <Link
-              href="/teacher/messages"
+              href="/teacher/messages/"
+              prefetch={true}
               className="px-4 py-2.5 rounded-2xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition-all flex items-center gap-2"
             >
               <MessageSquare className="w-4 h-4" />
@@ -156,7 +159,8 @@ export default function TeacherDashboardPage() {
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
             <span className="text-slate-500">Recommended: Schedule automated quadratic drill</span>
             <Link
-              href="/teacher/analytics"
+              href="/teacher/analytics/"
+              prefetch={true}
               className="font-bold text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1"
             >
               Full Breakdown →
@@ -176,7 +180,8 @@ export default function TeacherDashboardPage() {
                 <p className="text-xs text-slate-500">Flagged due to test scores below 60% or attendance drop</p>
               </div>
               <Link
-                href="/teacher/roster"
+                href="/teacher/roster/"
+                prefetch={true}
                 className="text-xs font-bold text-purple-600 dark:text-purple-400 hover:underline"
               >
                 View Roster →
@@ -198,7 +203,8 @@ export default function TeacherDashboardPage() {
                     <p className="text-[11px] text-rose-600 dark:text-rose-400 mt-0.5">{std.issue}</p>
                   </div>
                   <Link
-                    href={`/teacher/roster?student=${encodeURIComponent(std.name)}`}
+                    href={`/teacher/roster/?student=${encodeURIComponent(std.name)}`}
+                    prefetch={true}
                     className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-purple-600 hover:text-white transition-colors"
                   >
                     Inspect
@@ -210,7 +216,7 @@ export default function TeacherDashboardPage() {
 
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
             <span>Automated interventions enabled</span>
-            <Link href="/teacher/messages" className="text-purple-600 dark:text-purple-400 font-bold hover:underline">
+            <Link href="/teacher/messages/" prefetch={true} className="text-purple-600 dark:text-purple-400 font-bold hover:underline">
               Send Group Message →
             </Link>
           </div>

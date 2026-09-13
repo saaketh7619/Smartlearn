@@ -234,7 +234,7 @@ export const useStore = create<SmartLearnState>((set, get) => ({
           type: 'badge',
           read: false,
           createdAt: 'Just now',
-          linkUrl: '/student',
+          linkUrl: '/student/',
         });
         set({ notifications: [...db.notifications] });
       }

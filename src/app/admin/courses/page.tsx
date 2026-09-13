@@ -37,7 +37,8 @@ export default function AdminCoursesPage() {
         </div>
         <div className="flex items-center gap-3">
           <Link
-            href="/admin/curriculum"
+            href="/admin/curriculum/"
+            prefetch={true}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold transition-all shadow-sm"
           >
             <Layers className="w-4 h-4" />

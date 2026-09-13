@@ -69,11 +69,23 @@ export function Navbar() {
   };
 
 
+  // Pre-warm the main portal routes into Next.js router cache for instant 0ms transitions
+  useEffect(() => {
+    try {
+      router.prefetch('/student/');
+      router.prefetch('/teacher/');
+      router.prefetch('/parent/');
+      router.prefetch('/admin/');
+      router.prefetch('/student/courses/');
+      router.prefetch('/get-started/');
+      router.prefetch('/login/');
+    } catch (e) {}
+  }, [router]);
+
   const handleSwitchRole = (role: Role) => {
     switchDemoRole(role);
     setRoleDropdownOpen(false);
     setMobileMenuOpen(false);
-    router.push(roleStyles[role].dashboard);
   };
 
   const handleLogout = () => {

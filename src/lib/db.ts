@@ -763,7 +763,7 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
     type: 'badge',
     read: false,
     createdAt: '10 minutes ago',
-    linkUrl: '/student'
+    linkUrl: '/student/'
   },
   {
     id: 'notif-2',
@@ -773,7 +773,7 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
     type: 'test',
     read: false,
     createdAt: '2 hours ago',
-    linkUrl: '/student/tests'
+    linkUrl: '/student/tests/'
   },
   {
     id: 'notif-3',
@@ -783,7 +783,7 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
     type: 'alert',
     read: false,
     createdAt: '1 hour ago',
-    linkUrl: '/teacher'
+    linkUrl: '/teacher/'
   },
   {
     id: 'notif-4',
@@ -793,7 +793,7 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
     type: 'alert',
     read: false,
     createdAt: '3 hours ago',
-    linkUrl: '/parent/progress'
+    linkUrl: '/parent/progress/'
   },
 ];
 
