@@ -187,22 +187,22 @@ export function Sidebar() {
 
       {role === 'TEACHER' && (
         <div className="p-3 rounded-lg bg-slate-50 dark:bg-[#20252b] border border-slate-200 dark:border-[#283038] text-xs mt-4">
-          <p className="font-bold text-slate-900 dark:text-slate-200">Dr. Sarah Jenkins</p>
-          <p className="text-[11px] text-[#d82a4e]">Class 10-A (32 students)</p>
+          <p className="font-bold text-slate-900 dark:text-slate-200">{currentUser?.name || 'Dr. Sarah Jenkins'}</p>
+          <p className="text-[11px] text-[#d82a4e]">{currentUser?.teacherProfile?.department || 'Advanced Mathematics'}</p>
         </div>
       )}
 
       {role === 'PARENT' && (
         <div className="p-3 rounded-lg bg-slate-50 dark:bg-[#20252b] border border-slate-200 dark:border-[#283038] text-xs mt-4">
-          <p className="font-bold text-slate-900 dark:text-slate-200">Active Child</p>
-          <p className="text-[11px] text-emerald-600 dark:text-emerald-400">Alex Rivera (Grade 10)</p>
+          <p className="font-bold text-slate-900 dark:text-slate-200">{currentUser?.name || 'Priya Sharma'}</p>
+          <p className="text-[11px] text-emerald-600 dark:text-emerald-400">Active Child: Alex Rivera (Grade 10)</p>
         </div>
       )}
 
       {role === 'ADMIN' && (
         <div className="p-3 rounded-lg bg-slate-50 dark:bg-[#20252b] border border-slate-200 dark:border-[#283038] text-xs mt-4">
-          <p className="font-bold text-slate-900 dark:text-slate-200">System Healthy</p>
-          <p className="text-[11px] text-emerald-600 dark:text-emerald-400">99.98% uptime</p>
+          <p className="font-bold text-slate-900 dark:text-slate-200">{currentUser?.name || 'Marcus Vance'}</p>
+          <p className="text-[11px] text-emerald-600 dark:text-emerald-400">Platform Admin · 99.98% uptime</p>
         </div>
       )}
 

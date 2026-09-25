@@ -337,14 +337,15 @@ export function Navbar() {
               <NotificationCenter />
 
               {/* Direct Dashboard Shortcut */}
-              <Link
-                href={roleStyles[currentRole].dashboard}
-                prefetch={true}
-                className="btn-crimson inline-flex items-center justify-center px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-bold shadow-sm gap-1"
+              <button
+                type="button"
+                onClick={() => router.push(roleStyles[currentRole].dashboard)}
+                onMouseEnter={() => router.prefetch(roleStyles[currentRole].dashboard)}
+                className="btn-crimson inline-flex items-center justify-center px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-bold shadow-sm gap-1 cursor-pointer"
               >
                 <span>Dashboard</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
-              </Link>
+              </button>
 
               {/* Logout Button */}
               <button
@@ -360,20 +361,22 @@ export function Navbar() {
           ) : (
             /* Unauthenticated state: Clean Login & Get Started buttons */
             <div className="flex items-center gap-2">
-              <Link
-                href="/login/"
-                prefetch={true}
-                className="px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-[#d82a4e] dark:hover:text-[#d82a4e] transition-colors"
+              <button
+                type="button"
+                onClick={() => router.push('/login/')}
+                onMouseEnter={() => router.prefetch('/login/')}
+                className="px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-[#d82a4e] dark:hover:text-[#d82a4e] transition-colors cursor-pointer bg-transparent border-0"
               >
                 Log In
-              </Link>
-              <Link
-                href="/get-started/"
-                prefetch={true}
-                className="btn-crimson inline-flex items-center justify-center px-4 sm:px-5 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-bold shadow-md hover:scale-[1.02] transition-transform"
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push('/get-started/')}
+                onMouseEnter={() => router.prefetch('/get-started/')}
+                className="btn-crimson inline-flex items-center justify-center px-4 sm:px-5 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-bold shadow-md hover:scale-[1.02] transition-transform cursor-pointer"
               >
                 <span>Get Started</span>
-              </Link>
+              </button>
             </div>
           )}
 

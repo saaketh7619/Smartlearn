@@ -139,6 +139,38 @@ function LoginPageContent() {
     router.push(portalPaths[role]);
   };
 
+  const handleSelectRole = (role: Role) => {
+    setSelectedRole(role);
+    setErrorMsg('');
+    const defaultEmails = [
+      'student@smartlearn.edu',
+      'teacher@smartlearn.edu',
+      'sarah@smartlearn.edu',
+      'parent@smartlearn.edu',
+      'priya@smartlearn.edu',
+      'admin@smartlearn.edu',
+    ];
+    if (defaultEmails.includes(identifier.trim().toLowerCase()) || !identifier.trim()) {
+      if (role === 'STUDENT') {
+        setIdentifier('student@smartlearn.edu');
+        setFullName('Alex Rivera');
+        setGradeOrDept('Grade 10-A');
+      } else if (role === 'TEACHER') {
+        setIdentifier('teacher@smartlearn.edu');
+        setFullName('Dr. Sarah Jenkins');
+        setGradeOrDept('Advanced Mathematics');
+      } else if (role === 'PARENT') {
+        setIdentifier('parent@smartlearn.edu');
+        setFullName('Priya Sharma');
+        setGradeOrDept('Grade 10 Parent');
+      } else if (role === 'ADMIN') {
+        setIdentifier('admin@smartlearn.edu');
+        setFullName('Marcus Vance');
+        setGradeOrDept('Administration');
+      }
+    }
+  };
+
   const handleRequestOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
@@ -266,8 +298,9 @@ function LoginPageContent() {
         loginUser(localAuth.user);
         // Optional background Supabase session sync
         signInWithPassword(cleanEmail, password, selectedRole).catch(() => {});
+        const targetRole = localAuth.user.role || selectedRole;
         setTimeout(() => {
-          router.push(roleDashboards[selectedRole]);
+          router.push(roleDashboards[targetRole]);
         }, 50);
         return;
       }
@@ -301,8 +334,9 @@ function LoginPageContent() {
           triggerConfetti();
           setSuccessMsg('Supabase authentication confirmed! Initializing portal workspace...');
           loginUser(res.user);
+          const targetRole = res.user.role || selectedRole;
           setTimeout(() => {
-            router.push(roleDashboards[selectedRole]);
+            router.push(roleDashboards[targetRole]);
           }, 50);
           return;
         }
@@ -418,31 +452,34 @@ function LoginPageContent() {
       triggerConfetti();
       setSuccessMsg('Verification successful! Initializing portal workspace...');
 
+      const existingAccount = findAccountByEmail(identifier.trim());
+      const effectiveRole = mode === 'signup' ? selectedRole : (existingAccount?.role || selectedRole);
+
       const baseUser =
-        selectedRole === 'STUDENT'
+        effectiveRole === 'STUDENT'
           ? INITIAL_USERS[0]
-          : selectedRole === 'TEACHER'
+          : effectiveRole === 'TEACHER'
           ? INITIAL_USERS[1]
-          : selectedRole === 'PARENT'
+          : effectiveRole === 'PARENT'
           ? INITIAL_USERS[2]
           : INITIAL_USERS[3];
 
       const verifiedUser: User = {
         ...baseUser,
-        id: `user-${selectedRole.toLowerCase()}-${Date.now()}`,
-        name: mode === 'signup' && fullName ? fullName : baseUser.name,
+        id: existingAccount ? existingAccount.id : `user-${effectiveRole.toLowerCase()}-${Date.now()}`,
+        name: mode === 'signup' && fullName ? fullName : (existingAccount?.fullName || baseUser.name),
         email: identifier.includes('@') ? identifier : baseUser.email,
         phone: baseUser.phone,
-        role: selectedRole,
+        role: effectiveRole,
         studentProfile:
-          selectedRole === 'STUDENT' && baseUser.studentProfile
+          effectiveRole === 'STUDENT' && baseUser.studentProfile
             ? {
                 ...baseUser.studentProfile,
                 grade: gradeOrDept || baseUser.studentProfile.grade,
               }
             : baseUser.studentProfile,
         teacherProfile:
-          selectedRole === 'TEACHER' && baseUser.teacherProfile
+          effectiveRole === 'TEACHER' && baseUser.teacherProfile
             ? {
                 ...baseUser.teacherProfile,
                 department: gradeOrDept || baseUser.teacherProfile.department,
@@ -456,7 +493,7 @@ function LoginPageContent() {
           email: identifier.trim().toLowerCase(),
           password: 'smartlearn123',
           fullName: verifiedUser.name,
-          role: selectedRole,
+          role: effectiveRole,
           gradeOrDept: gradeOrDept.trim() || undefined,
           createdAt: new Date().toISOString(),
         });
@@ -464,7 +501,7 @@ function LoginPageContent() {
 
       loginUser(verifiedUser);
       setTimeout(() => {
-        router.push(roleDashboards[selectedRole]);
+        router.push(roleDashboards[effectiveRole]);
       }, 50);
       return;
     }
@@ -476,8 +513,9 @@ function LoginPageContent() {
         triggerConfetti();
         setSuccessMsg('Supabase OTP verified successfully! Initializing portal workspace...');
         loginUser(sbRes.user);
+        const targetRole = sbRes.user.role || selectedRole;
         setTimeout(() => {
-          router.push(roleDashboards[selectedRole]);
+          router.push(roleDashboards[targetRole]);
         }, 50);
         return;
       }
@@ -689,13 +727,14 @@ function LoginPageContent() {
                     </div>
                   </div>
                 </div>
-                <Link
-                  href="/get-started/"
-                  className="text-xs font-bold text-[#d82a4e] hover:underline inline-flex items-center gap-1 self-start sm:self-center"
+                <button
+                  type="button"
+                  onClick={() => router.push('/get-started/')}
+                  className="text-xs font-bold text-[#d82a4e] hover:underline inline-flex items-center gap-1 self-start sm:self-center cursor-pointer bg-transparent border-0 p-0"
                 >
                   <span>Change Role</span>
                   <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
+                </button>
               </div>
 
               {/* Sign In vs Sign Up Tabs */}
@@ -897,7 +936,7 @@ function LoginPageContent() {
                       <button
                         key={item.role}
                         type="button"
-                        onClick={() => setSelectedRole(item.role)}
+                        onClick={() => handleSelectRole(item.role)}
                         className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-sm border text-xs font-bold transition-all cursor-pointer ${
                           selectedRole === item.role
                             ? 'bg-[#d82a4e] text-white border-[#d82a4e] shadow-xs'

@@ -229,14 +229,16 @@ export default function LandingPage() {
 
           {/* Primary Action Button: Prominent Get Started button */}
           <div className="pt-6 max-w-2xl mx-auto flex items-center justify-center">
-            <Link
-              href="/get-started/"
+            <button
+              type="button"
               id="hero-get-started-btn"
+              onClick={() => router.push('/get-started/')}
+              onMouseEnter={() => router.prefetch('/get-started/')}
               className="btn-crimson inline-flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-md text-base sm:text-lg font-extrabold tracking-wide uppercase shadow-2xl hover:scale-105 transition-all cursor-pointer focus:outline-none focus:ring-4 focus:ring-[#d82a4e]/50"
             >
               <span>Get Started</span>
               <ArrowRight className="w-5 h-5" />
-            </Link>
+            </button>
           </div>
         </div>
       </section>
